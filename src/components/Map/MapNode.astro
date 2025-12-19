@@ -1,0 +1,46 @@
+---
+// MapNode - Individual clickable node on the map
+interface Props {
+  x: number;
+  y: number;
+  label: string;
+  href: string;
+}
+
+const { x, y, label, href } = Astro.props;
+---
+
+<a href={href} class="map-node-link">
+  <g class="map-node" data-label={label}>
+    <circle cx={x} cy={y} r="8" class="node-circle" />
+    <text x={x} y={y + 25} text-anchor="middle" class="node-label">
+      {label}
+    </text>
+  </g>
+</a>
+
+<style>
+  .node-circle {
+    fill: var(--ink-main);
+    stroke: var(--bg-parchment);
+    stroke-width: 2;
+    transition: all 0.3s ease;
+  }
+
+  .map-node:hover .node-circle {
+    fill: var(--accent-glow);
+    r: 10;
+  }
+
+  .node-label {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    fill: var(--ink-soft);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .map-node:hover .node-label {
+    opacity: 1;
+  }
+</style>

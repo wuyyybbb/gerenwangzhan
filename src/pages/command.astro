@@ -1,0 +1,337 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+---
+
+<BaseLayout title="Command Center - Resume & About">
+  <main class="page-container">
+    <!-- 返回按钮 -->
+    <a href="/" class="back-link">
+      ← Back to Map
+    </a>
+
+    <!-- 内容区 -->
+    <div class="content-wrapper">
+      <h1 class="page-title">Command Center</h1>
+      <p class="narrative-subtitle">"A synthesis of roles, skills, and intent."</p>
+
+      <!-- Section 1: Identity -->
+      <section class="identity-section">
+        <h2 class="section-label">IDENTITY</h2>
+        <p class="identity-statement">
+          Builder → Intelligent Pioneer
+        </p>
+      </section>
+
+      <!-- Section 2: Capabilities -->
+      <section class="capabilities-section">
+        <h2 class="section-label">CAPABILITIES</h2>
+
+        <div class="capability-item">
+          <div class="capability-header">
+            <span class="capability-name">AI / Vision</span>
+            <span class="capability-value">85%</span>
+          </div>
+          <div class="capability-bar">
+            <div class="capability-fill" style="width: 85%"></div>
+          </div>
+        </div>
+
+        <div class="capability-item">
+          <div class="capability-header">
+            <span class="capability-name">Design / Architecture</span>
+            <span class="capability-value">80%</span>
+          </div>
+          <div class="capability-bar">
+            <div class="capability-fill" style="width: 80%"></div>
+          </div>
+        </div>
+
+        <div class="capability-item">
+          <div class="capability-header">
+            <span class="capability-name">Product / Systems</span>
+            <span class="capability-value">88%</span>
+          </div>
+          <div class="capability-bar">
+            <div class="capability-fill" style="width: 88%"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Main Quest -->
+      <section class="quest-section">
+        <h2 class="section-label">MAIN QUEST</h2>
+        <p class="quest-statement">
+          Build intelligent systems that amplify human capability without diminishing human agency
+        </p>
+      </section>
+
+      <!-- Section 4: Principles -->
+      <section class="principles-section">
+        <h2 class="section-label">PRINCIPLES</h2>
+        <div class="principles-list">
+          <div class="principle-item">
+            <p class="principle-en">Build systems, not demos.</p>
+            <p class="principle-zh">构建系统，而非演示</p>
+          </div>
+          <div class="principle-item">
+            <p class="principle-en">Prefer clarity over novelty.</p>
+            <p class="principle-zh">清晰优于新奇</p>
+          </div>
+          <div class="principle-item">
+            <p class="principle-en">AI should extend, not replace, human agency.</p>
+            <p class="principle-zh">AI 应当延展而非取代人的能动性</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Decision Logs Navigation -->
+      <section class="decision-logs-nav">
+        <h2 class="section-label">DECISION LOGS</h2>
+        <a href="/command-center" class="decision-link">
+          <div class="decision-link-content">
+            <p class="decision-link-en">View Strategic Decisions & Trade-offs →</p>
+            <p class="decision-link-zh">查看战略决策与权衡分析</p>
+          </div>
+        </a>
+      </section>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .page-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 3rem;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink-main);
+  }
+
+  .content-wrapper {
+    max-width: 700px;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--ink-main);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .narrative-subtitle {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 4rem;
+    line-height: 1.6;
+  }
+
+  /* Section 样式 */
+  section {
+    margin-bottom: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(74, 74, 74, 0.2);
+  }
+
+  section:last-child {
+    border-bottom: none;
+  }
+
+  .section-label {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.15em;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  /* Identity Section */
+  .identity-statement {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: var(--ink-main);
+    line-height: 1.5;
+  }
+
+  /* Capabilities Section */
+  .capabilities-section {
+    padding-top: 1rem;
+  }
+
+  .capability-item {
+    margin-bottom: 2rem;
+  }
+
+  .capability-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .capability-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+  }
+
+  .capability-name {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ink-main);
+  }
+
+  .capability-value {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  .capability-bar {
+    width: 100%;
+    height: 2px;
+    background-color: rgba(74, 74, 74, 0.2);
+    position: relative;
+  }
+
+  .capability-fill {
+    height: 100%;
+    background-color: var(--ink-main);
+    transition: width 0.6s ease;
+  }
+
+  /* Quest Section */
+  .quest-statement {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--ink-main);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* Principles Section */
+  .principles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .principle-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .principle-en {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--ink-main);
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+
+  .principle-zh {
+    font-family: var(--font-zh-display);
+    font-size: 1.875rem;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    letter-spacing: 0.05em;
+  }
+
+  /* Decision Logs Navigation */
+  .decision-logs-nav {
+    margin-top: 3rem;
+  }
+
+  .decision-link {
+    display: block;
+    padding: 2rem;
+    border: 2px solid var(--ink-soft);
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .decision-link:hover {
+    border-color: var(--ink-main);
+    transform: translateX(4px);
+    background-color: rgba(31, 31, 31, 0.02);
+  }
+
+  .decision-link-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .decision-link-en {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ink-main);
+    letter-spacing: 0.05em;
+  }
+
+  .decision-link-zh {
+    font-family: var(--font-zh-display);
+    font-size: 2rem;
+    color: var(--ink-soft);
+    opacity: 0.8;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .narrative-subtitle {
+      font-size: 1rem;
+    }
+
+    .identity-statement {
+      font-size: 1.5rem;
+    }
+
+    .quest-statement {
+      font-size: 1rem;
+    }
+
+    .principle-en {
+      font-size: 1.125rem;
+    }
+
+    .principle-zh {
+      font-size: 1.75rem;
+    }
+
+    .decision-link {
+      padding: 1.5rem;
+    }
+
+    .decision-link-en {
+      font-size: 0.9375rem;
+    }
+
+    .decision-link-zh {
+      font-size: 1.75rem;
+    }
+  }
+</style>

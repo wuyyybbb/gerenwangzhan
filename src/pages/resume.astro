@@ -1,0 +1,523 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+---
+
+<BaseLayout title="Resume - Personal Map">
+  <main class="resume-container">
+    <!-- 返回按钮 -->
+    <a href="/" class="back-link">
+      ← Back to Map
+    </a>
+
+    <!-- 内容区 -->
+    <div class="resume-content">
+      <header class="resume-header">
+        <h1 class="page-title">Resume</h1>
+        <p class="page-subtitle">个人简历</p>
+      </header>
+
+      <!-- 时间轴 -->
+      <section class="timeline-section">
+        <div class="timeline-container">
+          <div class="timeline-arrow timeline-arrow-left">←</div>
+
+          <div class="timeline-track">
+            <!-- SVG 流动光束层 -->
+            <svg class="timeline-beam-layer" preserveAspectRatio="none">
+              <defs>
+                <filter id="timelineBlur">
+                  <feGaussianBlur stdDeviation="16"/>
+                </filter>
+
+                <linearGradient id="beamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f6d37a" stop-opacity="0.3" />
+                  <stop offset="50%" stop-color="#fffef5" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#f6d37a" stop-opacity="0.3" />
+                </linearGradient>
+              </defs>
+
+              <!-- 外层光晕 -->
+              <line x1="0" y1="50%" x2="100%" y2="50%"
+                    stroke="url(#beamGradient)"
+                    stroke-width="40"
+                    stroke-linecap="round"
+                    filter="url(#timelineBlur)"
+                    class="beam-outer" />
+
+              <!-- 内层芯 -->
+              <line x1="0" y1="50%" x2="100%" y2="50%"
+                    stroke="#ffffff"
+                    stroke-width="8"
+                    stroke-linecap="round"
+                    filter="url(#timelineBlur)"
+                    class="beam-inner" />
+
+              <!-- 流动高光 -->
+              <line x1="0" y1="50%" x2="100%" y2="50%"
+                    stroke="#ffffff"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-dasharray="80 160"
+                    class="beam-highlight" />
+
+              <!-- 流动粒子 -->
+              <circle r="6" fill="#ffffff" filter="url(#timelineBlur)" class="beam-particle particle-1">
+                <animate attributeName="cx" from="0%" to="100%" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="50%;50%;50%" dur="2s" repeatCount="indefinite" />
+              </circle>
+              <circle r="5" fill="#fffef5" filter="url(#timelineBlur)" class="beam-particle particle-2">
+                <animate attributeName="cx" from="0%" to="100%" dur="2s" begin="0.5s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="50%;50%;50%" dur="2s" repeatCount="indefinite" />
+              </circle>
+              <circle r="4" fill="#f6d37a" filter="url(#timelineBlur)" class="beam-particle particle-3">
+                <animate attributeName="cx" from="0%" to="100%" dur="2s" begin="1s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="50%;50%;50%" dur="2s" repeatCount="indefinite" />
+              </circle>
+            </svg>
+
+            <div class="timeline-line"></div>
+
+            <div class="timeline-years">
+              <div class="timeline-node" data-year="2022">
+                <img src="/map/timeline/2022.svg" alt="2022" class="year-badge" />
+              </div>
+              <div class="timeline-node" data-year="2023">
+                <img src="/map/timeline/2023.svg" alt="2023" class="year-badge" />
+              </div>
+              <div class="timeline-node" data-year="2024">
+                <img src="/map/timeline/2024.svg" alt="2024" class="year-badge" />
+              </div>
+              <div class="timeline-node" data-year="2025">
+                <img src="/map/timeline/2025.svg" alt="2025" class="year-badge" />
+              </div>
+              <div class="timeline-node" data-year="2026">
+                <img src="/map/timeline/2026.svg" alt="2026" class="year-badge" />
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-arrow timeline-arrow-right">→</div>
+        </div>
+
+        <div class="timeline-description">
+          <p class="timeline-text-en">Exploring the evolving landscape of AI & design</p>
+          <p class="timeline-text-zh">探索 AI 与设计的演进之路</p>
+        </div>
+      </section>
+
+      <!-- 技能 -->
+      <section class="resume-section">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills-grid">
+          <div class="skill-item">
+            <span class="skill-name">AI / Vision</span>
+            <span class="skill-level">85%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Design / Architecture</span>
+            <span class="skill-level">80%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Product / Systems</span>
+            <span class="skill-level">88%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 导航到其他页面 -->
+      <section class="resume-section">
+        <h2 class="section-title">Explore More</h2>
+        <div class="navigation-grid">
+          <a href="/command" class="nav-card">
+            <h3>Command Center</h3>
+            <p>决策中枢</p>
+          </a>
+          <a href="/command-center" class="nav-card">
+            <h3>Decision Logs</h3>
+            <p>决策文档</p>
+          </a>
+          <a href="/log" class="nav-card">
+            <h3>Knowledge Tower</h3>
+            <p>知识塔</p>
+          </a>
+          <a href="/workshop" class="nav-card">
+            <h3>AI Workshop</h3>
+            <p>AI 实验坊</p>
+          </a>
+        </div>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .resume-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 3rem;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink-main);
+  }
+
+  .resume-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* 时间轴突破容器限制并居中 */
+  .timeline-section {
+    width: 100%;
+    margin-bottom: 4rem;
+    padding: 4rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .timeline-section .timeline-container,
+  .timeline-section .timeline-description {
+    max-width: none;
+    width: auto;
+  }
+
+  .resume-header {
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--ink-main);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-family: var(--font-zh-display);
+    font-size: 3rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+
+  .timeline-container {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-bottom: 6rem;
+  }
+
+  .timeline-arrow {
+    font-family: var(--font-serif);
+    font-size: 8rem;
+    color: var(--ink-soft);
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .timeline-track {
+    flex: 1;
+    position: relative;
+    height: 360px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* 流动光束层 */
+  .timeline-beam-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .beam-outer {
+    opacity: 0.5;
+  }
+
+  .beam-inner {
+    opacity: 0.7;
+  }
+
+  .beam-highlight {
+    opacity: 0.6;
+    animation: beamFlow 2s linear infinite;
+  }
+
+  @keyframes beamFlow {
+    to {
+      stroke-dashoffset: -120;
+    }
+  }
+
+  .beam-particle {
+    opacity: 0.7;
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(246, 211, 122, 0.2) 10%,
+      rgba(246, 211, 122, 0.2) 90%,
+      transparent
+    );
+    opacity: 0.4;
+    z-index: 0;
+  }
+
+  .timeline-years {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+  }
+
+  .timeline-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    position: relative;
+  }
+
+  .timeline-node:hover {
+    transform: translateY(-16px) scale(1.08);
+  }
+
+  .year-badge {
+    width: 320px;
+    height: auto;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+    transition: filter 0.3s ease;
+  }
+
+  .timeline-node:hover .year-badge {
+    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.25));
+  }
+
+  .timeline-description {
+    text-align: center;
+    padding: 6rem 0;
+    border-top: 1px solid rgba(74, 74, 74, 0.1);
+    margin-top: 4rem;
+  }
+
+  .timeline-text-en {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--ink-main);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .timeline-text-zh {
+    font-family: var(--font-zh-display);
+    font-size: 5rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+
+  /* 尊重用户动画偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .beam-highlight {
+      animation: none !important;
+      stroke-dasharray: none !important;
+    }
+
+    .beam-particle {
+      display: none;
+    }
+
+    .timeline-node {
+      transition: none !important;
+    }
+  }
+
+  .resume-section {
+    margin-bottom: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(74, 74, 74, 0.2);
+  }
+
+  .resume-section:last-child {
+    border-bottom: none;
+  }
+
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--ink-main);
+    margin-bottom: 2rem;
+  }
+
+  .section-content {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  .skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .skill-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(74, 74, 74, 0.1);
+  }
+
+  .skill-name {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ink-main);
+  }
+
+  .skill-level {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  .navigation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .nav-card {
+    padding: 2rem;
+    border: 1px solid var(--ink-soft);
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .nav-card:hover {
+    border-color: var(--ink-main);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--ink-main);
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-card p {
+    font-family: var(--font-zh-display);
+    font-size: 1.5rem;
+    color: var(--ink-soft);
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .resume-container {
+      padding: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .page-subtitle {
+      font-size: 2rem;
+    }
+
+    .timeline-section {
+      margin-left: -1.5rem;
+      margin-right: -1.5rem;
+      padding: 3rem 1.5rem;
+      left: 0;
+      right: 0;
+      transform: none;
+    }
+
+    .timeline-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .timeline-arrow {
+      display: none;
+    }
+
+    .timeline-track {
+      height: auto;
+      min-height: 400px;
+    }
+
+    .timeline-years {
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .timeline-line {
+      width: 3px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(246, 211, 122, 0.2) 10%,
+        rgba(246, 211, 122, 0.2) 90%,
+        transparent
+      );
+    }
+
+    .timeline-beam-layer {
+      display: none;
+    }
+
+    .year-badge {
+      width: 220px;
+    }
+
+    .timeline-text-en {
+      font-size: 1.125rem;
+    }
+
+    .timeline-text-zh {
+      font-size: 1.75rem;
+    }
+
+    .navigation-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,1280 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+
+// 设计画布常量
+const DESIGN_W = 1376;
+const DESIGN_H = 768;
+
+// Debug 模式（开发时设为 true，或按 D 键切换）
+const DEBUG_MODE = false;
+
+// 核心建筑（中心点）
+const coreBuilding = {
+  building: {
+    src: '/map/core_building.svg',
+    rect: { x: 580, y: 180, w: 200, h: 300 },
+    transform: { scale: 1.4, dx: 0, dy: 0 },
+  },
+  center: { x: 688, y: 300 }, // 光束起点
+};
+
+// 地标配置（单一数据源）
+// Sign 位置：紧贴建筑底边，signY = buildingBottomY
+const landmarks = [
+  {
+    id: 'workshop',
+    route: '/workshop',
+    title_en: 'AI Workshop',
+    title_zh: 'AI 实验坊',
+    building: {
+      src: '/map/workshop_building.svg',
+      rect: { x: 210, y: 240, w: 240, h: 280 },
+      transform: { scale: 1.4, dx: 0, dy: -140 },
+    },
+    sign: {
+      src: '/map/workshop_sign.svg',
+      rect: { x: 250, y: 320, w: 140, h: 60 },
+      transform: { scale: 2.0, dx: 0, dy: 0 },
+    },
+    clickableRect: { x: 100, y: 280, w: 240, h: 320 },
+    beamEnd: { x: 330, y: 300 }, // 调整到建筑中心
+  },
+  {
+    id: 'knowledge',
+    route: '/log',
+    title_en: 'Knowledge Tower',
+    title_zh: '知识塔',
+    building: {
+      src: '/map/knowledge_building.svg',
+      rect: { x: 1020, y: 75, w: 300, h: 420 },
+      transform: { scale: 1.3, dx: 0, dy: -90 },
+    },
+    sign: {
+      src: '/map/knowledge_sign.svg',
+      rect: { x: 1100, y: 290, w: 140, h: 60 },
+      transform: { scale: 1.8, dx: 0, dy: 0 },
+    },
+    clickableRect: { x: 1020, y: 100, w: 300, h: 480 },
+    beamEnd: { x: 1170, y: 200 }, // 调整到建筑中心
+  },
+  {
+    id: 'archives',
+    route: '/archives',
+    title_en: 'Ancient Archives',
+    title_zh: '古卷库',
+    building: {
+      src: '/map/archives_building.svg',
+      rect: { x: 80, y: 450, w: 320, h: 300 },
+      transform: { scale: 1.3, dx: 0, dy: 0 },
+    },
+    sign: {
+      src: '/map/archives_sign.svg',
+      rect: { x: 200, y: 620, w: 200, h: 60 },
+      transform: { scale: 1.4, dx: 0, dy: 0 },
+    },
+    clickableRect: { x: 80, y: 420, w: 320, h: 330 },
+    beamEnd: { x: 240, y: 600 }, // 调整到建筑中心
+  },
+  {
+    id: 'command',
+    route: '/command',
+    title_en: 'Command Center',
+    title_zh: '指挥所',
+    building: {
+      src: '/map/command_building.svg',
+      rect: { x: 920, y: 380, w: 360, h: 320 },
+      transform: { scale: 0.8, dx: 0, dy: 0 },
+    },
+    sign: {
+      src: '/map/command_sign.svg',
+      rect: { x: 1010, y: 630, w: 200, h: 60 },
+      transform: { scale: 1.4, dx: 0, dy: 0 },
+    },
+    clickableRect: { x: 980, y: 400, w: 360, h: 340 },
+    beamEnd: { x: 1100, y: 540 }, // 调整到建筑中心
+  },
+];
+---
+
+<BaseLayout title="Mythic Engraving Interactive Map">
+  <div class="map-wrapper">
+    <!-- Debug 切换按钮（右上角） -->
+    <button class="debug-toggle-btn" id="debugToggle" aria-label="Toggle debug mode">
+      <span class="debug-icon">🔧</span>
+    </button>
+
+    <!-- 汉堡菜单（备用导航） -->
+    <button class="hamburger-btn" id="menuToggle" aria-label="Toggle menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
+    <nav class="menu-dropdown" id="menuDropdown">
+      {landmarks.map(landmark => (
+        <a href={landmark.route} class="menu-item">{landmark.title_en}</a>
+      ))}
+    </nav>
+
+    <!-- 固定画布容器 -->
+    <div class="map-canvas" id="mapCanvas" data-design-w={DESIGN_W} data-design-h={DESIGN_H}>
+      <!-- 背景层 -->
+      <img src="/map/background.webp" alt="World Map" class="map-background" />
+
+      <!-- 光束层（单一 inline SVG 覆盖层） -->
+      <svg class="beam-layer" viewBox={`0 0 ${DESIGN_W} ${DESIGN_H}`} preserveAspectRatio="none">
+        <defs>
+          <!-- 模糊滤镜（增强柔和效果） -->
+          <filter id="blur20">
+            <feGaussianBlur stdDeviation="20"/>
+          </filter>
+          <filter id="blur12">
+            <feGaussianBlur stdDeviation="12"/>
+          </filter>
+          <filter id="blur6">
+            <feGaussianBlur stdDeviation="6"/>
+          </filter>
+
+          <!-- 中心点渐变 -->
+          <radialGradient id="coreGradient">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="50%" stop-color="#ffe8a3" />
+            <stop offset="100%" stop-color="#f6d37a" />
+          </radialGradient>
+
+          <!-- 为每条光束生成独立的渐变 -->
+          {landmarks.map((landmark) => {
+            const x1 = coreBuilding.center.x;
+            const y1 = coreBuilding.center.y;
+            const x2 = landmark.beamEnd.x;
+            const y2 = landmark.beamEnd.y;
+            const id = landmark.id;
+
+            return (
+              <>
+                <!-- 内层渐变：白色流动芯 -->
+                <linearGradient id={`beamCore-${id}`} x1={x1} y1={y1} x2={x2} y2={y2} gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+                  <stop offset="50%" stop-color="#fffef5" stop-opacity="0.85" />
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0.8" />
+                </linearGradient>
+
+                <!-- 中层渐变：金黄雾气 -->
+                <linearGradient id={`beamWarm-${id}`} x1={x1} y1={y1} x2={x2} y2={y2} gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#f6d37a" stop-opacity="0.7" />
+                  <stop offset="50%" stop-color="#f0c56a" stop-opacity="0.6" />
+                  <stop offset="100%" stop-color="#f6d37a" stop-opacity="0.5" />
+                </linearGradient>
+
+                <!-- 外层渐变：金黄光晕 -->
+                <linearGradient id={`beamGold-${id}`} x1={x1} y1={y1} x2={x2} y2={y2} gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#f6d37a" stop-opacity="0.5" />
+                  <stop offset="50%" stop-color="#f1c85f" stop-opacity="0.4" />
+                  <stop offset="100%" stop-color="#f6d37a" stop-opacity="0.3" />
+                </linearGradient>
+              </>
+            );
+          })}
+        </defs>
+
+        <!-- 中心发光点（可点击） -->
+        <g id="coreBeacon">
+          <circle
+            cx={coreBuilding.center.x}
+            cy={coreBuilding.center.y}
+            r="12"
+            fill="url(#coreGradient)"
+            opacity="0.9"
+            style="cursor: pointer;"
+          >
+            <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
+            <animate attributeName="r" values="12;14;12" dur="2s" repeatCount="indefinite" />
+          </circle>
+
+          <!-- 外圈光晕 -->
+          <circle
+            cx={coreBuilding.center.x}
+            cy={coreBuilding.center.y}
+            r="20"
+            fill="none"
+            stroke="#ffe8a3"
+            stroke-width="1"
+            opacity="0.3"
+          >
+            <animate attributeName="r" values="20;28;20" dur="2.5s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.3;0;0.3" dur="2.5s" repeatCount="indefinite" />
+          </circle>
+        </g>
+
+        <!-- 光束组（三层叠加 + 流动高光） -->
+        {landmarks.map((landmark, index) => {
+          const x1 = coreBuilding.center.x;
+          const y1 = coreBuilding.center.y;
+          const x2 = landmark.beamEnd.x;
+          const y2 = landmark.beamEnd.y;
+
+          // 贝塞尔曲线控制点（拱形向上）
+          const controlX = (x1 + x2) / 2;
+          const controlY = Math.min(y1, y2) - 120;
+          const pathD = `M ${x1} ${y1} Q ${controlX} ${controlY} ${x2} ${y2}`;
+
+          return (
+            <g class="beam-group" data-beam-id={landmark.id}>
+              <!-- 外层：极淡金色光晕（最宽，强模糊） -->
+              <path
+                class="beam-path beam-outer"
+                d={pathD}
+                stroke={`url(#beamGold-${landmark.id})`}
+                stroke-width="32"
+                stroke-linecap="round"
+                fill="none"
+                filter="url(#blur20)"
+                style="opacity: 0;"
+              />
+
+              <!-- 中层：淡金雾气（中等宽度，中等模糊） -->
+              <path
+                class="beam-path beam-mid"
+                d={pathD}
+                stroke={`url(#beamWarm-${landmark.id})`}
+                stroke-width="16"
+                stroke-linecap="round"
+                fill="none"
+                filter="url(#blur12)"
+                style="opacity: 0;"
+              />
+
+              <!-- 内层：淡白芯（较细，轻微模糊） -->
+              <path
+                class="beam-path beam-inner"
+                d={pathD}
+                stroke={`url(#beamCore-${landmark.id})`}
+                stroke-width="6"
+                stroke-linecap="round"
+                fill="none"
+                filter="url(#blur6)"
+                style="opacity: 0;"
+              />
+
+              <!-- 流动高光（白色细线） -->
+              <path
+                class="beam-highlight"
+                d={pathD}
+                stroke="#ffffff"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                fill="none"
+                style="opacity: 0;"
+                stroke-dasharray="60 120"
+                stroke-dashoffset="0"
+              />
+
+              <!-- 流动粒子效果（白色光点，极快流动） -->
+              <circle class="beam-particle" r="2.5" fill="#ffffff" filter="url(#blur6)" style="opacity: 0;">
+                <animateMotion dur="0.5s" repeatCount="indefinite" begin="0s">
+                  <mpath href={`#beam-path-${landmark.id}`}/>
+                </animateMotion>
+              </circle>
+
+              <circle class="beam-particle" r="2" fill="#ffffff" filter="url(#blur6)" style="opacity: 0;">
+                <animateMotion dur="0.5s" repeatCount="indefinite" begin="0.15s">
+                  <mpath href={`#beam-path-${landmark.id}`}/>
+                </animateMotion>
+              </circle>
+
+              <circle class="beam-particle" r="1.5" fill="#fffef5" filter="url(#blur6)" style="opacity: 0;">
+                <animateMotion dur="0.5s" repeatCount="indefinite" begin="0.3s">
+                  <mpath href={`#beam-path-${landmark.id}`}/>
+                </animateMotion>
+              </circle>
+
+              <!-- 隐藏的路径，供粒子动画使用 -->
+              <path id={`beam-path-${landmark.id}`} d={pathD} fill="none" stroke="none" style="display: none;"/>
+            </g>
+          );
+        })}
+      </svg>
+
+      <!-- 核心建筑层（带 transform） -->
+      <div
+        class="building-container core-container"
+        data-building-id="core"
+        style={`
+          left: ${coreBuilding.building.rect.x}px;
+          top: ${coreBuilding.building.rect.y}px;
+          width: ${coreBuilding.building.rect.w}px;
+          height: ${coreBuilding.building.rect.h}px;
+          transform: translate(${coreBuilding.building.transform.dx}px, ${coreBuilding.building.transform.dy}px) scale(${coreBuilding.building.transform.scale});
+        `}
+      >
+        <img
+          src={coreBuilding.building.src}
+          alt="Core Building"
+          class="building-layer"
+        />
+      </div>
+
+      <!-- 地标建筑层 -->
+      {landmarks.map(landmark => (
+        <div
+          class="building-container"
+          data-landmark-id={`${landmark.id}-building`}
+          style={`
+            left: ${landmark.building.rect.x}px;
+            top: ${landmark.building.rect.y}px;
+            width: ${landmark.building.rect.w}px;
+            height: ${landmark.building.rect.h}px;
+            transform: translate(${landmark.building.transform.dx}px, ${landmark.building.transform.dy}px) scale(${landmark.building.transform.scale});
+          `}
+        >
+          <img
+            src={landmark.building.src}
+            alt={`${landmark.title_en} Building`}
+            class="building-layer"
+          />
+        </div>
+      ))}
+
+      <!-- 地标标牌层（独立渲染） -->
+      {landmarks.map(landmark => (
+        <div
+          class="sign-container"
+          data-landmark-id={`${landmark.id}-sign`}
+          style={`
+            left: ${landmark.sign.rect.x}px;
+            top: ${landmark.sign.rect.y}px;
+            width: ${landmark.sign.rect.w}px;
+            height: ${landmark.sign.rect.h}px;
+            transform: translate(${landmark.sign.transform.dx}px, ${landmark.sign.transform.dy}px) scale(${landmark.sign.transform.scale});
+          `}
+        >
+          <img
+            src={landmark.sign.src}
+            alt={`${landmark.title_en} Sign`}
+            class="sign-bg"
+          />
+        </div>
+      ))}
+
+      <!-- Resume 标识（中央底部） -->
+      <a
+        href="/resume"
+        class="resume-badge"
+        id="resumeBadge"
+        style="
+          left: 438px;
+          top: 615px;
+          width: 500px;
+          height: 150px;
+        "
+        aria-label="View Resume"
+      >
+        <img
+          src="/map/resume.svg"
+          alt="Personal Resume Map"
+          class="resume-badge-img"
+        />
+      </a>
+
+      <!-- 社交媒体图标（Resume 下方） -->
+      <div class="social-icons-container" style="
+        left: 608px;
+        top: 710px;
+      ">
+        <a
+          href="https://space.bilibili.com/YOUR_UID"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-icon"
+          aria-label="Bilibili"
+        >
+          <img src="/map/bilibili.svg" alt="Bilibili" class="social-icon-img" />
+        </a>
+
+        <a
+          href="https://github.com/YOUR_USERNAME"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-icon"
+          aria-label="GitHub"
+        >
+          <img src="/map/github.svg" alt="GitHub" class="social-icon-img" />
+        </a>
+
+        <a
+          href="#wechat"
+          class="social-icon"
+          aria-label="WeChat Official Account"
+        >
+          <img src="/map/gongzhonghao.svg" alt="WeChat Official Account" class="social-icon-img" />
+        </a>
+      </div>
+
+      <!-- 可点击热区层 -->
+      {landmarks.map(landmark => (
+        <div
+          class="landmark-hotspot-container"
+          data-landmark-id={landmark.id}
+          style={`
+            left: ${landmark.clickableRect.x}px;
+            top: ${landmark.clickableRect.y}px;
+            width: ${landmark.clickableRect.w}px;
+            height: ${landmark.clickableRect.h}px;
+          `}
+        >
+          <a
+            href={landmark.route}
+            class="landmark-hotspot"
+            data-landmark={landmark.id}
+            aria-label={`Visit ${landmark.title_en}`}
+          >
+            <span class="sr-only">{landmark.title_en}</span>
+          </a>
+        </div>
+      ))}
+
+      <!-- Debug 层：显示边界和锚点 -->
+      <svg class="debug-layer" id="debugLayer" viewBox={`0 0 ${DESIGN_W} ${DESIGN_H}`} preserveAspectRatio="none">
+        <!-- 核心建筑边界（红色） -->
+        <rect
+          x={coreBuilding.building.rect.x}
+          y={coreBuilding.building.rect.y}
+          width={coreBuilding.building.rect.w}
+          height={coreBuilding.building.rect.h}
+          fill="none"
+          stroke="red"
+          stroke-width="2"
+          stroke-dasharray="5,5"
+        />
+        <!-- 核心建筑中心点 -->
+        <circle
+          cx={coreBuilding.center.x}
+          cy={coreBuilding.center.y}
+          r="5"
+          fill="red"
+          opacity="0.8"
+        />
+        <text
+          x={coreBuilding.center.x + 10}
+          y={coreBuilding.center.y - 10}
+          font-size="12"
+          fill="red"
+        >
+          Core Center
+        </text>
+
+        {landmarks.map(landmark => (
+          <>
+            <!-- 建筑边界（红色） -->
+            <rect
+              x={landmark.building.rect.x}
+              y={landmark.building.rect.y}
+              width={landmark.building.rect.w}
+              height={landmark.building.rect.h}
+              fill="none"
+              stroke="red"
+              stroke-width="2"
+              stroke-dasharray="5,5"
+            />
+            <!-- 标牌边界（蓝色） -->
+            <rect
+              x={landmark.sign.rect.x}
+              y={landmark.sign.rect.y}
+              width={landmark.sign.rect.w}
+              height={landmark.sign.rect.h}
+              fill="none"
+              stroke="blue"
+              stroke-width="2"
+              stroke-dasharray="5,5"
+            />
+            <!-- 可点击区域边界（绿色） -->
+            <rect
+              x={landmark.clickableRect.x}
+              y={landmark.clickableRect.y}
+              width={landmark.clickableRect.w}
+              height={landmark.clickableRect.h}
+              fill="none"
+              stroke="lime"
+              stroke-width="2"
+              stroke-dasharray="5,5"
+            />
+            <!-- 光束终点锚点 -->
+            <circle
+              cx={landmark.beamEnd.x}
+              cy={landmark.beamEnd.y}
+              r="5"
+              fill="orange"
+              opacity="0.8"
+            />
+            <text
+              x={landmark.beamEnd.x + 10}
+              y={landmark.beamEnd.y - 10}
+              font-size="12"
+              fill="orange"
+            >
+              {landmark.id}
+            </text>
+          </>
+        ))}
+      </svg>
+    </div>
+
+    <!-- 小人角色引导 -->
+    <div id="girl-runner">
+      <img src="/girl/girl.svg" alt="guide girl" />
+    </div>
+  </div>
+</BaseLayout>
+
+<script type="module" src="/src/scripts/girl-runner.ts"></script>
+
+<style>
+  /* 全屏 Viewport */
+  .map-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-parchment);
+  }
+
+  /* Debug 切换按钮（右上角，fixed overlay） */
+  .debug-toggle-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 50;
+    background: transparent;
+    border: 1px solid var(--ink-main);
+    padding: 0.5rem;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+  }
+
+  .debug-toggle-btn:hover {
+    opacity: 1;
+    background-color: rgba(31, 31, 31, 0.05);
+  }
+
+  .debug-toggle-btn.active {
+    background-color: rgba(31, 31, 31, 0.1);
+    opacity: 1;
+  }
+
+  .debug-icon {
+    font-size: 1.25rem;
+  }
+
+  /* 固定画布 mapStage */
+  .map-canvas {
+    width: 1376px;
+    height: 768px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform-origin: center center;
+    /* transform 由 JS 计算: translate(-50%, -50%) scale(scale) */
+  }
+
+  /* 背景图（放在 mapStage 内，固定尺寸） */
+  .map-background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1376px;
+    height: 768px;
+    object-fit: fill;
+    display: block;
+    pointer-events: none;
+  }
+
+  /* 光束层（单一 SVG 覆盖层） */
+  .beam-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 30;
+    overflow: visible;
+  }
+
+  #coreBeacon {
+    pointer-events: all;
+    cursor: pointer;
+  }
+
+  /* 光束路径：不要用 CSS 覆盖 SVG stroke 属性 */
+  .beam-path {
+    /* 移除了 stroke: unset; 避免覆盖 SVG 的 stroke="url(#...)" */
+    transition: opacity 0.8s ease-out;
+  }
+
+  /* 激活状态：增强亮度 */
+  .beam-group.active .beam-outer {
+    opacity: 0.55 !important;
+    transition: opacity 1s ease-out;
+  }
+
+  .beam-group.active .beam-mid {
+    opacity: 0.7 !important;
+    transition: opacity 1s ease-out 0.1s;
+  }
+
+  .beam-group.active .beam-inner {
+    opacity: 0.9 !important;
+    transition: opacity 1s ease-out 0.2s;
+  }
+
+  /* 流动高光动画（白色流动，极快） */
+  .beam-highlight {
+    transition: opacity 0.6s ease;
+  }
+
+  .beam-group.active .beam-highlight {
+    opacity: 0.6 !important;
+    animation: highlightFlow 1s linear infinite 0.5s;
+  }
+
+  @keyframes highlightFlow {
+    to {
+      stroke-dashoffset: -200;
+    }
+  }
+
+  /* 流动粒子效果（白色光点，极快） */
+  .beam-particle {
+    transition: opacity 0.6s ease;
+  }
+
+  .beam-group.active .beam-particle {
+    opacity: 0.65 !important;
+  }
+
+  /* 建筑容器（支持 transform） */
+  .building-container {
+    position: absolute;
+    transform-origin: center center;
+    z-index: 8;
+    transition: transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1.2);
+  }
+
+  .core-container {
+    pointer-events: none;
+  }
+
+  /* 建筑层样式 */
+  .building-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: filter 220ms ease;
+  }
+
+  /* 建筑 hover 阴影 */
+  .building-layer.hover {
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.22));
+  }
+
+  /* 标牌容器（独立渲染） */
+  .sign-container {
+    position: absolute;
+    transform-origin: center center;
+    z-index: 9;
+    transition: transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1.2);
+  }
+
+  /* 标牌 SVG */
+  .sign-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  /* Resume 标识（中央底部） */
+  .resume-badge {
+    position: absolute;
+    z-index: 10;
+    transform-origin: center center;
+    transition: transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1.2);
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+
+  .resume-badge:hover {
+    transform: translateY(-6px) scale(1.05);
+  }
+
+  .resume-badge-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    opacity: 0.9;
+    transition: opacity 0.3s ease, filter 220ms ease;
+  }
+
+  .resume-badge:hover .resume-badge-img {
+    opacity: 1;
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.22));
+  }
+
+  /* 社交媒体图标容器 */
+  .social-icons-container {
+    position: absolute;
+    z-index: 11;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+
+  /* 单个社交图标 */
+  .social-icon {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: block;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .social-icon:hover {
+    transform: translateY(-8px);
+    animation: iconBounce 0.6s ease-in-out;
+  }
+
+  .social-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    opacity: 0.85;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+  }
+
+  .social-icon:hover .social-icon-img {
+    opacity: 1;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+  }
+
+  /* 弹跳动画 */
+  @keyframes iconBounce {
+    0%, 100% {
+      transform: translateY(-8px);
+    }
+    50% {
+      transform: translateY(-14px);
+    }
+  }
+
+  /* 可点击热区容器 */
+  .landmark-hotspot-container {
+    position: absolute;
+    z-index: 15;
+  }
+
+  /* 可点击热区 */
+  .landmark-hotspot {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    cursor: pointer;
+  }
+
+  /* 小人角色引导 */
+  #girl-runner {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 72px;
+    height: auto;
+    pointer-events: none;
+    z-index: 15;
+    will-change: transform;
+  }
+
+  #girl-runner img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* 汉堡菜单（左上角，fixed overlay） */
+  .hamburger-btn {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 50;
+    background: transparent;
+    border: 1px solid var(--ink-main);
+    padding: 0.4rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 28px;
+    height: 28px;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+  }
+
+  .hamburger-btn:hover {
+    opacity: 1;
+    background-color: rgba(31, 31, 31, 0.05);
+  }
+
+  .hamburger-line {
+    width: 14px;
+    height: 1.5px;
+    background-color: var(--ink-main);
+    transition: all 0.3s ease;
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(1) {
+    transform: translateY(4.5px) rotate(45deg);
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(3) {
+    transform: translateY(-4.5px) rotate(-45deg);
+  }
+
+  .menu-dropdown {
+    position: fixed;
+    top: 52px;
+    left: 16px;
+    z-index: 50;
+    background-color: rgba(239, 233, 198, 0.98);
+    border: 1px solid var(--ink-main);
+    padding: 0.5rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 160px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .menu-dropdown.open {
+    display: flex;
+  }
+
+  .menu-item {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-main);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .menu-item:hover {
+    border-color: var(--ink-main);
+    background-color: rgba(31, 31, 31, 0.03);
+  }
+
+  /* Debug 层 */
+  .debug-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .debug-layer.visible {
+    opacity: 1;
+  }
+
+  /* 屏幕阅读器专用 */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* 尊重用户动画偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .beam-path,
+    .beam-highlight {
+      animation: none !important;
+      transition: opacity 0.3s ease;
+    }
+
+    .beam-highlight {
+      stroke-dasharray: none !important;
+      stroke-dashoffset: 0 !important;
+    }
+
+    circle animate {
+      display: none;
+    }
+
+    .building-layer,
+    .sign-container {
+      transition: none !important;
+    }
+
+    .social-icon,
+    .social-icon:hover {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 768px) {
+    .debug-toggle-btn {
+      width: 32px;
+      height: 32px;
+      top: 12px;
+      right: 12px;
+    }
+
+    .debug-icon {
+      font-size: 1rem;
+    }
+
+    /* 移动端隐藏社交图标（避免遮挡） */
+    .social-icons-container {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // 确保 DOM 加载完成后执行
+  document.addEventListener('DOMContentLoaded', () => {
+    // 地标配置数据（用于 hover 动画计算）
+    const landmarks = [
+      {
+        id: 'workshop',
+        building: { transform: { scale: 1.4, dx: 0, dy: -140 } },
+        sign: { transform: { scale: 2.0, dx: 0, dy: 0 } },
+      },
+      {
+        id: 'knowledge',
+        building: { transform: { scale: 1.3, dx: 0, dy: -90 } },
+        sign: { transform: { scale: 1.8, dx: 0, dy: 0 } },
+      },
+      {
+        id: 'archives',
+        building: { transform: { scale: 1.3, dx: 0, dy: 0 } },
+        sign: { transform: { scale: 1.4, dx: 0, dy: 0 } },
+      },
+      {
+        id: 'command',
+        building: { transform: { scale: 0.8, dx: 0, dy: 0 } },
+        sign: { transform: { scale: 1.4, dx: 0, dy: 0 } },
+      },
+    ];
+
+    // 画布缩放逻辑
+    const DESIGN_W = 1376;
+    const DESIGN_H = 768;
+
+    const mapCanvas = document.getElementById('mapCanvas');
+    const debugLayer = document.getElementById('debugLayer');
+    const debugToggle = document.getElementById('debugToggle');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Debug 模式状态
+    let debugMode = false;
+
+    // 光束系统：hover 交互
+    const coreBeacon = document.getElementById('coreBeacon');
+    const beamGroups = document.querySelectorAll('.beam-group');
+
+    console.log('找到光束组数量:', beamGroups.length);
+
+    // 光束状态管理：防止多个系统冲突
+    let beamMode = 'none'; // 'none' | 'all' | 'single'
+    let activeBeamTimeouts = [];
+
+    // 清除所有光束的辅助函数
+    function clearAllBeams() {
+      console.log('清除所有光束');
+      // 清除所有待执行的激活动画
+      activeBeamTimeouts.forEach(timeout => clearTimeout(timeout));
+      activeBeamTimeouts = [];
+      // 移除所有active类
+      beamGroups.forEach(group => {
+        group.classList.remove('active');
+      });
+    }
+
+    // 调试：打印当前光束状态
+    function logBeamState() {
+      const activeBeams = [];
+      beamGroups.forEach(group => {
+        const id = group.getAttribute('data-beam-id');
+        if (group.classList.contains('active')) {
+          activeBeams.push(id);
+        }
+      });
+      console.log(`[光束状态] 模式: ${beamMode}, 激活的光束: [${activeBeams.join(', ')}]`);
+    }
+
+    // 中心建筑 hover：显示所有光束
+    if (coreBeacon) {
+      coreBeacon.addEventListener('mouseenter', () => {
+        console.log('鼠标进入中心建筑，显示所有光束');
+        clearAllBeams(); // 先清除所有光束
+        beamMode = 'all';
+        beamGroups.forEach((group, index) => {
+          const timeout = setTimeout(() => {
+            if (beamMode === 'all') { // 只有在仍处于 'all' 模式时才激活
+              group.classList.add('active');
+              if (index === beamGroups.length - 1) {
+                // 最后一条光束激活后，打印状态
+                setTimeout(() => logBeamState(), 50);
+              }
+            }
+          }, index * 80);
+          activeBeamTimeouts.push(timeout);
+        });
+      });
+
+      coreBeacon.addEventListener('mouseleave', () => {
+        console.log('鼠标离开中心建筑，隐藏所有光束');
+        beamMode = 'none';
+        clearAllBeams();
+        logBeamState();
+      });
+    }
+
+  function scaleCanvas() {
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+
+    // 计算缩放比例（保持宽高比）
+    const scale = Math.min(viewportW / DESIGN_W, viewportH / DESIGN_H);
+
+    // 应用缩放变换（translate(-50%, -50%) 居中，然后 scale）
+    if (mapCanvas) {
+      mapCanvas.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+  }
+
+  // 初始缩放
+  scaleCanvas();
+
+  // 窗口调整时重新缩放
+  window.addEventListener('resize', scaleCanvas);
+
+  // Debug 切换
+  if (debugToggle && debugLayer) {
+    debugToggle.addEventListener('click', () => {
+      debugMode = !debugMode;
+      debugToggle.classList.toggle('active', debugMode);
+      debugLayer.classList.toggle('visible', debugMode);
+
+      if (debugMode) {
+        console.log('=== Debug Mode Enabled ===');
+        console.log(`Canvas Size: ${DESIGN_W}x${DESIGN_H}`);
+        printLandmarkCoordinates();
+      }
+    });
+
+    // 键盘快捷键：D 键切换 debug
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'd' || e.key === 'D') {
+        debugToggle.click();
+      }
+    });
+  }
+
+  // 打印地标坐标
+  function printLandmarkCoordinates() {
+    const landmarks = document.querySelectorAll('.landmark-group');
+    const coreContainer = document.querySelector('.core-container');
+
+    console.log('--- Core Building ---');
+    if (coreContainer) {
+      const style = coreContainer.style;
+      console.log(`  rect: { x: ${style.left}, y: ${style.top}, w: ${style.width}, h: ${style.height} }`);
+      console.log(`  transform: ${style.transform}`);
+    }
+
+    console.log('\n--- Landmarks ---');
+    landmarks.forEach(group => {
+      const id = group.getAttribute('data-landmark-id');
+      const style = group.style;
+      console.log(`${id}:`);
+      console.log(`  rect: { x: ${style.left}, y: ${style.top}, w: ${style.width}, h: ${style.height} }`);
+      console.log(`  transform: ${style.transform}`);
+    });
+  }
+
+  // 地标交互（基于新的分层结构）
+  const hotspotContainers = document.querySelectorAll('.landmark-hotspot-container');
+
+  hotspotContainers.forEach(container => {
+    const landmarkId = container.getAttribute('data-landmark-id');
+    const hotspot = container.querySelector('.landmark-hotspot');
+    const buildingContainer = document.querySelector(`[data-landmark-id="${landmarkId}-building"]`);
+    const signContainer = document.querySelector(`[data-landmark-id="${landmarkId}-sign"]`);
+    const correspondingBeam = document.querySelector(`.beam-group[data-beam-id="${landmarkId}"]`);
+
+    // 保存建筑和标牌原始 transform
+    let originalBuildingTransform = '';
+    let originalSignTransform = '';
+    if (buildingContainer) {
+      originalBuildingTransform = buildingContainer.style.transform;
+    }
+    if (signContainer) {
+      originalSignTransform = signContainer.style.transform;
+    }
+
+    // Hover 交互（建筑浮起 + 标牌浮起 + 显示对应光束）
+    container.addEventListener('mouseenter', () => {
+      console.log(`[${landmarkId}] 鼠标进入建筑`);
+
+      // 建筑浮起动画（在原有 transform 基础上添加浮起效果）
+      if (buildingContainer) {
+        const landmark = landmarks.find(l => l.id === landmarkId);
+        if (landmark) {
+          const dx = landmark.building.transform.dx;
+          const dy = landmark.building.transform.dy - 6; // 向上浮起 6px
+          const scale = landmark.building.transform.scale * 1.03; // 放大 1.03 倍
+          buildingContainer.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+        }
+
+        // 添加阴影到建筑图层
+        const img = buildingContainer.querySelector('.building-layer');
+        if (img) img.classList.add('hover');
+      }
+
+      // 标牌也浮起（和建筑同步）
+      if (signContainer) {
+        const landmark = landmarks.find(l => l.id === landmarkId);
+        if (landmark) {
+          const dx = landmark.sign.transform.dx;
+          const dy = landmark.sign.transform.dy - 6; // 向上浮起 6px
+          const scale = landmark.sign.transform.scale * 1.02; // 稍微放大
+          signContainer.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+        }
+      }
+
+      // 显示对应光束（使用集中式状态管理）
+      if (correspondingBeam) {
+        console.log(`[${landmarkId}] 切换到单光束模式`);
+        beamMode = 'single';
+        clearAllBeams(); // 先清除所有光束（包括可能的中心建筑激活的光束）
+        correspondingBeam.classList.add('active');
+        logBeamState();
+      }
+    });
+
+    container.addEventListener('mouseleave', () => {
+      console.log(`[${landmarkId}] 鼠标离开建筑`);
+
+      // 恢复建筑原始 transform
+      if (buildingContainer) {
+        buildingContainer.style.transform = originalBuildingTransform;
+
+        // 移除阴影
+        const img = buildingContainer.querySelector('.building-layer');
+        if (img) img.classList.remove('hover');
+      }
+
+      // 恢复标牌原始 transform
+      if (signContainer) {
+        signContainer.style.transform = originalSignTransform;
+      }
+
+      // 隐藏对应光束
+      if (correspondingBeam && beamMode === 'single') {
+        console.log(`[${landmarkId}] 隐藏光束`);
+        beamMode = 'none';
+        clearAllBeams();
+        logBeamState();
+      }
+    });
+
+    // Click 交互
+    if (hotspot) {
+      hotspot.addEventListener('click', (e) => {
+        const href = hotspot.getAttribute('href');
+        if (prefersReducedMotion || !href) {
+          return;
+        }
+        e.preventDefault();
+        setTimeout(() => {
+          window.location.href = href;
+        }, 150);
+      });
+    }
+  });
+
+  // 汉堡菜单交互
+  const menuToggle = document.getElementById('menuToggle');
+  const menuDropdown = document.getElementById('menuDropdown');
+
+  if (menuToggle && menuDropdown) {
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      menuDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!menuToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
+        menuToggle.classList.remove('active');
+        menuDropdown.classList.remove('open');
+      }
+    });
+
+    const menuItems = menuDropdown.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        menuDropdown.classList.remove('open');
+      });
+    });
+  }
+
+  // Resume Badge 交互
+  const resumeBadge = document.getElementById('resumeBadge');
+  if (resumeBadge) {
+    resumeBadge.addEventListener('click', (e) => {
+      const href = resumeBadge.getAttribute('href');
+      if (prefersReducedMotion || !href) {
+        return;
+      }
+      e.preventDefault();
+      setTimeout(() => {
+        window.location.href = href;
+      }, 150);
+    });
+  }
+
+  }); // 结束 DOMContentLoaded
+</script>

@@ -1,0 +1,100 @@
+---
+interface Props {
+  activeFilter: string;
+}
+
+const { activeFilter } = Astro.props;
+
+const filters = [
+  { key: 'all', label_en: 'All', label_zh: '全部' },
+  { key: 'paper', label_en: 'Papers', label_zh: '论文' },
+  { key: 'course', label_en: 'Courses', label_zh: '课程' },
+  { key: 'reflection', label_zh: '思考', label_en: 'Reflections' },
+  { key: 'misc', label_en: 'Misc', label_zh: '杂项' },
+];
+---
+
+<div class="gallery-filters">
+  {filters.map(filter => (
+    <a
+      href={`/log?filter=${filter.key}`}
+      class:list={['filter-tab', { active: activeFilter === filter.key }]}
+      data-filter={filter.key}
+    >
+      <span class="filter-label-en">{filter.label_en}</span>
+      <span class="filter-label-zh">{filter.label_zh}</span>
+    </a>
+  ))}
+</div>
+
+<style>
+  .gallery-filters {
+    display: flex;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(74, 74, 74, 0.2);
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .filter-tab:hover {
+    border-color: var(--ink-soft);
+  }
+
+  .filter-tab.active {
+    border: 2px solid var(--ink-main);
+    background-color: rgba(31, 31, 31, 0.05);
+  }
+
+  .filter-label-en {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-main);
+    letter-spacing: 0.05em;
+  }
+
+  .filter-label-zh {
+    font-family: var(--font-zh-display);
+    font-size: 1.75rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+
+  .filter-tab.active .filter-label-en {
+    font-weight: 600;
+  }
+
+  .filter-tab.active .filter-label-zh {
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .gallery-filters {
+      gap: 1rem;
+    }
+
+    .filter-tab {
+      padding: 0.5rem 1rem;
+    }
+
+    .filter-label-en {
+      font-size: 0.75rem;
+    }
+
+    .filter-label-zh {
+      font-size: 1.5rem;
+    }
+  }
+</style>

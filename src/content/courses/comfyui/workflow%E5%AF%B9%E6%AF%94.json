@@ -1,0 +1,943 @@
+{
+  "last_node_id": 28,
+  "last_link_id": 61,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        1270,
+        1020
+      ],
+      "size": {
+        "0": 330,
+        "1": 560
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1,
+          "label": "model"
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 2,
+          "label": "positive"
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 3,
+          "label": "negative"
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 48,
+          "label": "latent_image"
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 4,
+          "label": "optional_vae"
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null,
+          "label": "script"
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 28,
+          "widget": {
+            "name": "seed"
+          },
+          "slot_index": 6,
+          "label": "seed"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": null,
+          "shape": 3,
+          "label": "MODEL"
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3,
+          "label": "CONDITIONING+"
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3,
+          "label": "CONDITIONING-"
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3,
+          "label": "LATENT"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3,
+          "label": "VAE"
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            8
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        923312284793752,
+        null,
+        20,
+        7,
+        "dpmpp_2m",
+        "karras",
+        1,
+        "auto",
+        "true"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159",
+      "shape": 1
+    },
+    {
+      "id": 19,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        1379.8642169542422,
+        1921.4958973578694
+      ],
+      "size": [
+        330,
+        560
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 37,
+          "label": "model",
+          "slot_index": 0
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 38,
+          "label": "positive",
+          "slot_index": 1
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 39,
+          "label": "negative",
+          "slot_index": 2
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 43,
+          "label": "latent_image"
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 40,
+          "label": "optional_vae",
+          "slot_index": 4
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null,
+          "label": "script"
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": 41,
+          "widget": {
+            "name": "seed"
+          },
+          "slot_index": 6,
+          "label": "seed"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": null,
+          "shape": 3,
+          "label": "MODEL"
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3,
+          "label": "CONDITIONING+"
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": null,
+          "shape": 3,
+          "label": "CONDITIONING-"
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3,
+          "label": "LATENT"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null,
+          "shape": 3,
+          "label": "VAE"
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            32
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        923312284793752,
+        null,
+        20,
+        7,
+        "dpmpp_2m",
+        "karras",
+        1,
+        "auto",
+        "true"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159",
+      "shape": 1
+    },
+    {
+      "id": 5,
+      "type": "PreviewImage",
+      "pos": [
+        1770,
+        1230
+      ],
+      "size": {
+        "0": 240,
+        "1": 280
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 8,
+          "label": "images"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 23,
+      "type": "Seed Everywhere",
+      "pos": [
+        1379.8642169542422,
+        1771.4958973578694
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            41
+          ],
+          "shape": 3,
+          "label": "INT",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "group_restricted": 0,
+        "color_restricted": 0,
+        "Node name for S&R": "Seed Everywhere"
+      },
+      "widgets_values": [
+        123455,
+        "fixed"
+      ]
+    },
+    {
+      "id": 17,
+      "type": "Seed Everywhere",
+      "pos": [
+        1280,
+        860
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            28
+          ],
+          "shape": 3,
+          "label": "INT"
+        }
+      ],
+      "properties": {
+        "group_restricted": 0,
+        "color_restricted": 0,
+        "Node name for S&R": "Seed Everywhere"
+      },
+      "widgets_values": [
+        123455,
+        "fixed"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "PreviewImage",
+      "pos": [
+        1799.8642169542422,
+        1921.4958973578694
+      ],
+      "size": {
+        "0": 240,
+        "1": 280
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 32,
+          "label": "images"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 25,
+      "type": "VAEEncodeForInpaint",
+      "pos": [
+        940,
+        1410
+      ],
+      "size": [
+        230,
+        110
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 46,
+          "label": "pixels"
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 47,
+          "label": "vae",
+          "slot_index": 1
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 55,
+          "label": "mask"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            48
+          ],
+          "shape": 3,
+          "label": "LATENT",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncodeForInpaint"
+      },
+      "widgets_values": [
+        0
+      ]
+    },
+    {
+      "id": 27,
+      "type": "Reroute",
+      "pos": [
+        909.8642169542422,
+        1851.4958973578694
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {
+        "pinned": false
+      },
+      "order": 5,
+      "mode": 1,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 60,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "links": [
+            59
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "vae",
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 21,
+      "type": "VAEEncode",
+      "pos": [
+        819.8642169542422,
+        2181.49589735787
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 33,
+          "label": "pixels"
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 59,
+          "label": "vae",
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            42
+          ],
+          "shape": 3,
+          "label": "LATENT",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      }
+    },
+    {
+      "id": 24,
+      "type": "SetLatentNoiseMask",
+      "pos": [
+        1089.8642169542422,
+        2181.49589735787
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 42,
+          "label": "samples"
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 56,
+          "label": "mask",
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            43
+          ],
+          "shape": 3,
+          "label": "LATENT",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SetLatentNoiseMask"
+      }
+    },
+    {
+      "id": 3,
+      "type": "LoadImage",
+      "pos": [
+        180,
+        1630
+      ],
+      "size": [
+        320,
+        310
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            33,
+            46
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            55,
+            56
+          ],
+          "shape": 3,
+          "label": "MASK",
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "clipspace/clipspace-mask-15767896.png [input]",
+        "image"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "Efficient Loader",
+      "pos": [
+        110,
+        1060
+      ],
+      "size": {
+        "0": 400,
+        "1": 462
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": null,
+          "label": "lora_stack"
+        },
+        {
+          "name": "cnet_stack",
+          "type": "CONTROL_NET_STACK",
+          "link": null,
+          "label": "cnet_stack"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1,
+            37
+          ],
+          "shape": 3,
+          "label": "MODEL",
+          "slot_index": 0
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [
+            2,
+            38
+          ],
+          "shape": 3,
+          "label": "CONDITIONING+",
+          "slot_index": 1
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": [
+            3,
+            39
+          ],
+          "shape": 3,
+          "label": "CONDITIONING-",
+          "slot_index": 2
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null,
+          "shape": 3,
+          "label": "LATENT"
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            4,
+            40,
+            47,
+            60
+          ],
+          "shape": 3,
+          "label": "VAE",
+          "slot_index": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": null,
+          "shape": 3,
+          "label": "CLIP"
+        },
+        {
+          "name": "DEPENDENCIES",
+          "type": "DEPENDENCIES",
+          "links": null,
+          "shape": 3,
+          "label": "DEPENDENCIES"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Efficient Loader"
+      },
+      "widgets_values": [
+        "majicMIX realistic 麦橘写实_v7.safetensors",
+        "Baked VAE",
+        -1,
+        "None",
+        1,
+        1,
+        "a dog head, white dog,",
+        "bad quality,",
+        "none",
+        "A1111",
+        512,
+        512,
+        1
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159",
+      "shape": 1
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      1,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      2,
+      1,
+      1,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      3,
+      2,
+      2,
+      1,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      4,
+      2,
+      4,
+      1,
+      4,
+      "VAE"
+    ],
+    [
+      8,
+      1,
+      5,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      28,
+      17,
+      0,
+      1,
+      6,
+      "INT"
+    ],
+    [
+      32,
+      19,
+      5,
+      20,
+      0,
+      "IMAGE"
+    ],
+    [
+      33,
+      3,
+      0,
+      21,
+      0,
+      "IMAGE"
+    ],
+    [
+      37,
+      2,
+      0,
+      19,
+      0,
+      "MODEL"
+    ],
+    [
+      38,
+      2,
+      1,
+      19,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      39,
+      2,
+      2,
+      19,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      40,
+      2,
+      4,
+      19,
+      4,
+      "VAE"
+    ],
+    [
+      41,
+      23,
+      0,
+      19,
+      6,
+      "INT"
+    ],
+    [
+      42,
+      21,
+      0,
+      24,
+      0,
+      "LATENT"
+    ],
+    [
+      43,
+      24,
+      0,
+      19,
+      3,
+      "LATENT"
+    ],
+    [
+      46,
+      3,
+      0,
+      25,
+      0,
+      "IMAGE"
+    ],
+    [
+      47,
+      2,
+      4,
+      25,
+      1,
+      "VAE"
+    ],
+    [
+      48,
+      25,
+      0,
+      1,
+      3,
+      "LATENT"
+    ],
+    [
+      55,
+      3,
+      1,
+      25,
+      2,
+      "MASK"
+    ],
+    [
+      56,
+      3,
+      1,
+      24,
+      1,
+      "MASK"
+    ],
+    [
+      59,
+      27,
+      0,
+      21,
+      1,
+      "VAE"
+    ],
+    [
+      60,
+      2,
+      4,
+      27,
+      0,
+      "*"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "for inpainting",
+      "bounding": [
+        840,
+        779,
+        1256,
+        839
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "locked": false
+    },
+    {
+      "title": "set latent noise mask",
+      "bounding": [
+        836,
+        1692,
+        1263,
+        837
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "locked": false
+    }
+  ],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

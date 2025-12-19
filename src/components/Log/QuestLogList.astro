@@ -1,0 +1,89 @@
+---
+// QuestLogList - Article list component for Log
+interface Article {
+  title: string;
+  date: string;
+  tags: string[];
+  slug: string;
+}
+
+interface Props {
+  articles: Article[];
+}
+
+const { articles } = Astro.props;
+---
+
+<div class="quest-log">
+  {articles.map((article) => (
+    <article class="quest-entry">
+      <div class="quest-header">
+        <h3 class="quest-title">
+          <a href={`/log/${article.slug}`}>{article.title}</a>
+        </h3>
+        <time class="quest-date">{article.date}</time>
+      </div>
+      <div class="quest-tags">
+        {article.tags.map((tag) => (
+          <span class="quest-tag">[{tag}]</span>
+        ))}
+      </div>
+    </article>
+  ))}
+</div>
+
+<style>
+  .quest-log {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .quest-entry {
+    border-left: 2px solid var(--ink-soft);
+    padding-left: 1.5rem;
+    margin-bottom: 2rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .quest-entry:hover {
+    border-color: var(--ink-main);
+  }
+
+  .quest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+  }
+
+  .quest-title {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  .quest-title a {
+    color: var(--ink-main);
+    transition: opacity 0.3s ease;
+  }
+
+  .quest-title a:hover {
+    opacity: 0.7;
+  }
+
+  .quest-date {
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  .quest-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .quest-tag {
+    font-size: 0.75rem;
+    font-family: monospace;
+    color: var(--ink-soft);
+  }
+</style>

@@ -1,0 +1,314 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GalleryFilters from '../components/GalleryFilters.astro';
+import EntryCard from '../components/EntryCard.astro';
+import '../styles/global.css';
+
+// 加载所有集合
+const papers = await getCollection('papers');
+const courses = await getCollection('courses');
+const reflections = await getCollection('reflections');
+const misc = await getCollection('misc');
+
+// 合并所有内容并添加集合标识，只显示已发布的
+const allPublishedEntries = [
+  ...papers.filter(e => e.data.status === 'published').map(entry => ({ ...entry, collection: 'papers' as const })),
+  ...courses.filter(e => e.data.status === 'published').map(entry => ({ ...entry, collection: 'courses' as const })),
+  ...reflections.filter(e => e.data.status === 'published').map(entry => ({ ...entry, collection: 'reflections' as const })),
+  ...misc.filter(e => e.data.status === 'published').map(entry => ({ ...entry, collection: 'misc' as const })),
+];
+
+// 统计各类型数量
+const counts = {
+  all: allPublishedEntries.length,
+  paper: papers.filter(e => e.data.status === 'published').length,
+  course: courses.filter(e => e.data.status === 'published' && e.slug.startsWith('comfyui/')).length,
+  reflection: reflections.filter(e => e.data.status === 'published').length,
+  misc: misc.filter(e => e.data.status === 'published').length,
+};
+---
+
+<BaseLayout title="Knowledge Tower - Collection Gallery">
+  <main class="page-container">
+    <!-- 返回按钮 -->
+    <a href="/" class="back-link">
+      ← Back to Map
+    </a>
+
+    <!-- 页面标题 -->
+    <div class="page-header">
+      <h1 class="page-title">Knowledge Tower</h1>
+      <p class="page-subtitle">知识塔</p>
+      <p class="narrative-text">
+        "A curated collection of research, courses, reflections, and explorations."
+      </p>
+      <p class="narrative-text-zh">
+        "研究、课程、思考与探索的精选集合。"
+      </p>
+    </div>
+
+    <!-- 过滤器 -->
+    <GalleryFilters activeFilter="all" />
+
+    <!-- 内容统计 -->
+    <div class="entry-count">
+      <span class="count-number" id="entry-count">{allPublishedEntries.length}</span>
+      <span class="count-label">entries</span>
+    </div>
+
+    <!-- 卡片网格 -->
+    <div class="entries-grid" id="entries-grid">
+      {allPublishedEntries.map((entry) => (
+        <div class="entry-card-wrapper" data-type={entry.data.type} data-slug={entry.slug}>
+          <EntryCard entry={entry} collection={entry.collection} />
+        </div>
+      ))}
+    </div>
+
+    <!-- 空状态 -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <p class="empty-message">No entries found for this filter.</p>
+      <p class="empty-message-zh">该分类暂无内容。</p>
+    </div>
+  </main>
+</BaseLayout>
+
+<script define:vars={{ counts }}>
+  // 客户端过滤逻辑
+  function filterEntries() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filter = urlParams.get('filter') || 'all';
+
+    const entryCards = document.querySelectorAll('.entry-card-wrapper');
+    const entryCount = document.getElementById('entry-count');
+    const emptyState = document.getElementById('empty-state');
+
+    let visibleCount = 0;
+
+    entryCards.forEach(card => {
+      const type = card.getAttribute('data-type');
+      const slug = card.getAttribute('data-slug');
+      let shouldShow = false;
+
+      if (filter === 'all') {
+        shouldShow = true;
+      } else if (filter === 'course') {
+        // 课程类型：只显示 comfyui 课程
+        shouldShow = type === 'course' && slug.startsWith('comfyui/');
+      } else {
+        // 其他类型：正常过滤
+        shouldShow = type === filter;
+      }
+
+      if (shouldShow) {
+        card.style.display = 'block';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // 更新计数
+    if (entryCount) {
+      entryCount.textContent = counts[filter] || visibleCount;
+    }
+
+    // 显示/隐藏空状态
+    if (emptyState) {
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // 更新选中的过滤器样式
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    filterTabs.forEach(tab => {
+      const tabFilter = tab.getAttribute('data-filter');
+      if (tabFilter === filter) {
+        tab.classList.add('active');
+      } else {
+        tab.classList.remove('active');
+      }
+    });
+  }
+
+  // 页面加载时过滤
+  document.addEventListener('DOMContentLoaded', filterEntries);
+
+  // 监听浏览器前进/后退
+  window.addEventListener('popstate', filterEntries);
+</script>
+
+<script>
+  // 对卡片进行排序
+  function sortEntries() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filter = urlParams.get('filter') || 'all';
+    const grid = document.getElementById('entries-grid');
+
+    if (!grid) return;
+
+    const cards = Array.from(grid.querySelectorAll('.entry-card-wrapper'));
+
+    cards.sort((a, b) => {
+      const typeA = a.getAttribute('data-type');
+      const typeB = b.getAttribute('data-type');
+
+      if (filter === 'course' && typeA === 'course' && typeB === 'course') {
+        // 课程按 lesson_number 排序
+        const cardA = a.querySelector('[data-lesson-number]');
+        const cardB = b.querySelector('[data-lesson-number]');
+        const lessonA = parseInt(cardA?.getAttribute('data-lesson-number') || '0');
+        const lessonB = parseInt(cardB?.getAttribute('data-lesson-number') || '0');
+        return lessonA - lessonB;
+      }
+
+      // 其他按日期排序（已经是正确顺序，不需要重新排序）
+      return 0;
+    });
+
+    // 重新插入排序后的卡片
+    cards.forEach(card => grid.appendChild(card));
+  }
+
+  document.addEventListener('DOMContentLoaded', sortEntries);
+  window.addEventListener('popstate', sortEntries);
+</script>
+
+<style>
+  .page-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 3rem;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink-main);
+  }
+
+  .page-header {
+    margin-bottom: 4rem;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--ink-main);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-family: var(--font-zh-display);
+    font-size: 3.5rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+
+  .narrative-text {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+
+  .narrative-text-zh {
+    font-family: var(--font-zh-display);
+    font-size: 2rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+
+  .entry-count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .count-number {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--ink-main);
+  }
+
+  .count-label {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+  }
+
+  .entries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .entry-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .empty-message {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-message-zh {
+    font-family: var(--font-zh-display);
+    font-size: 2rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .page-subtitle {
+      font-size: 2.5rem;
+    }
+
+    .narrative-text {
+      font-size: 1rem;
+    }
+
+    .narrative-text-zh {
+      font-size: 1.75rem;
+    }
+
+    .entries-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>

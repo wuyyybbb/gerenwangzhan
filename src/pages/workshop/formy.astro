@@ -1,0 +1,426 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/global.css';
+---
+
+<BaseLayout title="Formy - Case Study">
+  <main class="case-container">
+    <!-- 返回按钮 -->
+    <a href="/workshop" class="back-link">
+      ← Back to Workshop
+    </a>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <h1 class="project-name">Formy</h1>
+      <p class="project-tagline">
+        AI-powered form builder that understands natural language
+      </p>
+      <p class="project-tagline-zh">
+        用自然语言构建表单的 AI 工具
+      </p>
+
+      <div class="hero-meta">
+        <span class="meta-badge">Live Product</span>
+        <a href="https://formy.it.com/" target="_blank" rel="noopener noreferrer" class="external-link">
+          Visit formy.it.com ↗
+        </a>
+      </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="case-section">
+      <h2 class="section-label">PROBLEM</h2>
+      <div class="section-content">
+        <p>
+          Building forms is tedious. Every business needs them—signups, surveys, feedback, registrations—but creating forms involves repetitive UI work: dragging fields, setting validation rules, configuring logic, styling components.
+        </p>
+        <p>
+          Existing form builders are either too simple (limited field types, no logic) or too complex (enterprise tools with steep learning curves). Non-technical users struggle with conditional logic and validation. Developers waste time on UI work instead of building core product features.
+        </p>
+        <p>
+          The core insight: <strong>form structure maps naturally to natural language</strong>. When you describe a signup form, you already specify fields, types, and validation ("email field, required, must be valid format"). Why make users translate that mental model into clicks and dropdowns?
+        </p>
+      </div>
+    </section>
+
+    <!-- Approach Section -->
+    <section class="case-section approach-section">
+      <h2 class="section-label">APPROACH</h2>
+      <div class="section-content">
+        <h3 class="approach-principle">1. Design for Transparency, Not Magic</h3>
+        <p>
+          Early prototypes hid the AI completely—type a description, get a form. User testing revealed a problem: users didn't trust it. When the AI misunderstood, they had no way to correct it. When it worked, they didn't know <em>why</em> it worked.
+        </p>
+        <p>
+          <strong>Solution</strong>: Show the AI's interpretation before generation. Display parsed fields, validation rules, and conditional logic as structured previews. Let users edit the interpretation, not just the prompt. This creates a feedback loop: users learn how to write better prompts, and the system learns what users expect.
+        </p>
+
+        <h3 class="approach-principle">2. Escape Hatches at Every Level</h3>
+        <p>
+          AI-generated forms are starting points, not final products. Every element must be editable through both natural language and direct manipulation. Users can:
+        </p>
+        <ul class="approach-list">
+          <li>Refine prompts to adjust the entire form</li>
+          <li>Click individual fields to edit properties directly</li>
+          <li>Export to code (React, Vue, HTML) for full customization</li>
+          <li>Import existing forms to iterate with AI assistance</li>
+        </ul>
+        <p>
+          This prevents AI lock-in. Users never feel trapped by what the AI generated. If the AI can't do something, the user can.
+        </p>
+
+        <h3 class="approach-principle">3. Progressive Complexity</h3>
+        <p>
+          Simple forms ("contact form with name, email, message") work instantly. Complex forms (multi-step flows, conditional logic, custom validation) require more detailed prompts or manual refinement.
+        </p>
+        <p>
+          <strong>Key decision</strong>: We don't try to infer complex logic from vague prompts. Instead, we make complexity explicit. "Show field B only if field A is 'yes'" maps directly to readable conditional logic. This makes the system predictable: users understand what the AI can parse and what requires manual specification.
+        </p>
+
+        <h3 class="approach-principle">4. Architecture: Constrained Generation</h3>
+        <p>
+          Technical approach: Fine-tuned LLM generates structured JSON (field definitions, validation schemas, logic rules), not HTML/code directly. This JSON feeds into a React renderer with pre-built, accessible components.
+        </p>
+        <p>
+          <strong>Why constrained?</strong> Unconstrained code generation produces inconsistent output, accessibility issues, and security risks. Structured generation ensures every form follows best practices: proper ARIA labels, keyboard navigation, validation feedback, responsive layouts.
+        </p>
+        <p>
+          Model choice: Started with GPT-4, moved to fine-tuned GPT-3.5 for cost/latency. Fine-tuning on form-description pairs dramatically improved accuracy while reducing inference time from 8s to 2s.
+        </p>
+      </div>
+    </section>
+
+    <!-- Result Section -->
+    <section class="case-section">
+      <h2 class="section-label">RESULT</h2>
+      <div class="section-content">
+        <p>
+          <strong>Current Status</strong>: Live product with paying customers. Primary users are small businesses, marketing teams, and indie developers who need forms quickly without hiring developers.
+        </p>
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="metric-value">~2,000</span>
+            <span class="metric-label">Forms created</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-value">~85%</span>
+            <span class="metric-label">Generated without edits</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-value">2.3s</span>
+            <span class="metric-label">Avg. generation time</span>
+          </div>
+        </div>
+        <p>
+          <strong>Key Learning</strong>: Transparency beats magic. Users who see the AI's reasoning trust it more, even when it's imperfect. Escape hatches turn a tool with 85% accuracy into one that's useful 100% of the time.
+        </p>
+        <p>
+          <strong>What's Next</strong>: Expanding to workflow automation (conditional emails, integrations) and custom component libraries. The core insight—natural language to structured UI—applies beyond forms.
+        </p>
+      </div>
+    </section>
+
+    <!-- Role Section -->
+    <section class="case-section role-section">
+      <h2 class="section-label">ROLE</h2>
+      <div class="section-content">
+        <p class="role-summary">
+          I led product and engineering as founding team member / technical co-founder.
+        </p>
+        <div class="role-breakdown">
+          <div class="role-item">
+            <h4 class="role-title">Product Strategy</h4>
+            <p>Defined "transparency over magic" design principle through user research. Conducted 30+ user interviews to identify friction points in existing form builders.</p>
+          </div>
+          <div class="role-item">
+            <h4 class="role-title">System Design</h4>
+            <p>Architected constrained generation approach: LLM → JSON schema → React renderer. Chose fine-tuning strategy and built training pipeline for form-description pairs.</p>
+          </div>
+          <div class="role-item">
+            <h4 class="role-title">Core Implementation</h4>
+            <p>Built frontend (React + TypeScript), prompt engineering, model fine-tuning workflow, and form renderer with accessibility compliance (WCAG 2.1 AA).</p>
+          </div>
+          <div class="role-item">
+            <h4 class="role-title">Technical Decisions</h4>
+            <p>Evaluated GPT-4 vs fine-tuned GPT-3.5 tradeoffs. Chose latency + cost optimization without sacrificing quality. Reduced inference cost by 80% through fine-tuning.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="case-footer">
+      <p class="workshop-signature">— Built in the Workshop</p>
+    </footer>
+  </main>
+</BaseLayout>
+
+<style>
+  .case-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 3rem;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink-main);
+  }
+
+  /* Hero Section */
+  .hero-section {
+    max-width: 800px;
+    margin-bottom: 6rem;
+  }
+
+  .project-name {
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    color: var(--ink-main);
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+  }
+
+  .project-tagline {
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    color: var(--ink-main);
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+  }
+
+  .project-tagline-zh {
+    font-family: var(--font-zh-display);
+    font-size: 2.25rem;
+    color: var(--ink-soft);
+    opacity: 0.8;
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .meta-badge {
+    font-family: monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-main);
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--ink-main);
+  }
+
+  .external-link {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    transition: color 0.3s ease;
+  }
+
+  .external-link:hover {
+    color: var(--ink-main);
+  }
+
+  /* Case Sections */
+  .case-section {
+    max-width: 800px;
+    margin-bottom: 6rem;
+  }
+
+  .section-label {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.15em;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  .section-content {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--ink-main);
+  }
+
+  .section-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-content strong {
+    font-weight: 600;
+  }
+
+  .section-content em {
+    font-style: italic;
+  }
+
+  /* Approach Section Specifics */
+  .approach-principle {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--ink-main);
+    margin-top: 3rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.3;
+  }
+
+  .approach-principle:first-child {
+    margin-top: 0;
+  }
+
+  .approach-list {
+    margin: 1.25rem 0 1.25rem 2rem;
+    list-style: none;
+  }
+
+  .approach-list li {
+    position: relative;
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+  }
+
+  .approach-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--ink-soft);
+  }
+
+  /* Metrics Grid */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 2.5rem 0;
+    padding: 2.5rem 0;
+    border-top: 1px solid rgba(74, 74, 74, 0.2);
+    border-bottom: 1px solid rgba(74, 74, 74, 0.2);
+  }
+
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .metric-value {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--ink-main);
+    line-height: 1.2;
+  }
+
+  .metric-label {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  /* Role Section */
+  .role-summary {
+    font-size: 1.25rem;
+    font-style: italic;
+    margin-bottom: 3rem;
+  }
+
+  .role-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .role-item {
+    padding-left: 2rem;
+    border-left: 2px solid var(--ink-soft);
+  }
+
+  .role-title {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    color: var(--ink-main);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .role-item p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  /* Footer */
+  .case-footer {
+    max-width: 800px;
+    padding-top: 4rem;
+    border-top: 1px solid rgba(74, 74, 74, 0.2);
+  }
+
+  .workshop-signature {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .case-container {
+      padding: 1.5rem;
+    }
+
+    .project-name {
+      font-size: 2.5rem;
+    }
+
+    .project-tagline {
+      font-size: 1.25rem;
+    }
+
+    .project-tagline-zh {
+      font-size: 2rem;
+    }
+
+    .section-content {
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .approach-principle {
+      font-size: 1.125rem;
+    }
+
+    .metrics-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .role-item {
+      padding-left: 1rem;
+    }
+  }
+</style>

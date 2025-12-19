@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "id": "example-project",
+      "title": "Example AI Project",
+      "tagline": "A brief description of what this project achieves",
+      "role": "Design / Engineering",
+      "tech": ["React", "Python", "OpenAI API"],
+      "demo": "/demo/example.gif"
+    }
+  ]
+}

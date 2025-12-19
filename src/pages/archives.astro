@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+---
+
+<BaseLayout title="Archives - Ancient Blueprints">
+  <main class="page-container">
+    <!-- 返回按钮 -->
+    <a href="/" class="back-link">
+      ← Back to Map
+    </a>
+
+    <!-- 内容区 -->
+    <div class="content-wrapper">
+      <h1 class="page-title">Ancient Archives</h1>
+      <p class="narrative-subtitle">"Fragments from an earlier discipline."</p>
+
+      <div class="placeholder-area">
+        <div class="fragment-grid">
+          <div class="fragment-box"></div>
+          <div class="fragment-box"></div>
+          <div class="fragment-box"></div>
+          <div class="fragment-box"></div>
+        </div>
+        <p class="coming-soon">— Fragments yet to surface —</p>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .page-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 3rem;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink-main);
+  }
+
+  .content-wrapper {
+    max-width: 800px;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--ink-main);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .narrative-subtitle {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 4rem;
+    line-height: 1.6;
+  }
+
+  .placeholder-area {
+    padding: 3rem 0;
+  }
+
+  .fragment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .fragment-box {
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--ink-soft);
+    opacity: 0.2;
+    position: relative;
+  }
+
+  .fragment-box::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--ink-soft);
+    opacity: 0.3;
+  }
+
+  .coming-soon {
+    margin-top: 3rem;
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+    text-align: center;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .narrative-subtitle {
+      font-size: 1rem;
+    }
+
+    .fragment-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

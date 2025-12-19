@@ -1,0 +1,256 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+---
+
+<BaseLayout title="Workshop - AI & Product Works">
+  <main class="page-container">
+    <!-- 返回按钮 -->
+    <a href="/" class="back-link">
+      ← Back to Map
+    </a>
+
+    <!-- 内容区 -->
+    <div class="content-wrapper">
+      <h1 class="page-title">Workshop</h1>
+      <p class="narrative-subtitle">"This is where experiments take form."</p>
+
+      <!-- 项目列表 -->
+      <div class="projects-area">
+
+        <!-- 项目 1: Formy -->
+        <article class="project-card">
+          <div class="project-image">
+            <img src="/formy_product.webp" alt="Formy - AI Form Builder" />
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">
+              <a href="/workshop/formy">
+                Formy
+              </a>
+            </h3>
+            <p class="project-description">
+              AI-powered form builder that understands natural language
+            </p>
+            <div class="project-meta">
+              <span class="meta-item">Role: Product / Engineering</span>
+              <span class="meta-item status-live">Status: Live</span>
+              <a href="/workshop/formy" class="meta-link">View Case Study →</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 项目 2: Placeholder -->
+        <article class="project-card">
+          <div class="project-image placeholder-image">
+            <div class="placeholder-icon">[ ]</div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Project Codename: Atlas</h3>
+            <p class="project-description">
+              Knowledge navigation system for complex information spaces
+            </p>
+            <div class="project-meta">
+              <span class="meta-item">Role: Design / AI</span>
+              <span class="meta-item status-progress">Status: Prototype</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- 项目 3: Placeholder -->
+        <article class="project-card">
+          <div class="project-image placeholder-image">
+            <div class="placeholder-icon">[ ]</div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Untitled Workflow Tool</h3>
+            <p class="project-description">
+              Adaptive interface that learns from user behavior patterns
+            </p>
+            <div class="project-meta">
+              <span class="meta-item">Role: Product / AI</span>
+              <span class="meta-item status-progress">Status: In Progress</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .page-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 3rem;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink-main);
+  }
+
+  .content-wrapper {
+    max-width: 900px;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--ink-main);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .narrative-subtitle {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 4rem;
+    line-height: 1.6;
+  }
+
+  .projects-area {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .project-card {
+    border: 1px solid var(--ink-soft);
+    padding: 2rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .project-card:hover {
+    border-color: var(--ink-main);
+  }
+
+  .project-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    border: 1px solid var(--ink-soft);
+  }
+
+  .project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .placeholder-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(239, 233, 198, 0.3);
+  }
+
+  .placeholder-icon {
+    font-size: 3rem;
+    color: var(--ink-soft);
+    opacity: 0.3;
+    font-family: monospace;
+  }
+
+  .project-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .project-title {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: var(--ink-main);
+    line-height: 1.3;
+  }
+
+  .project-title a {
+    color: var(--ink-main);
+    transition: opacity 0.3s ease;
+  }
+
+  .project-title a:hover {
+    opacity: 0.7;
+  }
+
+  .project-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .project-meta {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  .status-live {
+    color: var(--ink-main);
+    font-weight: 500;
+  }
+
+  .status-progress {
+    font-style: italic;
+  }
+
+  .meta-link {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-main);
+    transition: opacity 0.3s ease;
+  }
+
+  .meta-link:hover {
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .narrative-subtitle {
+      font-size: 1rem;
+    }
+
+    .project-card {
+      padding: 1.5rem;
+    }
+
+    .project-title {
+      font-size: 1.5rem;
+    }
+
+    .project-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>

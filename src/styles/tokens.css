@@ -1,0 +1,59 @@
+/* 汉仪神工体 - 仅用于中文标题/地点名/牌匾 */
+@font-face {
+  font-family: 'HanYiShenGong';
+  src:
+    url('/fonts/HanYiShenGongTi/HanYiShenGongTiJian-1.woff2') format('woff2'),
+    url('/fonts/HanYiShenGongTi/HanYiShenGongTiJian-1.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Color Tokens - Mythic Engraving Theme */
+:root {
+  /* Base Colors */
+  --bg-parchment: #efe9c6;
+  --ink-main: #1f1f1f;
+  --ink-soft: #4a4a4a;
+  --ink-faded: #8a8a8a;
+
+  /* Accent Colors */
+  --accent-glow: rgba(255, 245, 200, 0.6);
+  --accent-beam: rgba(255, 245, 200, 0.3);
+
+  /* Typography - English */
+  --font-en-title: 'Cinzel', serif;
+  --font-en-body: 'Inter', sans-serif;
+
+  /* Typography - Chinese */
+  --font-zh-body: 'Source Han Serif', serif;
+  --font-zh-display: 'HanYiShenGong', serif;
+
+  /* Legacy support */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Cinzel', 'Georgia', serif;
+
+  /* Spacing & Rhythm */
+  --space-unit: 0.25rem;
+}
+
+/* Dark theme support (optional) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-parchment: #2a2619;
+    --ink-main: #e5dfc5;
+    --ink-soft: #b5b09a;
+    --ink-faded: #858070;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

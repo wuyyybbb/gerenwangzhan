@@ -1,0 +1,92 @@
+---
+// CrystalCard - Project card component for Workshop
+interface Props {
+  title: string;
+  tagline: string;
+  role: string;
+  tech: string[];
+  demo?: string;
+}
+
+const { title, tagline, role, tech, demo } = Astro.props;
+---
+
+<article class="crystal-card">
+  {demo && (
+    <div class="demo-container">
+      <img src={demo} alt={`${title} demo`} loading="lazy" />
+    </div>
+  )}
+
+  <div class="card-content">
+    <h3 class="card-title">{title}</h3>
+    <p class="card-tagline">{tagline}</p>
+
+    <div class="card-meta">
+      <span class="card-role">{role}</span>
+      <div class="card-tech">
+        {tech.map((item) => (
+          <span class="tech-badge">{item}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .crystal-card {
+    border: 1px solid var(--ink-soft);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .crystal-card:hover {
+    border-color: var(--ink-main);
+  }
+
+  .demo-container {
+    margin-bottom: 1rem;
+    border: 1px solid var(--ink-faded);
+  }
+
+  .demo-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-tagline {
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+  }
+
+  .card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-role {
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  .card-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tech-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--ink-soft);
+    color: var(--ink-soft);
+  }
+</style>

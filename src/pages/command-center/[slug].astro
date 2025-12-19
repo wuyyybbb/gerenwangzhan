@@ -1,0 +1,646 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/global.css';
+
+// 生成所有可能的路径
+export async function getStaticPaths() {
+  const posts = await getCollection('command-center');
+
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+type Props = {
+  post: CollectionEntry<'command-center'>;
+};
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const { data } = post;
+
+// 格式化日期
+const year = new Date(data.date).getFullYear();
+const month = new Date(data.date).toLocaleDateString('zh-CN', { month: 'long' });
+
+// 类型标签
+const typeLabels = {
+  'decision-log': { en: 'Decision Log', zh: '决策日志' },
+  'trade-offs': { en: 'Trade-offs Analysis', zh: '权衡分析' },
+  'system-thinking': { en: 'System Thinking', zh: '系统思考' },
+  'direction-notes': { en: 'Direction Notes', zh: '方向笔记' },
+};
+const typeLabel = typeLabels[data.type];
+
+// 获取相关文章
+const allPosts = await getCollection('command-center');
+const relatedPosts = allPosts
+  .filter(p => {
+    if (p.slug === post.slug || p.data.status !== 'published') return false;
+    // 相同类型或共享标签
+    const sameType = p.data.type === data.type;
+    const sharedTags = p.data.tags.filter(tag => data.tags.includes(tag));
+    return sameType || sharedTags.length > 0;
+  })
+  .sort((a, b) => {
+    // 按相关度排序（相同类型优先，然后看共享标签数量）
+    const scoreA = (a.data.type === data.type ? 10 : 0) + a.data.tags.filter(t => data.tags.includes(t)).length;
+    const scoreB = (b.data.type === data.type ? 10 : 0) + b.data.tags.filter(t => data.tags.includes(t)).length;
+    return scoreB - scoreA;
+  })
+  .slice(0, 3);
+
+// 获取上一篇和下一篇
+const publishedPosts = allPosts
+  .filter(p => p.data.status === 'published')
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// 优先同类型的文章
+const sameTypePosts = publishedPosts.filter(p => p.data.type === data.type);
+const currentIndexInType = sameTypePosts.findIndex(p => p.slug === post.slug);
+
+let prevPost = null;
+let nextPost = null;
+
+if (currentIndexInType !== -1 && sameTypePosts.length > 1) {
+  // 在同类型中找到了，优先使用同类型的上下篇
+  prevPost = sameTypePosts[currentIndexInType - 1] || null;
+  nextPost = sameTypePosts[currentIndexInType + 1] || null;
+}
+
+// 如果同类型中没有上一篇或下一篇，从全局中找
+if (!prevPost || !nextPost) {
+  const currentIndexGlobal = publishedPosts.findIndex(p => p.slug === post.slug);
+  if (!prevPost) {
+    prevPost = publishedPosts[currentIndexGlobal - 1] || null;
+  }
+  if (!nextPost) {
+    nextPost = publishedPosts[currentIndexGlobal + 1] || null;
+  }
+}
+---
+
+<BaseLayout title={`${data.title_en} - Command Center`}>
+  <main class="article-container">
+    <!-- 返回按钮 -->
+    <a href="/command-center" class="back-link">
+      ← Back to Command Center
+    </a>
+
+    <!-- 文章内容 -->
+    <article class="article-content">
+      <!-- 标题区 -->
+      <header class="article-header">
+        <div class="header-meta">
+          <span class="meta-type">{typeLabel.en} / {typeLabel.zh}</span>
+        </div>
+
+        <h1 class="article-title-en">{data.title_en}</h1>
+        <p class="article-title-zh">{data.title_zh}</p>
+
+        <div class="article-info">
+          <span class="info-date">{year} 年 {month}</span>
+          <span class="info-status status-{data.status}">{data.status}</span>
+        </div>
+
+        {data.tags.length > 0 && (
+          <div class="article-tags">
+            {data.tags.map(tag => (
+              <span class="tag-chip">{tag}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <!-- Markdown 内容 -->
+      <div class="article-body prose">
+        <Content />
+      </div>
+
+      <!-- 底部署名 -->
+      <footer class="article-footer">
+        <p class="command-signature">— Recorded in the Command Center</p>
+        <p class="command-signature-zh">— 记录于决策中枢</p>
+      </footer>
+    </article>
+
+    <!-- 上一篇/下一篇导航 -->
+    {(prevPost || nextPost) && (
+      <nav class="post-navigation">
+        {prevPost && (
+          <a href={`/command-center/${prevPost.slug}`} class="nav-link nav-prev">
+            <span class="nav-label">← Previous</span>
+            <span class="nav-label-zh">上一篇</span>
+            <div class="nav-content">
+              <span class="nav-type">{typeLabels[prevPost.data.type].zh}</span>
+              <h3 class="nav-title">{prevPost.data.title_zh}</h3>
+            </div>
+          </a>
+        )}
+        {nextPost && (
+          <a href={`/command-center/${nextPost.slug}`} class="nav-link nav-next">
+            <span class="nav-label">Next →</span>
+            <span class="nav-label-zh">下一篇</span>
+            <div class="nav-content">
+              <span class="nav-type">{typeLabels[nextPost.data.type].zh}</span>
+              <h3 class="nav-title">{nextPost.data.title_zh}</h3>
+            </div>
+          </a>
+        )}
+      </nav>
+    )}
+
+    <!-- 相关文章 -->
+    {relatedPosts.length > 0 && (
+      <aside class="related-section">
+        <h2 class="related-title">Related Entries</h2>
+        <p class="related-title-zh">相关文章</p>
+
+        <div class="related-grid">
+          {relatedPosts.map(related => {
+            const relatedYear = new Date(related.data.date).getFullYear();
+            return (
+              <a href={`/command-center/${related.slug}`} class="related-card">
+                <div class="related-card-type">{typeLabels[related.data.type].zh}</div>
+                <h3 class="related-card-title-en">{related.data.title_en}</h3>
+                <p class="related-card-title-zh">{related.data.title_zh}</p>
+                <div class="related-card-meta">
+                  <span>{relatedYear}</span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </aside>
+    )}
+  </main>
+</BaseLayout>
+
+<style>
+  .article-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 3rem;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink-main);
+  }
+
+  .article-content {
+    max-width: 800px;
+    margin: 0 auto 4rem;
+  }
+
+  /* 标题区 */
+  .article-header {
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(74, 74, 74, 0.2);
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .meta-type {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.05em;
+  }
+
+  .article-title-en {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    color: var(--ink-main);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  .article-title-zh {
+    font-family: var(--font-zh-display);
+    font-size: 3rem;
+    color: var(--ink-soft);
+    opacity: 0.8;
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+
+  .article-info {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-date {
+    font-family: var(--font-zh-display);
+    font-size: 1.5rem;
+    color: var(--ink-soft);
+  }
+
+  .info-status {
+    font-family: monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .status-published {
+    color: var(--ink-main);
+  }
+
+  .status-draft {
+    color: var(--ink-soft);
+    opacity: 0.6;
+  }
+
+  .article-tags {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .tag-chip {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--ink-soft);
+    letter-spacing: 0.05em;
+  }
+
+  /* Markdown 内容样式 */
+  .article-body {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--ink-main);
+    margin-bottom: 4rem;
+  }
+
+  .article-body :global(h1) {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--ink-main);
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .article-body :global(h2) {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: var(--ink-main);
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .article-body :global(h3) {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    color: var(--ink-main);
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.3;
+  }
+
+  .article-body :global(h4) {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--ink-main);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .article-body :global(p) {
+    margin-bottom: 1.5rem;
+  }
+
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    margin: 1.5rem 0 1.5rem 2rem;
+  }
+
+  .article-body :global(li) {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+  }
+
+  .article-body :global(blockquote) {
+    border-left: 3px solid var(--ink-soft);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+
+  .article-body :global(code) {
+    font-family: monospace;
+    font-size: 0.9em;
+    background-color: rgba(31, 31, 31, 0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 2px;
+  }
+
+  .article-body :global(pre) {
+    background-color: rgba(31, 31, 31, 0.05);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--ink-soft);
+  }
+
+  .article-body :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+
+  .article-body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+  }
+
+  .article-body :global(th),
+  .article-body :global(td) {
+    border: 1px solid var(--ink-soft);
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+
+  .article-body :global(th) {
+    background-color: rgba(31, 31, 31, 0.05);
+    font-weight: 600;
+  }
+
+  .article-body :global(strong) {
+    font-weight: 600;
+  }
+
+  .article-body :global(em) {
+    font-style: italic;
+  }
+
+  .article-body :global(a) {
+    color: var(--ink-main);
+    text-decoration: underline;
+    text-decoration-color: var(--ink-soft);
+    transition: text-decoration-color 0.3s ease;
+  }
+
+  .article-body :global(a:hover) {
+    text-decoration-color: var(--ink-main);
+  }
+
+  .article-body :global(hr) {
+    border: none;
+    border-top: 1px solid rgba(74, 74, 74, 0.2);
+    margin: 3rem 0;
+  }
+
+  /* 底部 */
+  .article-footer {
+    padding-top: 3rem;
+    border-top: 1px solid rgba(74, 74, 74, 0.2);
+    text-align: center;
+  }
+
+  .command-signature {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+  }
+
+  .command-signature-zh {
+    font-family: var(--font-zh-display);
+    font-size: 1.75rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+  }
+
+  /* 上一篇/下一篇导航 */
+  .post-navigation {
+    max-width: 800px;
+    margin: 0 auto 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(74, 74, 74, 0.2);
+  }
+
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid var(--ink-soft);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .nav-link:hover {
+    border-color: var(--ink-main);
+    transform: translateY(-2px);
+  }
+
+  .nav-link.nav-prev {
+    text-align: left;
+  }
+
+  .nav-link.nav-next {
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .nav-label {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-label-zh {
+    font-family: var(--font-zh-display);
+    font-size: 1.5rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+  }
+
+  .nav-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nav-type {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .nav-title {
+    font-family: var(--font-zh-display);
+    font-size: 1.5rem;
+    color: var(--ink-main);
+    line-height: 1.3;
+  }
+
+  /* 相关文章 */
+  .related-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 4rem;
+    border-top: 1px solid rgba(74, 74, 74, 0.2);
+  }
+
+  .related-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--ink-main);
+    margin-bottom: 0.5rem;
+  }
+
+  .related-title-zh {
+    font-family: var(--font-zh-display);
+    font-size: 2.5rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    margin-bottom: 2rem;
+  }
+
+  .related-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .related-card {
+    padding: 1.5rem;
+    border: 1px solid var(--ink-soft);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .related-card:hover {
+    border-color: var(--ink-main);
+    transform: translateX(4px);
+  }
+
+  .related-card-type {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .related-card-title-en {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    color: var(--ink-main);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .related-card-title-zh {
+    font-family: var(--font-zh-display);
+    font-size: 1.75rem;
+    color: var(--ink-soft);
+    opacity: 0.8;
+    margin-bottom: 1rem;
+  }
+
+  .related-card-meta {
+    display: flex;
+    gap: 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 768px) {
+    .article-container {
+      padding: 1.5rem;
+    }
+
+    .article-title-en {
+      font-size: 2rem;
+    }
+
+    .article-title-zh {
+      font-size: 2.5rem;
+    }
+
+    .article-body {
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .article-body :global(h1) {
+      font-size: 1.75rem;
+    }
+
+    .article-body :global(h2) {
+      font-size: 1.5rem;
+    }
+
+    .article-body :global(h3) {
+      font-size: 1.25rem;
+    }
+
+    .info-date {
+      font-size: 1.25rem;
+    }
+
+    .post-navigation {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .nav-link.nav-next {
+      margin-left: 0;
+    }
+
+    .nav-label-zh {
+      font-size: 1.25rem;
+    }
+
+    .nav-title {
+      font-size: 1.25rem;
+    }
+
+    .related-title-zh {
+      font-size: 2rem;
+    }
+
+    .related-card-title-zh {
+      font-size: 1.5rem;
+    }
+  }
+</style>

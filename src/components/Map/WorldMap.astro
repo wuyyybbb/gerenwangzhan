@@ -1,0 +1,39 @@
+---
+// WorldMap - Interactive map component for landing page
+// This will be the main navigation element
+---
+
+<div class="world-map-container">
+  <svg
+    width="800"
+    height="600"
+    viewBox="0 0 800 600"
+    xmlns="http://www.w3.org/2000/svg"
+    class="world-map"
+  >
+    <!-- Map paths and nodes will be added here -->
+    <circle cx="400" cy="300" r="5" fill="var(--ink-main)" />
+    <text x="400" y="320" text-anchor="middle" fill="var(--ink-soft)" class="map-label">
+      Map Coming Soon
+    </text>
+  </svg>
+</div>
+
+<style>
+  .world-map-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .world-map {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .map-label {
+    font-family: var(--font-sans);
+    font-size: 14px;
+  }
+</style>
