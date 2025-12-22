@@ -20,8 +20,8 @@ import '../styles/global.css';
 
         <!-- 项目 1: Formy -->
         <article class="project-card">
-          <div class="project-image">
-            <img src="/formy_product.webp" alt="Formy - AI Form Builder" />
+          <div class="project-image long-image">
+            <img src="/Formy.png" alt="Formy - AI Form Builder" />
           </div>
           <div class="project-content">
             <h3 class="project-title">
@@ -40,19 +40,24 @@ import '../styles/global.css';
           </div>
         </article>
 
-        <!-- 项目 2: Placeholder -->
+        <!-- 项目 2: 倍影 -->
         <article class="project-card">
-          <div class="project-image placeholder-image">
-            <div class="placeholder-icon">[ ]</div>
+          <div class="project-image long-image">
+            <img src="/倍影.png" alt="倍影 - AI视频创作平台" />
           </div>
           <div class="project-content">
-            <h3 class="project-title">Project Codename: Atlas</h3>
+            <h3 class="project-title">
+              <a href="https://ratev.ai/" target="_blank" rel="noopener noreferrer">
+                倍影 (RateV)
+              </a>
+            </h3>
             <p class="project-description">
-              Knowledge navigation system for complex information spaces
+              AI-powered video creation platform for content creators
             </p>
             <div class="project-meta">
-              <span class="meta-item">Role: Design / AI</span>
-              <span class="meta-item status-progress">Status: Prototype</span>
+              <span class="meta-item">Role: Product / Engineering</span>
+              <span class="meta-item status-live">Status: Live</span>
+              <a href="https://ratev.ai/" target="_blank" rel="noopener noreferrer" class="meta-link">Visit Website →</a>
             </div>
           </div>
         </article>
@@ -145,10 +150,35 @@ import '../styles/global.css';
     border: 1px solid var(--ink-soft);
   }
 
+  /* 长图样式 - 带滚动条 */
+  .long-image {
+    aspect-ratio: auto;
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .long-image::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .long-image::-webkit-scrollbar-track {
+    background: rgba(239, 233, 198, 0.2);
+  }
+
+  .long-image::-webkit-scrollbar-thumb {
+    background: var(--ink-soft);
+    border-radius: 4px;
+  }
+
+  .long-image::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-main);
+  }
+
   .project-image img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    object-fit: contain;
     display: block;
   }
 

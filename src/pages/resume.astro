@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/global.css';
+
+// 读取时间轴数据
+const timelineData = await import('../content/timeline/resume.timeline.json');
+const timeline = timelineData.default || timelineData;
 ---
 
 <BaseLayout title="Resume - Personal Map">
@@ -19,6 +23,11 @@ import '../styles/global.css';
 
       <!-- 时间轴 -->
       <section class="timeline-section">
+        <div class="timeline-description">
+          <p class="timeline-text-en">Exploring the evolving landscape of AI & design</p>
+          <p class="timeline-text-zh">探索 AI 与设计的演进之路</p>
+        </div>
+
         <div class="timeline-container">
           <div class="timeline-arrow timeline-arrow-left">←</div>
 
@@ -79,48 +88,158 @@ import '../styles/global.css';
             <div class="timeline-line"></div>
 
             <div class="timeline-years">
-              <div class="timeline-node" data-year="2022">
-                <img src="/map/timeline/2022.svg" alt="2022" class="year-badge" />
-              </div>
-              <div class="timeline-node" data-year="2023">
-                <img src="/map/timeline/2023.svg" alt="2023" class="year-badge" />
-              </div>
-              <div class="timeline-node" data-year="2024">
-                <img src="/map/timeline/2024.svg" alt="2024" class="year-badge" />
-              </div>
-              <div class="timeline-node" data-year="2025">
-                <img src="/map/timeline/2025.svg" alt="2025" class="year-badge" />
-              </div>
-              <div class="timeline-node" data-year="2026">
-                <img src="/map/timeline/2026.svg" alt="2026" class="year-badge" />
-              </div>
+              {timeline.timeline.map((item: any) => (
+                <div class="timeline-node" data-year={item.year}>
+                  <img src={`/map/timeline/${item.year}.svg`} alt={item.year} class="year-badge" />
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <div class="timeline-company">{item.company}</div>
+                      <div class="timeline-role">{item.role}</div>
+                    </div>
+                    <div class="timeline-bullets">
+                      {item.bullets.map((bullet: string, index: number) => (
+                        <span class="bullet-item">
+                          {index > 0 && <span class="bullet-separator"> / </span>}
+                          <span class="bullet-text">· {bullet}</span>
+                        </span>
+                      ))}
+                    </div>
+                    <div class="timeline-details">
+                      {item.details.map((paragraph: string) => (
+                        <p class="detail-paragraph">{paragraph}</p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
           <div class="timeline-arrow timeline-arrow-right">→</div>
         </div>
-
-        <div class="timeline-description">
-          <p class="timeline-text-en">Exploring the evolving landscape of AI & design</p>
-          <p class="timeline-text-zh">探索 AI 与设计的演进之路</p>
-        </div>
       </section>
 
-      <!-- 技能 -->
-      <section class="resume-section">
-        <h2 class="section-title">Skills</h2>
-        <div class="skills-grid">
-          <div class="skill-item">
-            <span class="skill-name">AI / Vision</span>
-            <span class="skill-level">85%</span>
+      <!-- 技能面板 -->
+      <section class="skills-panel-section">
+        <div class="skills-panels-wrapper">
+          <!-- 视觉技能面板 -->
+          <div class="skill-panel">
+            <div class="panel-background">
+              <img src="/visual.svg" alt="Visual Skills Panel" class="panel-svg" />
+            </div>
+            <div class="panel-content">
+              <!-- 第一组 -->
+              <div class="skill-group">
+                {[
+                  { name: 'ComfyUI', level: 85 },
+                  { name: 'WebUI', level: 80 },
+                  { name: 'LoRA训练', level: 75 }
+                ].map(skill => (
+                  <div class="skill-bar-wrapper">
+                    <div class="skill-bar-container">
+                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
+                      <span class="bar-name">{skill.name}</span>
+                      <span class="bar-value">{skill.level}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <!-- 第二组 -->
+              <div class="skill-group">
+                {[
+                  { name: 'Midjourney', level: 78 },
+                  { name: 'PS', level: 85 },
+                  { name: '可灵', level: 60 }
+                ].map(skill => (
+                  <div class="skill-bar-wrapper">
+                    <div class="skill-bar-container">
+                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
+                      <span class="bar-name">{skill.name}</span>
+                      <span class="bar-value">{skill.level}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <!-- 第三组 -->
+              <div class="skill-group">
+                {[
+                  { name: 'Runway', level: 70 },
+                  { name: '海螺', level: 55 },
+                  { name: 'CAD', level: 60 }
+                ].map(skill => (
+                  <div class="skill-bar-wrapper">
+                    <div class="skill-bar-container">
+                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
+                      <span class="bar-name">{skill.name}</span>
+                      <span class="bar-value">{skill.level}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div class="skill-item">
-            <span class="skill-name">Design / Architecture</span>
-            <span class="skill-level">80%</span>
-          </div>
-          <div class="skill-item">
-            <span class="skill-name">Product / Systems</span>
-            <span class="skill-level">88%</span>
+
+          <!-- 编程技能面板 -->
+          <div class="skill-panel">
+            <div class="panel-background">
+              <img src="/coding.svg" alt="Coding Skills Panel" class="panel-svg" />
+            </div>
+            <div class="panel-content">
+              <!-- 第一组 -->
+              <div class="skill-group">
+                {[
+                  { name: 'Cursor', level: 85 },
+                  { name: 'Agent', level: 70 },
+                  { name: 'Claude+ChatGPT', level: 88 }
+                ].map(skill => (
+                  <div class="skill-bar-wrapper">
+                    <div class="skill-bar-container">
+                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
+                      <span class="bar-name">{skill.name}</span>
+                      <span class="bar-value">{skill.level}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <!-- 第二组 -->
+              <div class="skill-group">
+                {[
+                  { name: 'Python', level: 75 },
+                  { name: 'JavaScript', level: 80 },
+                  { name: 'React', level: 78 }
+                ].map(skill => (
+                  <div class="skill-bar-wrapper">
+                    <div class="skill-bar-container">
+                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
+                      <span class="bar-name">{skill.name}</span>
+                      <span class="bar-value">{skill.level}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <!-- 第三组 -->
+              <div class="skill-group">
+                {[
+                  { name: 'Node.js', level: 72 },
+                  { name: 'Git', level: 85 },
+                  { name: 'Office', level: 75 }
+                ].map(skill => (
+                  <div class="skill-bar-wrapper">
+                    <div class="skill-bar-container">
+                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
+                      <span class="bar-name">{skill.name}</span>
+                      <span class="bar-value">{skill.level}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -155,7 +274,7 @@ import '../styles/global.css';
   .resume-container {
     min-height: 100vh;
     padding: 2rem;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
   }
 
@@ -173,7 +292,7 @@ import '../styles/global.css';
   }
 
   .resume-content {
-    max-width: 800px;
+    max-width: 1400px;
     margin: 0 auto;
   }
 
@@ -181,7 +300,8 @@ import '../styles/global.css';
   .timeline-section {
     width: 100%;
     margin-bottom: 4rem;
-    padding: 4rem 0;
+    padding: 5rem;
+    margin-top: -50px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -217,8 +337,9 @@ import '../styles/global.css';
   .timeline-container {
     display: flex;
     align-items: center;
-    gap: 4rem;
+    gap: 0.1rem;
     margin-bottom: 6rem;
+    margin-top: -3rem;
   }
 
   .timeline-arrow {
@@ -232,7 +353,7 @@ import '../styles/global.css';
   .timeline-track {
     flex: 1;
     position: relative;
-    height: 360px;
+    height: 50px;
     display: flex;
     align-items: center;
   }
@@ -291,20 +412,23 @@ import '../styles/global.css';
   .timeline-years {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     position: relative;
     z-index: 2;
     width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 
   .timeline-node {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2rem;
     cursor: pointer;
     transition: transform 0.3s ease;
     position: relative;
+    flex: 1;
   }
 
   .timeline-node:hover {
@@ -312,26 +436,132 @@ import '../styles/global.css';
   }
 
   .year-badge {
-    width: 320px;
+    width: 800px;
     height: auto;
     filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
     transition: filter 0.3s ease;
+    margin-top: -60px;
   }
 
   .timeline-node:hover .year-badge {
     filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.25));
   }
 
+  /* 时间轴内容样式 */
+  .timeline-content {
+    max-width: 600px;
+    min-height: 180px;
+    text-align: center;
+    padding: 1.5rem;
+    border: 1px solid rgba(74, 74, 74, 0.2);
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .timeline-node:hover .timeline-content {
+    border-color: var(--ink-soft);
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    min-height: 240px;
+  }
+
+  .timeline-header {
+    margin-bottom: 1rem;
+  }
+
+  .timeline-company {
+    font-family: var(--font-zh-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ink-main);
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-role {
+    font-family: var(--font-zh-body);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  /* 摘要bullets - 默认显示 */
+  .timeline-bullets {
+    font-family: var(--font-zh-body);
+    font-size: 0.7rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .bullet-item {
+    display: inline;
+  }
+
+  .bullet-separator {
+    color: var(--ink-faded);
+  }
+
+  .bullet-text {
+    white-space: nowrap;
+  }
+
+  /* hover时隐藏bullets */
+  .timeline-node:hover .timeline-bullets {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  /* 详情details - 默认隐藏 */
+  .timeline-details {
+    font-family: var(--font-zh-body);
+    font-size: 0.75rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    text-align: left;
+    opacity: 0;
+    position: absolute;
+    top: 5rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .detail-paragraph {
+    margin-bottom: 0.75rem;
+  }
+
+  .detail-paragraph:last-child {
+    margin-bottom: 0;
+  }
+
+  /* hover时显示details */
+  .timeline-node:hover .timeline-details {
+    opacity: 1;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: auto;
+  }
+
   .timeline-description {
     text-align: center;
-    padding: 6rem 0;
-    border-top: 1px solid rgba(74, 74, 74, 0.1);
-    margin-top: 4rem;
+    padding: 0 0 4rem 0;
+    margin-bottom: 2rem;
   }
 
   .timeline-text-en {
     font-family: var(--font-serif);
-    font-size: 3rem;
+    font-size: 1rem;
     color: var(--ink-main);
     font-style: italic;
     margin-bottom: 1.5rem;
@@ -340,7 +570,7 @@ import '../styles/global.css';
 
   .timeline-text-zh {
     font-family: var(--font-zh-display);
-    font-size: 5rem;
+    font-size: 2rem;
     color: var(--ink-soft);
     opacity: 0.7;
     letter-spacing: 0.05em;
@@ -371,6 +601,270 @@ import '../styles/global.css';
   .resume-section:last-child {
     border-bottom: none;
   }
+
+  /* ========== 技能面板样式 ========== */
+  .skills-panel-section {
+    margin: 12rem 0;
+    padding: 0;
+    transform: scale(0.8);
+  }
+
+  /* 双面板容器 - 并列布局 */
+  .skills-panels-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* 单个技能面板 */
+  .skill-panel {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1.2; /* 固定面板宽高比，确保背景SVG不变形 */
+  }
+
+  /* 面板背景层 */
+  .panel-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .panel-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.95;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
+  }
+
+  /* 面板内容层 */
+  .panel-content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 4rem 3rem;
+    padding-top: calc(4rem + 45px); /* bar整体往下移动45px */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
+    gap: 35px; /* 组与组之间的间距 */
+  }
+
+  /* 技能分组 - 3个bar一组 */
+  .skill-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* 组内bar的间距 */
+    width: 75%; /* 控制整组的宽度 */
+  }
+
+  /* 单个技能条包装器 */
+  .skill-bar-wrapper {
+    width: 100%; /* 相对于skill-group的100% */
+    transition: transform 0.3s ease;
+  }
+
+  .skill-bar-wrapper:hover {
+    transform: translateX(8px);
+  }
+
+  /* 技能条容器 - 相对定位以便子元素绝对定位 */
+  .skill-bar-container {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* bar.svg 背景图 */
+  .bar-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* 进度填充层 - 黄色光束效果 */
+  .bar-fill {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 2px;
+    height: 60%; /* 光束高度小于bar高度 */
+    background: linear-gradient(
+      to right,
+      rgba(246, 211, 122, 0) 0%,
+      rgba(246, 211, 122, 1) 100%
+    );
+    z-index: 2;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    border-radius: 12px; /* 匹配bar.svg的倒角 */
+    box-shadow:
+      inset 0 0 20px rgba(255, 255, 255, 0.3),
+      0 0 12px rgba(246, 211, 122, 0.5);
+    overflow: hidden;
+    max-width: calc(100% - 4px);
+  }
+
+  /* 进度条内部流动高光 */
+  .bar-fill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.15) 30%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
+    border-radius: 12px;
+    pointer-events: none;
+  }
+
+  /* 流动光束效果 */
+  .bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -30%;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(255, 254, 245, 0.6),
+      transparent
+    );
+    animation: barFlow 2.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes barFlow {
+    0% {
+      left: -30%;
+    }
+    100% {
+      left: 130%;
+    }
+  }
+
+  /* 技能名称 */
+  .bar-name {
+    position: absolute;
+    left: 30px;
+    z-index: 3;
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #e0d2ae;
+    text-shadow:
+      1px 1px 0 rgba(255, 255, 255, 0.5),
+      0 0 12px rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* 技能数值 */
+  .bar-value {
+    position: absolute;
+    right: 30px;
+    z-index: 3;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #e0d2ae;
+    text-shadow:
+      1px 1px 0 rgba(255, 255, 255, 0.5),
+      0 0 12px rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+  }
+
+  /* hover 增强效果 */
+  .skill-bar-wrapper:hover .bar-fill {
+    box-shadow:
+      inset 0 0 30px rgba(255, 255, 255, 0.6),
+      0 0 24px rgba(246, 211, 122, 0.8),
+      0 0 40px rgba(246, 211, 122, 0.4);
+  }
+
+  .skill-bar-wrapper:hover .bar-name,
+  .skill-bar-wrapper:hover .bar-value {
+    text-shadow:
+      1px 1px 0 rgba(255, 255, 255, 0.6),
+      0 0 16px rgba(255, 255, 255, 0.6);
+  }
+
+  /* 尊重用户动画偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill {
+      transition: none;
+    }
+    .bar-fill::after {
+      animation: none;
+    }
+    .skill-bar-wrapper {
+      transition: none;
+    }
+  }
+
+  /* 响应式 - 移动端单列 */
+  @media (max-width: 1200px) {
+    .skills-panels-wrapper {
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+
+    .panel-content {
+      padding: 3rem 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .skills-panel-section {
+      margin: 6rem 0;
+    }
+
+    .panel-content {
+      padding: 2rem 1.5rem;
+      gap: 20px; /* 组与组间距 */
+    }
+
+    .skill-group {
+      gap: 12px; /* 组内间距 */
+    }
+
+    .skill-bar-container {
+      height: 40px;
+    }
+
+    .bar-name {
+      font-size: 0.9rem;
+      left: 20px;
+    }
+
+    .bar-value {
+      font-size: 0.9rem;
+      right: 20px;
+    }
+
+    .skill-bar-wrapper:hover {
+      transform: translateX(4px);
+    }
+  }
+
+  /* ========== 技能面板样式结束 ========== */
 
   .section-title {
     font-family: var(--font-serif);
@@ -505,7 +999,33 @@ import '../styles/global.css';
     }
 
     .year-badge {
-      width: 220px;
+      width: 800px;
+    }
+
+    .timeline-content {
+      font-size: 0.7rem;
+      padding: 1.5rem;
+      min-height: 160px;
+    }
+
+    .timeline-node:hover .timeline-content {
+      min-height: 200px;
+    }
+
+    .timeline-company {
+      font-size: 0.8rem;
+    }
+
+    .timeline-role {
+      font-size: 0.7rem;
+    }
+
+    .timeline-bullets {
+      font-size: 0.65rem;
+    }
+
+    .timeline-details {
+      font-size: 0.7rem;
     }
 
     .timeline-text-en {
