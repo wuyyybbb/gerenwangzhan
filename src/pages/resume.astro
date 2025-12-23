@@ -340,6 +340,28 @@ const timeline = timelineData.default || timelineData;
     gap: 0.1rem;
     margin-bottom: 6rem;
     margin-top: -3rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 2rem 0;
+  }
+
+  /* Timeline horizontal scroll styling */
+  .timeline-container::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .timeline-container::-webkit-scrollbar-track {
+    background: rgba(239, 233, 198, 0.2);
+    border-radius: 4px;
+  }
+
+  .timeline-container::-webkit-scrollbar-thumb {
+    background: var(--ink-soft);
+    border-radius: 4px;
+  }
+
+  .timeline-container::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-main);
   }
 
   .timeline-arrow {
@@ -356,6 +378,8 @@ const timeline = timelineData.default || timelineData;
     height: 50px;
     display: flex;
     align-items: center;
+    min-width: 1200px;
+    overflow: visible;
   }
 
   /* 流动光束层 */
@@ -416,8 +440,10 @@ const timeline = timelineData.default || timelineData;
     position: relative;
     z-index: 2;
     width: 100%;
+    min-width: 1200px;
     margin-top: auto;
     margin-bottom: auto;
+    gap: 1rem;
   }
 
   .timeline-node {
@@ -428,7 +454,8 @@ const timeline = timelineData.default || timelineData;
     cursor: pointer;
     transition: transform 0.3s ease;
     position: relative;
-    flex: 1;
+    flex: 0 0 auto;
+    min-width: 200px;
   }
 
   .timeline-node:hover {
@@ -436,11 +463,13 @@ const timeline = timelineData.default || timelineData;
   }
 
   .year-badge {
-    width: 800px;
+    width: 180px;
     height: auto;
+    max-width: 180px;
     filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
     transition: filter 0.3s ease;
     margin-top: -60px;
+    object-fit: contain;
   }
 
   .timeline-node:hover .year-badge {
@@ -450,7 +479,8 @@ const timeline = timelineData.default || timelineData;
   /* 时间轴内容样式 */
   .timeline-content {
     max-width: 600px;
-    min-height: 180px;
+    min-height: 240px;
+    height: 240px;
     text-align: center;
     padding: 1.5rem;
     border: 1px solid rgba(74, 74, 74, 0.2);
@@ -458,13 +488,14 @@ const timeline = timelineData.default || timelineData;
     backdrop-filter: blur(8px);
     transition: all 0.3s ease;
     position: relative;
+    overflow: hidden;
   }
 
   .timeline-node:hover .timeline-content {
     border-color: var(--ink-soft);
     background: rgba(255, 255, 255, 0.5);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    min-height: 240px;
+    height: 280px;
   }
 
   .timeline-header {
@@ -999,7 +1030,8 @@ const timeline = timelineData.default || timelineData;
     }
 
     .year-badge {
-      width: 800px;
+      width: 180px;
+      max-width: 180px;
     }
 
     .timeline-content {
