@@ -90,7 +90,7 @@ const timeline = timelineData.default || timelineData;
             <div class="timeline-years">
               {timeline.timeline.map((item: any) => (
                 <div class="timeline-node" data-year={item.year}>
-                  <img src={`/map/timeline/${item.year}.svg`} alt={item.year} class="year-badge" />
+                  <img src={`/map/timeline/${item.year}.svg`} alt={item.year} class="year-badge" fetchpriority="high" decoding="async" />
                   <div class="timeline-content">
                     <div class="timeline-header">
                       <div class="timeline-company">{item.company}</div>
@@ -125,7 +125,7 @@ const timeline = timelineData.default || timelineData;
           <!-- 视觉技能面板 -->
           <div class="skill-panel">
             <div class="panel-background">
-              <img src="/visual.svg" alt="Visual Skills Panel" class="panel-svg" />
+              <img src="/visual.svg" alt="Visual Skills Panel" class="panel-svg" loading="lazy" decoding="async" />
             </div>
             <div class="panel-content">
               <!-- 第一组 -->
@@ -137,7 +137,7 @@ const timeline = timelineData.default || timelineData;
                 ].map(skill => (
                   <div class="skill-bar-wrapper">
                     <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
                       <div class="bar-fill" style={`width: ${skill.level}%`}></div>
                       <span class="bar-name">{skill.name}</span>
                       <span class="bar-value">{skill.level}</span>
@@ -154,7 +154,7 @@ const timeline = timelineData.default || timelineData;
                 ].map(skill => (
                   <div class="skill-bar-wrapper">
                     <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
                       <div class="bar-fill" style={`width: ${skill.level}%`}></div>
                       <span class="bar-name">{skill.name}</span>
                       <span class="bar-value">{skill.level}</span>
@@ -171,7 +171,7 @@ const timeline = timelineData.default || timelineData;
                 ].map(skill => (
                   <div class="skill-bar-wrapper">
                     <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
                       <div class="bar-fill" style={`width: ${skill.level}%`}></div>
                       <span class="bar-name">{skill.name}</span>
                       <span class="bar-value">{skill.level}</span>
@@ -185,7 +185,7 @@ const timeline = timelineData.default || timelineData;
           <!-- 编程技能面板 -->
           <div class="skill-panel">
             <div class="panel-background">
-              <img src="/coding.svg" alt="Coding Skills Panel" class="panel-svg" />
+              <img src="/coding.svg" alt="Coding Skills Panel" class="panel-svg" loading="lazy" decoding="async" />
             </div>
             <div class="panel-content">
               <!-- 第一组 -->
@@ -197,7 +197,7 @@ const timeline = timelineData.default || timelineData;
                 ].map(skill => (
                   <div class="skill-bar-wrapper">
                     <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
                       <div class="bar-fill" style={`width: ${skill.level}%`}></div>
                       <span class="bar-name">{skill.name}</span>
                       <span class="bar-value">{skill.level}</span>
@@ -214,7 +214,7 @@ const timeline = timelineData.default || timelineData;
                 ].map(skill => (
                   <div class="skill-bar-wrapper">
                     <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
                       <div class="bar-fill" style={`width: ${skill.level}%`}></div>
                       <span class="bar-name">{skill.name}</span>
                       <span class="bar-value">{skill.level}</span>
@@ -231,7 +231,7 @@ const timeline = timelineData.default || timelineData;
                 ].map(skill => (
                   <div class="skill-bar-wrapper">
                     <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" />
+                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
                       <div class="bar-fill" style={`width: ${skill.level}%`}></div>
                       <span class="bar-name">{skill.name}</span>
                       <span class="bar-value">{skill.level}</span>

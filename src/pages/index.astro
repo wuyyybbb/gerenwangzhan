@@ -120,7 +120,13 @@ const landmarks = [
     <!-- 固定画布容器 -->
     <div class="map-canvas" id="mapCanvas" data-design-w={DESIGN_W} data-design-h={DESIGN_H}>
       <!-- 背景层 -->
-      <img src="/map/background.webp" alt="World Map" class="map-background" />
+      <img
+        src="/map/background.webp"
+        alt="World Map"
+        class="map-background"
+        fetchpriority="high"
+        decoding="async"
+      />
 
       <!-- 光束层（单一 inline SVG 覆盖层） -->
       <svg class="beam-layer" viewBox={`0 0 ${DESIGN_W} ${DESIGN_H}`} preserveAspectRatio="none">
@@ -312,6 +318,8 @@ const landmarks = [
           src={coreBuilding.building.src}
           alt="Core Building"
           class="building-layer"
+          fetchpriority="high"
+          decoding="async"
         />
       </div>
 
@@ -332,6 +340,8 @@ const landmarks = [
             src={landmark.building.src}
             alt={`${landmark.title_en} Building`}
             class="building-layer"
+            fetchpriority="high"
+            decoding="async"
           />
         </div>
       ))}
@@ -353,6 +363,8 @@ const landmarks = [
             src={landmark.sign.src}
             alt={`${landmark.title_en} Sign`}
             class="sign-bg"
+            fetchpriority="high"
+            decoding="async"
           />
         </div>
       ))}
@@ -374,6 +386,8 @@ const landmarks = [
           src="/map/resume.svg"
           alt="Personal Resume Map"
           class="resume-badge-img"
+          fetchpriority="high"
+          decoding="async"
         />
       </a>
 
@@ -389,7 +403,13 @@ const landmarks = [
           class="social-icon"
           aria-label="Bilibili"
         >
-          <img src="/map/bilibili.svg" alt="Bilibili" class="social-icon-img" />
+          <img
+            src="/map/bilibili.svg"
+            alt="Bilibili"
+            class="social-icon-img"
+            loading="lazy"
+            decoding="async"
+          />
         </a>
 
         <a
@@ -399,7 +419,13 @@ const landmarks = [
           class="social-icon"
           aria-label="GitHub"
         >
-          <img src="/map/github.svg" alt="GitHub" class="social-icon-img" />
+          <img
+            src="/map/github.svg"
+            alt="GitHub"
+            class="social-icon-img"
+            loading="lazy"
+            decoding="async"
+          />
         </a>
 
         <a
@@ -407,7 +433,13 @@ const landmarks = [
           class="social-icon"
           aria-label="WeChat Official Account"
         >
-          <img src="/map/gongzhonghao.svg" alt="WeChat Official Account" class="social-icon-img" />
+          <img
+            src="/map/gongzhonghao.svg"
+            alt="WeChat Official Account"
+            class="social-icon-img"
+            loading="lazy"
+            decoding="async"
+          />
         </a>
       </div>
 
@@ -522,7 +554,12 @@ const landmarks = [
 
     <!-- 小人角色引导 -->
     <div id="girl-runner">
-      <img src="/girl/girl.svg" alt="guide girl" />
+      <img
+        src="/girl/girl.svg"
+        alt="guide girl"
+        loading="lazy"
+        decoding="async"
+      />
     </div>
   </div>
 </BaseLayout>
