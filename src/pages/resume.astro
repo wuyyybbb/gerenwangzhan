@@ -97,18 +97,20 @@ const timeline = timelineData.default || timelineData;
                       <div class="timeline-role">{item.role}</div>
                     </div>
                     <div class="timeline-bullets">
-                      {item.bullets.map((bullet: string, index: number) => (
-                        <span class="bullet-item">
-                          {index > 0 && <span class="bullet-separator"> / </span>}
-                          <span class="bullet-text">· {bullet}</span>
-                        </span>
+                      {item.bullets.map((bullet: string) => (
+                        <div class="bullet-item">
+                          <span class="bullet-text" set:html={bullet.replace(/^·\s*/, '<span class="bullet-dot">·</span> ').replace(/(\d+[万张倍+%×–-]+|\bComfyUI\b|\bWebUI\b|\bLoRA\b|\bAI\b|\bMidjourney\b|\bPrompt\b|\bAgent\b|\bCursor\b|\bMall\b|\bPPT\b|\bRevit\b|\bSketchUp\b|\bRhino\b|\bPhotoshop\b|\bYouTube\b|\bCoze\b|\bRunway\b|\bSaaS\b|\bQuery\b|「[^」]+」|出图|决策服务|空间逻辑|视觉表达|叙事|完整生命周期|商业空间|跨文化沟通|创意表达|风格探索|概念方案|视觉迭代|前期出图|方案表达|训练师|博主|工具体系建设|课程内容|商业化|电商|图片制作|个人效率|对外输出|交付|服装业务|规模化生产|中型企业|可落地|可复制|产品化|视频项目|意图识别|改写|可持续产品)/g, '<strong class="highlight">$1</strong>')} />
+                        </div>
                       ))}
                     </div>
-                    <div class="timeline-details">
+                    <ul class="timeline-details">
                       {item.details.map((paragraph: string) => (
-                        <p class="detail-paragraph">{paragraph}</p>
+                        <li class="detail-item" set:html={paragraph
+                          .replace(/(\d+[万张倍+%×—–-]+|\bComfyUI\b|\bWebUI\b|\bLoRA\b|\bAI\b|\bMidjourney\b|\bPrompt\b|\bAgent\b|\bCursor\b|\bMall\b|\bPPT\b|\bRevit\b|\bSketchUp\b|\bRhino\b|\bPhotoshop\b|\bYouTube\b|\bCoze\b|\bRunway\b|\bLuma\b|\bSaaS\b|\bQuery\b|\bBeiying\b|200–300|600\+|2–3|2\.5–3|17\.5\s*万|3\.8%|40\+|「[^」]+」|倍影|出图|决策服务|空间逻辑|视觉表达|叙事完整|商业逻辑|商业空间|商业价值|完整周期|跨文化|创意表达|风格一致性|可控|可解释|可落地|前期概念|风格探索|概念生成|尝鲜工具|设计流程|风格参考|定向训练|输出稳定性|技术探索|使用边界|阶段性价值|训练师|博主|陈生\s*2\.0|产品化|商业化|电商|可复用|可复现|可教学|教学友好|商业可用|可传播|可售卖|使用者|能力输出者|创作者视角|用户视角|规模化|成本|效率|技术表达|商业沟通能力|用户洞察|降低门槛|放大能力|技术壁垒|投入产出比|内容产品|工作流|商品图|模型训练|服装业务|业务流程|内容引擎|组织赋能者|个人高手|中型企业|中型组织|系统性验证|人群画像|渠道特性|投放逻辑|银发矩阵号|CTR|曝光|转化率|秋冬商品|测款|场景图|模特图|视频脚本|服装设计|品牌营销|门店视觉陈列|培训计划|操作规范|协作成本|可持续性|节奏快|款式多|验证周期短|可灵|即梦|数字人|内容投放|普通运营|运营逻辑|视频项目|项目交付|意图识别|意图驱动|参数驱动|改写|增强|任务拆解|执行路径|智能执行系统|自然语言输入|场景选择|低学习成本|高确定性反馈|前端设计|交互设计|非技术用户|团队负责人|产品推动者|技术决策|产品方向|系统与体验|抽象层|用户留存|可持续迭代|长期产品运营|AI\s*系统构建者|AI\s*产品创造者|个人执行者|解决问题的人|定义问题|构建系统|营销视频|内容视频|操作复杂|成本不可控|效果不稳定|强依赖|核心痛点)/g, '<strong class="highlight">$1</strong>')
+                          .replace(/(具体项目|具体工作|具体工作与项目|核心成长|工具体系|工具体系与方法|团队协作|团队协作与商业沟通|行业认知|行业认知与用户洞察|行业认知与产品洞察)：/g, '<span class="section-title">$1：</span>')
+                        } />
                       ))}
-                    </div>
+                    </ul>
                   </div>
                 </div>
               ))}
@@ -430,7 +432,7 @@ const timeline = timelineData.default || timelineData;
     cursor: pointer;
     transition: transform 0.3s ease;
     position: relative;
-    flex: 1;
+    flex: 0 0 auto;
   }
 
   .timeline-node:hover {
@@ -443,7 +445,7 @@ const timeline = timelineData.default || timelineData;
     max-width: 180px;
     filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
     transition: filter 0.3s ease;
-    margin-top: -60px;
+    margin-top: -30px;
     object-fit: contain;
   }
 
@@ -453,10 +455,9 @@ const timeline = timelineData.default || timelineData;
 
   /* 时间轴内容样式 */
   .timeline-content {
-    max-width: 600px;
-    min-height: 180px;
+    width: 240px;
+    min-height: 400px;
     height: 240px;
-    text-align: center;
     padding: 1.5rem;
     border: 1px solid rgba(74, 74, 74, 0.2);
     background: rgba(255, 255, 255, 0.3);
@@ -470,11 +471,14 @@ const timeline = timelineData.default || timelineData;
     border-color: var(--ink-soft);
     background: rgba(255, 255, 255, 0.5);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    height: 280px;
+    width: 350px;
+    height: 600px;
+    padding: 2rem;
   }
 
   .timeline-header {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
   }
 
   .timeline-company {
@@ -495,27 +499,47 @@ const timeline = timelineData.default || timelineData;
   /* 摘要bullets - 默认显示 */
   .timeline-bullets {
     font-family: var(--font-zh-body);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     line-height: 1.8;
     color: var(--ink-soft);
     opacity: 1;
     transition: opacity 0.3s ease;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
     gap: 0.25rem;
+    width: 100%;
   }
 
   .bullet-item {
-    display: inline;
+    display: block;
+    width: 100%;
   }
 
-  .bullet-separator {
-    color: var(--ink-faded);
+  .bullet-dot {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-right: 0.2em;
   }
 
   .bullet-text {
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .highlight {
+    color: var(--ink-main);
+    font-weight: 600;
+    background: rgba(246, 211, 122, 0.15);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+  }
+
+  .section-title {
+    color: #d4a832;
+    font-weight: 700;
+    font-size: 1.05em;
   }
 
   /* hover时隐藏bullets */
@@ -528,8 +552,8 @@ const timeline = timelineData.default || timelineData;
   /* 详情details - 默认隐藏 */
   .timeline-details {
     font-family: var(--font-zh-body);
-    font-size: 0.75rem;
-    line-height: 1.8;
+    font-size: 0.7rem;
+    line-height: 1.7;
     color: var(--ink-soft);
     text-align: left;
     opacity: 0;
@@ -539,13 +563,36 @@ const timeline = timelineData.default || timelineData;
     right: 1.5rem;
     transition: opacity 0.3s ease;
     pointer-events: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 480px;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
   }
 
-  .detail-paragraph {
-    margin-bottom: 0.75rem;
+  /* 隐藏滚动条 - Chrome, Safari */
+  .timeline-details::-webkit-scrollbar {
+    display: none;
   }
 
-  .detail-paragraph:last-child {
+  .detail-item {
+    margin-bottom: 0.7rem;
+    padding-left: 1.2em;
+    position: relative;
+  }
+
+  .detail-item::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    font-size: 1.3em;
+    font-weight: bold;
+    line-height: 1.3;
+  }
+
+  .detail-item:last-child {
     margin-bottom: 0;
   }
 
