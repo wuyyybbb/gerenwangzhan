@@ -292,7 +292,7 @@ const timeline = timelineData.default || timelineData;
   }
 
   .resume-content {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
   }
 
@@ -340,28 +340,7 @@ const timeline = timelineData.default || timelineData;
     gap: 0.1rem;
     margin-bottom: 6rem;
     margin-top: -3rem;
-    overflow-x: auto;
-    overflow-y: visible;
     padding: 2rem 0;
-  }
-
-  /* Timeline horizontal scroll styling */
-  .timeline-container::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .timeline-container::-webkit-scrollbar-track {
-    background: rgba(239, 233, 198, 0.2);
-    border-radius: 4px;
-  }
-
-  .timeline-container::-webkit-scrollbar-thumb {
-    background: var(--ink-soft);
-    border-radius: 4px;
-  }
-
-  .timeline-container::-webkit-scrollbar-thumb:hover {
-    background: var(--ink-main);
   }
 
   .timeline-arrow {
@@ -378,7 +357,6 @@ const timeline = timelineData.default || timelineData;
     height: 50px;
     display: flex;
     align-items: center;
-    min-width: 1200px;
     overflow: visible;
   }
 
@@ -440,10 +418,8 @@ const timeline = timelineData.default || timelineData;
     position: relative;
     z-index: 2;
     width: 100%;
-    min-width: 1200px;
     margin-top: auto;
     margin-bottom: auto;
-    gap: 1rem;
   }
 
   .timeline-node {
@@ -454,8 +430,7 @@ const timeline = timelineData.default || timelineData;
     cursor: pointer;
     transition: transform 0.3s ease;
     position: relative;
-    flex: 0 0 auto;
-    min-width: 200px;
+    flex: 1;
   }
 
   .timeline-node:hover {
@@ -479,7 +454,7 @@ const timeline = timelineData.default || timelineData;
   /* 时间轴内容样式 */
   .timeline-content {
     max-width: 600px;
-    min-height: 240px;
+    min-height: 180px;
     height: 240px;
     text-align: center;
     padding: 1.5rem;
