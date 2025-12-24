@@ -1,6 +1,35 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/global.css';
+import { Image } from 'astro:assets';
+
+// 定义项目数据结构
+const projects = [
+  {
+    name: '东莞君尚',
+    description: '商业综合体空间设计',
+    year: '2022',
+    imageCount: 9
+  },
+  {
+    name: '华润深圳侨香路',
+    description: '商业空间改造项目',
+    year: '2022',
+    imageCount: 4
+  },
+  {
+    name: '深圳中航城',
+    description: '商业综合体概念设计',
+    year: '2022',
+    imageCount: 6
+  },
+  {
+    name: '伊芙丽大厦',
+    description: '办公大堂空间设计',
+    year: '2022',
+    imageCount: 5
+  }
+];
 ---
 
 <BaseLayout title="Archives - Ancient Blueprints">
@@ -15,14 +44,62 @@ import '../styles/global.css';
       <h1 class="page-title">Ancient Archives</h1>
       <p class="narrative-subtitle">"Fragments from an earlier discipline."</p>
 
-      <div class="placeholder-area">
-        <div class="fragment-grid">
-          <div class="fragment-box"></div>
-          <div class="fragment-box"></div>
-          <div class="fragment-box"></div>
-          <div class="fragment-box"></div>
-        </div>
-        <p class="coming-soon">— Fragments yet to surface —</p>
+      <div class="projects-container">
+        {projects.map((project, projectIndex) => (
+          <div class="project-card" data-project-index={projectIndex}>
+            <div class="project-header">
+              <h2 class="project-title">{project.name}</h2>
+              <div class="project-meta">
+                <span class="project-year">{project.year}</span>
+                <span class="project-desc">{project.description}</span>
+              </div>
+            </div>
+
+            <div class="carousel-container">
+              <button class="carousel-btn prev-btn" aria-label="Previous image">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M15 18l-6-6 6-6"/>
+                </svg>
+              </button>
+
+              <div class="carousel-viewport">
+                <div class="carousel-track">
+                  {Array.from({ length: project.imageCount }, (_, i) => {
+                    const imagePath = i === 0
+                      ? `/archives/${project.name}/1.jpg`
+                      : `/archives/${project.name}/1 (${i}).jpg`;
+                    return (
+                      <div class="carousel-slide">
+                        <img
+                          src={imagePath}
+                          alt={`${project.name} - 图片 ${i + 1}`}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <button class="carousel-btn next-btn" aria-label="Next image">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 18l6-6-6-6"/>
+                </svg>
+              </button>
+
+              <div class="carousel-indicators">
+                {Array.from({ length: project.imageCount }, (_, i) => (
+                  <button
+                    class={`indicator ${i === 0 ? 'active' : ''}`}
+                    data-index={i}
+                    aria-label={`Go to image ${i + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </main>
@@ -32,7 +109,7 @@ import '../styles/global.css';
   .page-container {
     min-height: 100vh;
     padding: 2rem;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
   }
 
@@ -50,7 +127,7 @@ import '../styles/global.css';
   }
 
   .content-wrapper {
-    max-width: 800px;
+    max-width: 100%;
   }
 
   .page-title {
@@ -70,42 +147,145 @@ import '../styles/global.css';
     line-height: 1.6;
   }
 
-  .placeholder-area {
-    padding: 3rem 0;
+  .projects-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
   }
 
-  .fragment-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+  .project-card {
+    border: 1px solid rgba(74, 74, 74, 0.2);
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
   }
 
-  .fragment-box {
-    aspect-ratio: 4 / 3;
-    border: 1px solid var(--ink-soft);
-    opacity: 0.2;
+  .project-card:hover {
+    border-color: var(--ink-soft);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .project-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .project-title {
+    font-family: var(--font-zh-display);
+    font-size: 1.5rem;
+    color: var(--ink-main);
+    margin-bottom: 0.5rem;
+  }
+
+  .project-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-family: var(--font-zh-body);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  .project-year {
+    font-weight: 600;
+  }
+
+  .project-desc {
+    opacity: 0.8;
+  }
+
+  /* Carousel Styles */
+  .carousel-container {
     position: relative;
+    width: 100%;
   }
 
-  .fragment-box::after {
-    content: '';
+  .carousel-viewport {
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+    min-width: 100%;
+  }
+
+  .carousel-slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    max-height: 600px;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .carousel-btn {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 2rem;
-    height: 2rem;
-    border: 1px solid var(--ink-soft);
-    opacity: 0.3;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(74, 74, 74, 0.3);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
   }
 
-  .coming-soon {
-    margin-top: 3rem;
-    color: var(--ink-soft);
-    font-size: 0.875rem;
-    text-align: center;
-    font-style: italic;
+  .carousel-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: var(--ink-main);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .carousel-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--ink-main);
+  }
+
+  .prev-btn {
+    left: 1rem;
+  }
+
+  .next-btn {
+    right: 1rem;
+  }
+
+  .carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--ink-soft);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .indicator:hover {
+    background: rgba(74, 74, 74, 0.3);
+  }
+
+  .indicator.active {
+    background: var(--ink-main);
+    border-color: var(--ink-main);
   }
 
   @media (max-width: 768px) {
@@ -121,8 +301,84 @@ import '../styles/global.css';
       font-size: 1rem;
     }
 
-    .fragment-grid {
-      grid-template-columns: 1fr;
+    .project-card {
+      padding: 1.5rem;
+    }
+
+    .carousel-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .carousel-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .prev-btn {
+      left: 0.5rem;
+    }
+
+    .next-btn {
+      right: 0.5rem;
+    }
+
+    .carousel-slide img {
+      max-height: 400px;
     }
   }
 </style>
+
+<script>
+  // Carousel functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const projectCards = document.querySelectorAll('.project-card');
+
+    projectCards.forEach((card) => {
+      const track = card.querySelector('.carousel-track');
+      const slides = card.querySelectorAll('.carousel-slide');
+      const prevBtn = card.querySelector('.prev-btn');
+      const nextBtn = card.querySelector('.next-btn');
+      const indicators = card.querySelectorAll('.indicator');
+
+      let currentIndex = 0;
+      const totalSlides = slides.length;
+
+      const updateCarousel = (newIndex) => {
+        currentIndex = newIndex;
+        const offset = -currentIndex * 100;
+        track.style.transform = `translateX(${offset}%)`;
+
+        // Update indicators
+        indicators.forEach((indicator, index) => {
+          indicator.classList.toggle('active', index === currentIndex);
+        });
+      };
+
+      prevBtn.addEventListener('click', () => {
+        const newIndex = currentIndex === 0 ? totalSlides - 1 : currentIndex - 1;
+        updateCarousel(newIndex);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        const newIndex = currentIndex === totalSlides - 1 ? 0 : currentIndex + 1;
+        updateCarousel(newIndex);
+      });
+
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          updateCarousel(index);
+        });
+      });
+
+      // Keyboard navigation
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          prevBtn.click();
+        } else if (e.key === 'ArrowRight') {
+          nextBtn.click();
+        }
+      });
+    });
+  });
+</script>
