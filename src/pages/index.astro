@@ -128,6 +128,12 @@ const landmarks = [
         decoding="async"
       />
 
+      <!-- 主标题 -->
+      <div class="hero-title" style="left: 688px; top: 55px;">
+        <div class="hero-subtitle">FROM BUILDER TO</div>
+        <div class="hero-main">INTELLIGENT PIONEER</div>
+      </div>
+
       <!-- 光束层（单一 inline SVG 覆盖层） -->
       <svg class="beam-layer" viewBox={`0 0 ${DESIGN_W} ${DESIGN_H}`} preserveAspectRatio="none">
         <defs>
@@ -391,10 +397,10 @@ const landmarks = [
         />
       </a>
 
-      <!-- 社交媒体图标（Resume 下方） -->
+      <!-- 社交媒体图标（Resume Sign 内部） -->
       <div class="social-icons-container" style="
-        left: 608px;
-        top: 710px;
+        left: 590px;
+        top: 715px;
       ">
         <a
           href="https://space.bilibili.com/YOUR_UID"
@@ -407,7 +413,7 @@ const landmarks = [
             src="/map/bilibili.svg"
             alt="Bilibili"
             class="social-icon-img"
-            loading="lazy"
+            fetchpriority="high"
             decoding="async"
           />
         </a>
@@ -423,21 +429,68 @@ const landmarks = [
             src="/map/github.svg"
             alt="GitHub"
             class="social-icon-img"
-            loading="lazy"
+            fetchpriority="high"
             decoding="async"
           />
         </a>
 
         <a
-          href="#wechat"
+          href="javascript:void(0)"
           class="social-icon"
           aria-label="WeChat Official Account"
+          data-popup="gongzhonghao"
         >
           <img
             src="/map/gongzhonghao.svg"
             alt="WeChat Official Account"
             class="social-icon-img"
-            loading="lazy"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </a>
+
+        <a
+          href="javascript:void(0)"
+          class="social-icon"
+          aria-label="Email"
+          data-popup="email"
+        >
+          <img
+            src="/map/email.svg"
+            alt="Email"
+            class="social-icon-img"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </a>
+
+        <a
+          href="https://www.xiaohongshu.com/user/profile/YOUR_ID"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-icon"
+          aria-label="Xiaohongshu"
+        >
+          <img
+            src="/map/xiaohongshu.svg"
+            alt="Xiaohongshu"
+            class="social-icon-img"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </a>
+
+        <a
+          href="javascript:void(0)"
+          class="social-icon"
+          aria-label="WeChat"
+          data-popup="wechat"
+        >
+          <img
+            src="/map/wechat.svg"
+            alt="WeChat"
+            class="social-icon-img"
+            fetchpriority="high"
             decoding="async"
           />
         </a>
@@ -561,6 +614,43 @@ const landmarks = [
         decoding="async"
       />
     </div>
+
+    <!-- 弹窗组件 -->
+    <div id="popup-overlay" class="popup-overlay">
+      <div class="popup-container">
+        <button class="popup-close" id="popupClose" aria-label="Close popup">×</button>
+
+        <!-- WeChat QR Code 弹窗 -->
+        <div id="popup-wechat" class="popup-content">
+          <h3 class="popup-title">微信扫一扫</h3>
+          <img src="/map/qrcode.png" alt="WeChat QR Code" class="popup-qrcode" />
+        </div>
+
+        <!-- Email 弹窗 -->
+        <div id="popup-email" class="popup-content">
+          <h3 class="popup-title">电子邮箱</h3>
+          <div class="popup-text-container">
+            <p class="popup-text" id="emailText">wyb3206@163.com</p>
+          </div>
+          <button class="popup-copy-btn" data-copy="wyb3206@163.com">
+            <span class="copy-icon">📋</span>
+            <span class="copy-text">复制</span>
+          </button>
+        </div>
+
+        <!-- 公众号弹窗 -->
+        <div id="popup-gongzhonghao" class="popup-content">
+          <h3 class="popup-title">公众号</h3>
+          <div class="popup-text-container">
+            <p class="popup-text" id="gongzhonghaoText">贝塔数智所</p>
+          </div>
+          <button class="popup-copy-btn" data-copy="贝塔数智所">
+            <span class="copy-icon">📋</span>
+            <span class="copy-text">复制</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </BaseLayout>
 
@@ -632,6 +722,37 @@ const landmarks = [
     object-fit: fill;
     display: block;
     pointer-events: none;
+  }
+
+  /* 主标题 */
+  .hero-title {
+    position: absolute;
+    transform: translateX(-50%);
+    z-index: 5;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    color: #d4c4a8;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .hero-main {
+    font-family: var(--font-serif);
+    font-size: 1.85rem;
+    letter-spacing: 0.1em;
+    color: #e8dcc0;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    line-height: 1.2;
   }
 
   /* 光束层（单一 SVG 覆盖层） */
@@ -774,15 +895,15 @@ const landmarks = [
     position: absolute;
     z-index: 11;
     display: flex;
-    gap: 18px;
+    gap: 12px;
     align-items: center;
   }
 
   /* 单个社交图标 */
   .social-icon {
     position: relative;
-    width: 48px;
-    height: 48px;
+    width: 32px;
+    height: 32px;
     display: block;
     cursor: pointer;
     text-decoration: none;
@@ -1003,6 +1124,177 @@ const landmarks = [
     /* 移动端隐藏社交图标（避免遮挡） */
     .social-icons-container {
       display: none;
+    }
+
+    /* 移动端标题调整 */
+    .hero-subtitle {
+      font-size: 0.625rem;
+      letter-spacing: 0.1em;
+    }
+
+    .hero-main {
+      font-size: 1.25rem;
+      letter-spacing: 0.08em;
+    }
+  }
+
+  /* 弹窗样式 */
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .popup-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .popup-container {
+    position: relative;
+    background: var(--bg-parchment);
+    border: 2px solid var(--ink-main);
+    padding: 2.5rem 2rem 2rem;
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .popup-overlay.active .popup-container {
+    transform: scale(1);
+  }
+
+  .popup-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .popup-close:hover {
+    color: var(--ink-main);
+    transform: scale(1.1);
+  }
+
+  .popup-content {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .popup-content.active {
+    display: flex;
+  }
+
+  .popup-title {
+    font-family: var(--font-zh-display);
+    font-size: 1.5rem;
+    color: var(--ink-main);
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .popup-qrcode {
+    width: 280px;
+    height: 280px;
+    object-fit: contain;
+    border: 1px solid rgba(74, 74, 74, 0.2);
+    background: white;
+    padding: 0.5rem;
+  }
+
+  .popup-text-container {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(74, 74, 74, 0.2);
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    min-width: 280px;
+  }
+
+  .popup-text {
+    font-family: var(--font-zh-body);
+    font-size: 1.125rem;
+    color: var(--ink-main);
+    margin: 0;
+    text-align: center;
+    user-select: all;
+  }
+
+  .popup-copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--ink-main);
+    color: var(--bg-parchment);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .popup-copy-btn:hover {
+    background: var(--ink-soft);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .popup-copy-btn:active {
+    transform: translateY(0);
+  }
+
+  .popup-copy-btn.copied {
+    background: #4caf50;
+  }
+
+  .copy-icon {
+    font-size: 1.25rem;
+  }
+
+  .copy-text {
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .popup-container {
+      padding: 2rem 1.5rem 1.5rem;
+    }
+
+    .popup-title {
+      font-size: 1.25rem;
+    }
+
+    .popup-qrcode {
+      width: 220px;
+      height: 220px;
+    }
+
+    .popup-text-container {
+      min-width: 240px;
+    }
+
+    .popup-text {
+      font-size: 1rem;
     }
   }
 </style>
@@ -1312,6 +1604,98 @@ const landmarks = [
       }, 150);
     });
   }
+
+  // 弹窗逻辑
+  const popupOverlay = document.getElementById('popup-overlay');
+  const popupClose = document.getElementById('popupClose');
+  const popupContents = document.querySelectorAll('.popup-content');
+
+  // 打开弹窗函数
+  function openPopup(type) {
+    // 隐藏所有弹窗内容
+    popupContents.forEach(content => {
+      content.classList.remove('active');
+    });
+
+    // 显示对应的弹窗内容
+    const targetContent = document.getElementById(`popup-${type}`);
+    if (targetContent) {
+      targetContent.classList.add('active');
+    }
+
+    // 显示弹窗遮罩
+    popupOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // 关闭弹窗函数
+  function closePopup() {
+    popupOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // 为社交图标添加点击事件
+  const socialIcons = document.querySelectorAll('.social-icon[data-popup]');
+  socialIcons.forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      e.preventDefault();
+      const popupType = icon.getAttribute('data-popup');
+      if (popupType) {
+        openPopup(popupType);
+      }
+    });
+  });
+
+  // 关闭按钮点击事件
+  if (popupClose) {
+    popupClose.addEventListener('click', closePopup);
+  }
+
+  // 点击遮罩关闭弹窗
+  if (popupOverlay) {
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        closePopup();
+      }
+    });
+  }
+
+  // ESC 键关闭弹窗
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && popupOverlay.classList.contains('active')) {
+      closePopup();
+    }
+  });
+
+  // 复制按钮功能
+  const copyButtons = document.querySelectorAll('.popup-copy-btn');
+  copyButtons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const textToCopy = btn.getAttribute('data-copy');
+      const copyText = btn.querySelector('.copy-text');
+      const originalText = copyText.textContent;
+
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+
+        // 显示复制成功状态
+        btn.classList.add('copied');
+        copyText.textContent = '已复制';
+
+        // 2秒后恢复原状
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          copyText.textContent = originalText;
+        }, 2000);
+      } catch (err) {
+        console.error('复制失败:', err);
+        copyText.textContent = '复制失败';
+        setTimeout(() => {
+          copyText.textContent = originalText;
+        }, 2000);
+      }
+    });
+  });
 
   }); // 结束 DOMContentLoaded
 </script>

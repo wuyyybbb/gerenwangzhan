@@ -24,8 +24,18 @@ const timeline = timelineData.default || timelineData;
       <!-- 时间轴 -->
       <section class="timeline-section">
         <div class="timeline-description">
+          <!-- Sitting Girl - 左侧 -->
+          <div class="sitting-girl">
+            <img src="/girl/sitting_girl.svg" alt="Sitting Girl" loading="lazy" decoding="async" />
+          </div>
+
           <p class="timeline-text-en">Exploring the evolving landscape of AI & design</p>
-          <p class="timeline-text-zh">探索 AI 与设计的演进之路</p>
+          <p class="timeline-text-zh">黑客与画家的演进之路</p>
+
+          <!-- Hiking Girl - 右侧 -->
+          <div class="hiking-girl">
+            <img src="/girl/hiking_girl.svg" alt="Hiking Girl" loading="lazy" decoding="async" />
+          </div>
         </div>
 
         <div class="timeline-container">
@@ -33,55 +43,85 @@ const timeline = timelineData.default || timelineData;
 
           <div class="timeline-track">
             <!-- SVG 流动光束层 -->
-            <svg class="timeline-beam-layer" preserveAspectRatio="none">
+            <svg class="timeline-beam-layer" viewBox="0 0 1200 50" preserveAspectRatio="none">
               <defs>
-                <filter id="timelineBlur">
-                  <feGaussianBlur stdDeviation="16"/>
+                <!-- 多级模糊滤镜 -->
+                <filter id="timelineBlur100">
+                  <feGaussianBlur stdDeviation="20"/>
+                </filter>
+                <filter id="timelineBlur30">
+                  <feGaussianBlur stdDeviation="15"/>
+                </filter>
+                <filter id="timelineBlur12">
+                  <feGaussianBlur stdDeviation="8"/>
+                </filter>
+                <filter id="timelineBlur6">
+                  <feGaussianBlur stdDeviation="4"/>
                 </filter>
 
-                <linearGradient id="beamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#f6d37a" stop-opacity="0.3" />
-                  <stop offset="50%" stop-color="#fffef5" stop-opacity="0.7" />
-                  <stop offset="100%" stop-color="#f6d37a" stop-opacity="0.3" />
+                <!-- 外层渐变：淡金色光晕 -->
+                <linearGradient id="beamGold" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f5bd16ff" stop-opacity="1.0" />
+                  <stop offset="50%" stop-color="#d4b506ff" stop-opacity="0.95" />
+                  <stop offset="100%" stop-color="#ffcc33" stop-opacity="0.9" />
+                </linearGradient>
+
+                <!-- 中层渐变：金黄雾气 -->
+                <linearGradient id="beamWarm" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f7c327ff" stop-opacity="0.8" />
+                  <stop offset="50%" stop-color="#eec04dff" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#ffcc33" stop-opacity="0.65" />
+                </linearGradient>
+
+                <!-- 内层渐变：白色流动芯 -->
+                <linearGradient id="beamCore" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+                  <stop offset="50%" stop-color="#fffef5" stop-opacity="0.9" />
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0.8" />
                 </linearGradient>
               </defs>
 
-              <!-- 外层光晕 -->
-              <line x1="0" y1="50%" x2="100%" y2="50%"
-                    stroke="url(#beamGradient)"
+              <!-- 外层：极淡金色光晕（最宽，强模糊） -->
+              <line x1="0" y1="25" x2="1200" y2="25"
+                    stroke="url(#beamGold)"
                     stroke-width="40"
                     stroke-linecap="round"
-                    filter="url(#timelineBlur)"
+                    filter="url(#timelineBlur100)"
                     class="beam-outer" />
 
-              <!-- 内层芯 -->
-              <line x1="0" y1="50%" x2="100%" y2="50%"
-                    stroke="#ffffff"
+              <!-- 中层：淡金雾气（中等宽度，中等模糊） -->
+              <line x1="0" y1="25" x2="1200" y2="25"
+                    stroke="url(#beamWarm)"
+                    stroke-width="18"
+                    stroke-linecap="round"
+                    filter="url(#timelineBlur12)"
+                    class="beam-mid" />
+
+              <!-- 内层：淡白芯（较粗，轻微模糊） -->
+              <line x1="0" y1="25" x2="1200" y2="25"
+                    stroke="url(#beamCore)"
                     stroke-width="8"
                     stroke-linecap="round"
-                    filter="url(#timelineBlur)"
+                    filter="url(#timelineBlur6)"
                     class="beam-inner" />
 
-              <!-- 流动高光 -->
-              <line x1="0" y1="50%" x2="100%" y2="50%"
+              <!-- 流动高光（白色细线） -->
+              <line x1="0" y1="25" x2="1200" y2="25"
                     stroke="#ffffff"
-                    stroke-width="4"
+                    stroke-width="2"
                     stroke-linecap="round"
-                    stroke-dasharray="80 160"
+                    stroke-dasharray="60 120"
                     class="beam-highlight" />
 
-              <!-- 流动粒子 -->
-              <circle r="6" fill="#ffffff" filter="url(#timelineBlur)" class="beam-particle particle-1">
-                <animate attributeName="cx" from="0%" to="100%" dur="2s" repeatCount="indefinite" />
-                <animate attributeName="cy" values="50%;50%;50%" dur="2s" repeatCount="indefinite" />
+              <!-- 流动粒子效果（白色光点，极快流动） -->
+              <circle r="2.5" fill="#ffffff" filter="url(#timelineBlur6)" class="beam-particle particle-1" cy="25">
+                <animate attributeName="cx" from="0" to="1200" dur="0.5s" repeatCount="indefinite" />
               </circle>
-              <circle r="5" fill="#fffef5" filter="url(#timelineBlur)" class="beam-particle particle-2">
-                <animate attributeName="cx" from="0%" to="100%" dur="2s" begin="0.5s" repeatCount="indefinite" />
-                <animate attributeName="cy" values="50%;50%;50%" dur="2s" repeatCount="indefinite" />
+              <circle r="2" fill="#ffffff" filter="url(#timelineBlur6)" class="beam-particle particle-2" cy="25">
+                <animate attributeName="cx" from="0" to="1200" dur="0.5s" begin="0.15s" repeatCount="indefinite" />
               </circle>
-              <circle r="4" fill="#f6d37a" filter="url(#timelineBlur)" class="beam-particle particle-3">
-                <animate attributeName="cx" from="0%" to="100%" dur="2s" begin="1s" repeatCount="indefinite" />
-                <animate attributeName="cy" values="50%;50%;50%" dur="2s" repeatCount="indefinite" />
+              <circle r="1.5" fill="#fffef5" filter="url(#timelineBlur6)" class="beam-particle particle-3" cy="25">
+                <animate attributeName="cx" from="0" to="1200" dur="0.5s" begin="0.3s" repeatCount="indefinite" />
               </circle>
             </svg>
 
@@ -99,7 +139,8 @@ const timeline = timelineData.default || timelineData;
                     <div class="timeline-bullets">
                       {item.bullets.map((bullet: string) => (
                         <div class="bullet-item">
-                          <span class="bullet-text" set:html={bullet.replace(/^·\s*/, '<span class="bullet-dot">·</span> ').replace(/(\d+[万张倍+%×–-]+|\bComfyUI\b|\bWebUI\b|\bLoRA\b|\bAI\b|\bMidjourney\b|\bPrompt\b|\bAgent\b|\bCursor\b|\bMall\b|\bPPT\b|\bRevit\b|\bSketchUp\b|\bRhino\b|\bPhotoshop\b|\bYouTube\b|\bCoze\b|\bRunway\b|\bSaaS\b|\bQuery\b|「[^」]+」|出图|决策服务|空间逻辑|视觉表达|叙事|完整生命周期|商业空间|跨文化沟通|创意表达|风格探索|概念方案|视觉迭代|前期出图|方案表达|训练师|博主|工具体系建设|课程内容|商业化|电商|图片制作|个人效率|对外输出|交付|服装业务|规模化生产|中型企业|可落地|可复制|产品化|视频项目|意图识别|改写|可持续产品)/g, '<strong class="highlight">$1</strong>')} />
+                          <span class="bullet-dot">•</span>
+                          <span class="bullet-text" set:html={bullet.replace(/^·\s*/, '').replace(/(\d+[万张倍+%×–-]+|\bComfyUI\b|\bWebUI\b|\bLoRA\b|\bAI\b|\bMidjourney\b|\bPrompt\b|\bAgent\b|\bCursor\b|\bMall\b|\bPPT\b|\bRevit\b|\bSketchUp\b|\bRhino\b|\bPhotoshop\b|\bYouTube\b|\bCoze\b|\bRunway\b|\bSaaS\b|\bQuery\b|「[^」]+」|出图|决策服务|空间逻辑|视觉表达|叙事|完整生命周期|商业空间|跨文化沟通|创意表达|风格探索|概念方案|视觉迭代|前期出图|方案表达|训练师|博主|工具体系建设|课程内容|商业化|电商|图片制作|个人效率|对外输出|交付|服装业务|规模化生产|中型企业|可落地|可复制|产品化|视频项目|意图识别|改写|可持续产品)/g, '<strong class="highlight">$1</strong>')} />
                         </div>
                       ))}
                     </div>
@@ -107,7 +148,7 @@ const timeline = timelineData.default || timelineData;
                       {item.details.map((paragraph: string) => (
                         <li class="detail-item" set:html={paragraph
                           .replace(/(\d+[万张倍+%×—–-]+|\bComfyUI\b|\bWebUI\b|\bLoRA\b|\bAI\b|\bMidjourney\b|\bPrompt\b|\bAgent\b|\bCursor\b|\bMall\b|\bPPT\b|\bRevit\b|\bSketchUp\b|\bRhino\b|\bPhotoshop\b|\bYouTube\b|\bCoze\b|\bRunway\b|\bLuma\b|\bSaaS\b|\bQuery\b|\bBeiying\b|200–300|600\+|2–3|2\.5–3|17\.5\s*万|3\.8%|40\+|「[^」]+」|倍影|出图|决策服务|空间逻辑|视觉表达|叙事完整|商业逻辑|商业空间|商业价值|完整周期|跨文化|创意表达|风格一致性|可控|可解释|可落地|前期概念|风格探索|概念生成|尝鲜工具|设计流程|风格参考|定向训练|输出稳定性|技术探索|使用边界|阶段性价值|训练师|博主|陈生\s*2\.0|产品化|商业化|电商|可复用|可复现|可教学|教学友好|商业可用|可传播|可售卖|使用者|能力输出者|创作者视角|用户视角|规模化|成本|效率|技术表达|商业沟通能力|用户洞察|降低门槛|放大能力|技术壁垒|投入产出比|内容产品|工作流|商品图|模型训练|服装业务|业务流程|内容引擎|组织赋能者|个人高手|中型企业|中型组织|系统性验证|人群画像|渠道特性|投放逻辑|银发矩阵号|CTR|曝光|转化率|秋冬商品|测款|场景图|模特图|视频脚本|服装设计|品牌营销|门店视觉陈列|培训计划|操作规范|协作成本|可持续性|节奏快|款式多|验证周期短|可灵|即梦|数字人|内容投放|普通运营|运营逻辑|视频项目|项目交付|意图识别|意图驱动|参数驱动|改写|增强|任务拆解|执行路径|智能执行系统|自然语言输入|场景选择|低学习成本|高确定性反馈|前端设计|交互设计|非技术用户|团队负责人|产品推动者|技术决策|产品方向|系统与体验|抽象层|用户留存|可持续迭代|长期产品运营|AI\s*系统构建者|AI\s*产品创造者|个人执行者|解决问题的人|定义问题|构建系统|营销视频|内容视频|操作复杂|成本不可控|效果不稳定|强依赖|核心痛点)/g, '<strong class="highlight">$1</strong>')
-                          .replace(/(具体项目|具体工作|具体工作与项目|核心成长|工具体系|工具体系与方法|团队协作|团队协作与商业沟通|行业认知|行业认知与用户洞察|行业认知与产品洞察)：/g, '<span class="section-title">$1：</span>')
+                          .replace(/(具体项目|具体工作|具体工作与项目|核心成长|工具体系|工具体系与方法|团队协作|团队协作与商业沟通|商业沟通|行业认知|行业认知与用户洞察|行业认知与产品洞察|行业洞察)：/g, '<span class="detail-section-title">$1：</span>')
                         } />
                       ))}
                     </ul>
@@ -121,125 +162,93 @@ const timeline = timelineData.default || timelineData;
         </div>
       </section>
 
-      <!-- 技能面板 -->
-      <section class="skills-panel-section">
-        <div class="skills-panels-wrapper">
-          <!-- 视觉技能面板 -->
-          <div class="skill-panel">
-            <div class="panel-background">
-              <img src="/visual.svg" alt="Visual Skills Panel" class="panel-svg" loading="lazy" decoding="async" />
+      <!-- Capabilities Section -->
+      <section class="capabilities-section">
+        <h2 class="section-label">CAPABILITIES</h2>
+
+        <div class="capabilities-grid">
+          <!-- 左列：视觉 / AI 生成 -->
+          <div class="capability-column">
+            <div class="capability-item">
+              <div class="capability-header">
+                <span class="capability-name">AI 工作流工程（ComfyUI、Coze）<br>AI Workflow Engineering</span>
+                <span class="capability-value">95%</span>
+              </div>
+              <div class="capability-bar">
+                <div class="capability-fill" style="width: 95%"></div>
+              </div>
             </div>
-            <div class="panel-content">
-              <!-- 第一组 -->
-              <div class="skill-group">
-                {[
-                  { name: 'ComfyUI', level: 85 },
-                  { name: 'WebUI', level: 80 },
-                  { name: 'LoRA训练', level: 75 }
-                ].map(skill => (
-                  <div class="skill-bar-wrapper">
-                    <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
-                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
-                      <span class="bar-name">{skill.name}</span>
-                      <span class="bar-value">{skill.level}</span>
-                    </div>
-                  </div>
-                ))}
+
+            <div class="capability-item">
+              <div class="capability-header">
+                <span class="capability-name">模型与工具编排能力<br>Model & Tool Orchestration</span>
+                <span class="capability-value">85%</span>
               </div>
-              <!-- 第二组 -->
-              <div class="skill-group">
-                {[
-                  { name: 'Midjourney', level: 78 },
-                  { name: 'PS', level: 85 },
-                  { name: '可灵', level: 60 }
-                ].map(skill => (
-                  <div class="skill-bar-wrapper">
-                    <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
-                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
-                      <span class="bar-name">{skill.name}</span>
-                      <span class="bar-value">{skill.level}</span>
-                    </div>
-                  </div>
-                ))}
+              <div class="capability-bar">
+                <div class="capability-fill" style="width: 85%"></div>
               </div>
-              <!-- 第三组 -->
-              <div class="skill-group">
-                {[
-                  { name: 'Runway', level: 70 },
-                  { name: '海螺', level: 55 },
-                  { name: 'CAD', level: 60 }
-                ].map(skill => (
-                  <div class="skill-bar-wrapper">
-                    <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
-                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
-                      <span class="bar-name">{skill.name}</span>
-                      <span class="bar-value">{skill.level}</span>
-                    </div>
-                  </div>
-                ))}
+            </div>
+
+            <div class="capability-item">
+              <div class="capability-header">
+                <span class="capability-name">AI 内容策略<br>AI Content Intelligence</span>
+                <span class="capability-value">80%</span>
+              </div>
+              <div class="capability-bar">
+                <div class="capability-fill" style="width: 80%"></div>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <div class="capability-header">
+                <span class="capability-name">Prompt / Query 工程<br>Prompt & Query Optimization</span>
+                <span class="capability-value">85%</span>
+              </div>
+              <div class="capability-bar">
+                <div class="capability-fill" style="width: 85%"></div>
               </div>
             </div>
           </div>
 
-          <!-- 编程技能面板 -->
-          <div class="skill-panel">
-            <div class="panel-background">
-              <img src="/coding.svg" alt="Coding Skills Panel" class="panel-svg" loading="lazy" decoding="async" />
+          <!-- 右列：编程 / AI 开发 -->
+          <div class="capability-column">
+            <div class="capability-item">
+              <div class="capability-header">
+                <span class="capability-name">AI 系统与 Agent<br>AI Systems & Agents</span>
+                <span class="capability-value">75%</span>
+              </div>
+              <div class="capability-bar">
+                <div class="capability-fill" style="width: 75%"></div>
+              </div>
             </div>
-            <div class="panel-content">
-              <!-- 第一组 -->
-              <div class="skill-group">
-                {[
-                  { name: 'Cursor', level: 85 },
-                  { name: 'Agent', level: 70 },
-                  { name: 'Claude+ChatGPT', level: 88 }
-                ].map(skill => (
-                  <div class="skill-bar-wrapper">
-                    <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
-                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
-                      <span class="bar-name">{skill.name}</span>
-                      <span class="bar-value">{skill.level}</span>
-                    </div>
-                  </div>
-                ))}
+
+            <div class="capability-item">
+              <div class="capability-header">
+                <span class="capability-name">AI 产品化能力<br>AI Productization</span>
+                <span class="capability-value">85%</span>
               </div>
-              <!-- 第二组 -->
-              <div class="skill-group">
-                {[
-                  { name: 'Python', level: 75 },
-                  { name: 'JavaScript', level: 80 },
-                  { name: 'React', level: 78 }
-                ].map(skill => (
-                  <div class="skill-bar-wrapper">
-                    <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
-                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
-                      <span class="bar-name">{skill.name}</span>
-                      <span class="bar-value">{skill.level}</span>
-                    </div>
-                  </div>
-                ))}
+              <div class="capability-bar">
+                <div class="capability-fill" style="width: 85%"></div>
               </div>
-              <!-- 第三组 -->
-              <div class="skill-group">
-                {[
-                  { name: 'Node.js', level: 72 },
-                  { name: 'Git', level: 85 },
-                  { name: 'Office', level: 75 }
-                ].map(skill => (
-                  <div class="skill-bar-wrapper">
-                    <div class="skill-bar-container">
-                      <img src="/bar.svg" alt="" class="bar-bg" loading="lazy" decoding="async" />
-                      <div class="bar-fill" style={`width: ${skill.level}%`}></div>
-                      <span class="bar-name">{skill.name}</span>
-                      <span class="bar-value">{skill.level}</span>
-                    </div>
-                  </div>
-                ))}
+            </div>
+
+            <div class="capability-item">
+              <div class="capability-header">
+                <span class="capability-name">创意与设计底层能力<br>Creative & Design Foundation</span>
+                <span class="capability-value">90%</span>
+              </div>
+              <div class="capability-bar">
+                <div class="capability-fill" style="width: 90%"></div>
+              </div>
+            </div>
+
+            <div class="capability-item">
+              <div class="capability-header">
+                <span class="capability-name">表达与沟通能力<br>Presentation & Communication</span>
+                <span class="capability-value">85%</span>
+              </div>
+              <div class="capability-bar">
+                <div class="capability-fill" style="width: 85%"></div>
               </div>
             </div>
           </div>
@@ -318,6 +327,7 @@ const timeline = timelineData.default || timelineData;
   .resume-header {
     margin-bottom: 4rem;
     text-align: center;
+    position: relative;
   }
 
   .page-title {
@@ -373,27 +383,34 @@ const timeline = timelineData.default || timelineData;
     overflow: visible;
   }
 
+  /* 三层光束透明度控制 */
   .beam-outer {
-    opacity: 0.5;
+    opacity: 0.8;
+  }
+
+  .beam-mid {
+    opacity: 0.9;
   }
 
   .beam-inner {
-    opacity: 0.7;
+    opacity: 1.0;
   }
 
+  /* 流动高光动画（白色流动，极快） */
   .beam-highlight {
     opacity: 0.6;
-    animation: beamFlow 2s linear infinite;
+    animation: timelineHighlightFlow 0.5s linear infinite;
   }
 
-  @keyframes beamFlow {
+  @keyframes timelineHighlightFlow {
     to {
-      stroke-dashoffset: -120;
+      stroke-dashoffset: -200;
     }
   }
 
+  /* 流动粒子效果（白色光点，极快） */
   .beam-particle {
-    opacity: 0.7;
+    opacity: 0.65;
   }
 
   .timeline-line {
@@ -513,19 +530,24 @@ const timeline = timelineData.default || timelineData;
   }
 
   .bullet-item {
-    display: block;
+    display: flex;
+    align-items: flex-start;
     width: 100%;
+    gap: 0.3rem;
   }
 
   .bullet-dot {
-    font-size: 1.2em;
+    font-size: 1.5em;
     font-weight: bold;
-    margin-right: 0.2em;
+    line-height: 1.2;
+    flex-shrink: 0;
+    color: var(--ink-main);
   }
 
   .bullet-text {
     white-space: normal;
     word-break: break-word;
+    flex: 1;
   }
 
   .highlight {
@@ -536,10 +558,10 @@ const timeline = timelineData.default || timelineData;
     border-radius: 3px;
   }
 
-  .section-title {
-    color: #d4a832;
-    font-weight: 700;
-    font-size: 1.05em;
+  .detail-item .detail-section-title {
+    color: #61503e !important;
+    font-weight: 700 !important;
+    font-size: 1.1em !important;
   }
 
   /* hover时隐藏bullets */
@@ -610,6 +632,41 @@ const timeline = timelineData.default || timelineData;
     text-align: center;
     padding: 0 0 4rem 0;
     margin-bottom: 2rem;
+    position: relative;
+  }
+
+  /* Sitting Girl - 左侧，坐在 "Exploring" 上 */
+  .sitting-girl {
+    position: absolute;
+    left: -80px;
+    top: -143px;
+    width: 140px;
+    height: auto;
+    z-index: 10;
+  }
+
+  .sitting-girl img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+  }
+
+  /* Hiking Girl - 右侧，靠近 "design"，底部与中文对齐 */
+  .hiking-girl {
+    position: absolute;
+    right: -13rem;
+    bottom: 4rem;
+    width: 140px;
+    height: auto;
+    z-index: 10;
+  }
+
+  .hiking-girl img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
   }
 
   .timeline-text-en {
@@ -655,269 +712,87 @@ const timeline = timelineData.default || timelineData;
     border-bottom: none;
   }
 
-  /* ========== 技能面板样式 ========== */
-  .skills-panel-section {
-    margin: 12rem 0;
-    padding: 0;
-    transform: scale(0.8);
-  }
-
-  /* 双面板容器 - 并列布局 */
-  .skills-panels-wrapper {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3rem;
-    max-width: 1600px;
-    margin: 0 auto;
-  }
-
-  /* 单个技能面板 */
-  .skill-panel {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1.2; /* 固定面板宽高比，确保背景SVG不变形 */
-  }
-
-  /* 面板背景层 */
-  .panel-background {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .panel-svg {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    opacity: 0.95;
-    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
-  }
-
-  /* 面板内容层 */
-  .panel-content {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    padding: 4rem 3rem;
-    padding-top: calc(4rem + 45px); /* bar整体往下移动45px */
+  /* ========== Capabilities 样式 ========== */
+  .capabilities-section {
+    width: 1000px;
+    margin: 20rem auto;
+    padding: 0 5rem;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 垂直居中 */
-    align-items: center; /* 水平居中 */
-    gap: 35px; /* 组与组之间的间距 */
-  }
-
-  /* 技能分组 - 3个bar一组 */
-  .skill-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px; /* 组内bar的间距 */
-    width: 75%; /* 控制整组的宽度 */
-  }
-
-  /* 单个技能条包装器 */
-  .skill-bar-wrapper {
-    width: 100%; /* 相对于skill-group的100% */
-    transition: transform 0.3s ease;
-  }
-
-  .skill-bar-wrapper:hover {
-    transform: translateX(8px);
-  }
-
-  /* 技能条容器 - 相对定位以便子元素绝对定位 */
-  .skill-bar-container {
-    position: relative;
-    width: 100%;
-    height: 50px;
-    display: flex;
     align-items: center;
   }
 
-  /* bar.svg 背景图 */
-  .bar-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  /* 进度填充层 - 黄色光束效果 */
-  .bar-fill {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 2px;
-    height: 60%; /* 光束高度小于bar高度 */
-    background: linear-gradient(
-      to right,
-      rgba(246, 211, 122, 0) 0%,
-      rgba(246, 211, 122, 1) 100%
-    );
-    z-index: 2;
-    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    border-radius: 12px; /* 匹配bar.svg的倒角 */
-    box-shadow:
-      inset 0 0 20px rgba(255, 255, 255, 0.3),
-      0 0 12px rgba(246, 211, 122, 0.5);
-    overflow: hidden;
-    max-width: calc(100% - 4px);
-  }
-
-  /* 进度条内部流动高光 */
-  .bar-fill::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.4) 0%,
-      rgba(255, 255, 255, 0.15) 30%,
-      transparent 50%,
-      rgba(0, 0, 0, 0.05) 100%
-    );
-    border-radius: 12px;
-    pointer-events: none;
-  }
-
-  /* 流动光束效果 */
-  .bar-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -30%;
-    width: 30%;
-    height: 100%;
-    background: linear-gradient(
-      to right,
-      transparent,
-      rgba(255, 254, 245, 0.6),
-      transparent
-    );
-    animation: barFlow 2.5s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  @keyframes barFlow {
-    0% {
-      left: -30%;
-    }
-    100% {
-      left: 130%;
-    }
-  }
-
-  /* 技能名称 */
-  .bar-name {
-    position: absolute;
-    left: 30px;
-    z-index: 3;
-    font-family: var(--font-sans);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #e0d2ae;
-    text-shadow:
-      1px 1px 0 rgba(255, 255, 255, 0.5),
-      0 0 12px rgba(255, 255, 255, 0.4);
-    pointer-events: none;
-    white-space: nowrap;
-  }
-
-  /* 技能数值 */
-  .bar-value {
-    position: absolute;
-    right: 30px;
-    z-index: 3;
+  .section-label {
     font-family: var(--font-serif);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #e0d2ae;
-    text-shadow:
-      1px 1px 0 rgba(255, 255, 255, 0.5),
-      0 0 12px rgba(255, 255, 255, 0.4);
-    pointer-events: none;
+    font-size: 1rem;
+    color: var(--ink-main);
+    font-style: italic;
+    letter-spacing: 0.02em;
+    margin-bottom: 3rem;
+    font-weight: 400;
+    text-align: center;
   }
 
-  /* hover 增强效果 */
-  .skill-bar-wrapper:hover .bar-fill {
-    box-shadow:
-      inset 0 0 30px rgba(255, 255, 255, 0.6),
-      0 0 24px rgba(246, 211, 122, 0.8),
-      0 0 40px rgba(246, 211, 122, 0.4);
+  .capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6rem;
+    width: auto;
+    max-width: none;
   }
 
-  .skill-bar-wrapper:hover .bar-name,
-  .skill-bar-wrapper:hover .bar-value {
-    text-shadow:
-      1px 1px 0 rgba(255, 255, 255, 0.6),
-      0 0 16px rgba(255, 255, 255, 0.6);
+  .capability-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    min-width: 520px;
   }
 
-  /* 尊重用户动画偏好 */
-  @media (prefers-reduced-motion: reduce) {
-    .bar-fill {
-      transition: none;
-    }
-    .bar-fill::after {
-      animation: none;
-    }
-    .skill-bar-wrapper {
-      transition: none;
-    }
+  .capability-item {
+    margin-bottom: 0;
+    width: 100%;
   }
 
-  /* 响应式 - 移动端单列 */
-  @media (max-width: 1200px) {
-    .skills-panels-wrapper {
-      grid-template-columns: 1fr;
-      gap: 4rem;
-    }
-
-    .panel-content {
-      padding: 3rem 2rem;
-    }
+  .capability-item:last-child {
+    margin-bottom: 0;
   }
 
-  @media (max-width: 768px) {
-    .skills-panel-section {
-      margin: 6rem 0;
-    }
-
-    .panel-content {
-      padding: 2rem 1.5rem;
-      gap: 20px; /* 组与组间距 */
-    }
-
-    .skill-group {
-      gap: 12px; /* 组内间距 */
-    }
-
-    .skill-bar-container {
-      height: 40px;
-    }
-
-    .bar-name {
-      font-size: 0.9rem;
-      left: 20px;
-    }
-
-    .bar-value {
-      font-size: 0.9rem;
-      right: 20px;
-    }
-
-    .skill-bar-wrapper:hover {
-      transform: translateX(4px);
-    }
+  .capability-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
   }
 
-  /* ========== 技能面板样式结束 ========== */
+  .capability-name {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--ink-main);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .capability-value {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+    padding-top: 0.1rem;
+  }
+
+  .capability-bar {
+    width: 100%;
+    height: 2px;
+    background-color: rgba(74, 74, 74, 0.2);
+    position: relative;
+  }
+
+  .capability-fill {
+    height: 100%;
+    background-color: var(--ink-main);
+    transition: width 0.6s ease;
+  }
 
   .section-title {
     font-family: var(--font-serif);
@@ -997,6 +872,18 @@ const timeline = timelineData.default || timelineData;
       padding: 1.5rem;
     }
 
+    .sitting-girl {
+      width: 100px;
+      left: -10px;
+      top: -5px;
+    }
+
+    .hiking-girl {
+      width: 100px;
+      right: -10px;
+      bottom: 3rem;
+    }
+
     .page-title {
       font-size: 2rem;
     }
@@ -1012,6 +899,37 @@ const timeline = timelineData.default || timelineData;
       left: 0;
       right: 0;
       transform: none;
+    }
+
+    .capabilities-section {
+      margin: 4rem auto;
+      padding: 0 3rem;
+      width: 100%;
+    }
+
+    .capabilities-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      width: 100%;
+    }
+
+    .capability-column {
+      gap: 1.5rem;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .section-label {
+      font-size: 1.125rem;
+      margin-bottom: 2rem;
+    }
+
+    .capability-name {
+      font-size: 0.9375rem;
+    }
+
+    .capability-value {
+      font-size: 0.8125rem;
     }
 
     .timeline-container {

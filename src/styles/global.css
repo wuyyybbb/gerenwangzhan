@@ -37,3 +37,10 @@ html {
     scroll-behavior: auto;
   }
 }
+
+/* Timeline detail section titles */
+.detail-section-title {
+  color: #FF8E00 !important;
+  font-weight: 700 !important;
+  font-size: 1.1em !important;
+}
