@@ -10,6 +10,7 @@ export async function getStaticPaths() {
   const courses = await getCollection('courses');
   const reflections = await getCollection('reflections');
   const misc = await getCollection('misc');
+  const commandCenter = await getCollection('command-center');
 
   return [
     ...papers.map(entry => ({
@@ -28,12 +29,16 @@ export async function getStaticPaths() {
       params: { collection: 'misc', slug: entry.slug },
       props: { entry, collection: 'misc' as const },
     })),
+    ...commandCenter.map(entry => ({
+      params: { collection: 'command-center', slug: entry.slug },
+      props: { entry, collection: 'command-center' as const },
+    })),
   ];
 }
 
 type Props = {
-  entry: CollectionEntry<'papers'> | CollectionEntry<'courses'> | CollectionEntry<'reflections'> | CollectionEntry<'misc'>;
-  collection: 'papers' | 'courses' | 'reflections' | 'misc';
+  entry: CollectionEntry<'papers'> | CollectionEntry<'courses'> | CollectionEntry<'reflections'> | CollectionEntry<'misc'> | CollectionEntry<'command-center'>;
+  collection: 'papers' | 'courses' | 'reflections' | 'misc' | 'command-center';
 };
 
 const { entry, collection } = Astro.props;
@@ -50,6 +55,10 @@ const typeLabels = {
   course: { en: 'Course', zh: '课程' },
   reflection: { en: 'Reflection', zh: '思考' },
   misc: { en: 'Misc', zh: '杂项' },
+  'decision-log': { en: 'Decision Log', zh: '决策日志' },
+  'trade-offs': { en: 'Trade-offs', zh: '权衡分析' },
+  'system-thinking': { en: 'System Thinking', zh: '系统思考' },
+  'direction-notes': { en: 'Direction Notes', zh: '方向笔记' },
 };
 const typeLabel = typeLabels[data.type];
 
@@ -59,6 +68,7 @@ const allCollections = await Promise.all([
   getCollection('courses'),
   getCollection('reflections'),
   getCollection('misc'),
+  getCollection('command-center'),
 ]);
 
 const allEntries = [
@@ -66,6 +76,7 @@ const allEntries = [
   ...allCollections[1].map(e => ({ ...e, collection: 'courses' as const })),
   ...allCollections[2].map(e => ({ ...e, collection: 'reflections' as const })),
   ...allCollections[3].map(e => ({ ...e, collection: 'misc' as const })),
+  ...allCollections[4].map(e => ({ ...e, collection: 'command-center' as const })),
 ].filter(e => e.slug !== entry.slug && e.data.status === 'published');
 
 // 计算相关度分数
@@ -85,11 +96,11 @@ const relatedEntries = allEntries
   .map(item => item.entry);
 ---
 
-<BaseLayout title={`${data.title_en} - Knowledge Tower`}>
+<BaseLayout title={`${data.title_en} - ${collection === 'command-center' ? 'Command Center' : 'Knowledge Tower'}`}>
   <main class="article-container">
     <!-- 返回按钮 -->
-    <a href="/log" class="back-link">
-      ← Back to Tower
+    <a href={collection === 'command-center' ? '/command' : '/log'} class="back-link">
+      ← Back to {collection === 'command-center' ? 'Command Center' : 'Tower'}
     </a>
 
     <!-- 文章内容 -->
@@ -130,8 +141,17 @@ const relatedEntries = allEntries
 
       <!-- 底部署名 -->
       <footer class="article-footer">
-        <p class="tower-signature">— Recorded in the Knowledge Tower</p>
-        <p class="tower-signature-zh">— 记录于知识塔</p>
+        {collection === 'command-center' ? (
+          <>
+            <p class="tower-signature">— Recorded in the Command Center</p>
+            <p class="tower-signature-zh">— 记录于指挥所</p>
+          </>
+        ) : (
+          <>
+            <p class="tower-signature">— Recorded in the Knowledge Tower</p>
+            <p class="tower-signature-zh">— 记录于知识塔</p>
+          </>
+        )}
       </footer>
     </article>
 
@@ -474,7 +494,7 @@ const relatedEntries = allEntries
   }
 
   .related-card-title-zh {
-    font-family: var(--font-zh-display);
+    font-family: var(--font-zh-body);
     font-size: 1.75rem;
     color: var(--ink-soft);
     opacity: 0.8;

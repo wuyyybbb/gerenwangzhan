@@ -1,6 +1,41 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 import '../styles/global.css';
+
+// 获取所有已发布的 command-center 文章
+const commandCenterPosts = await getCollection('command-center', ({ data }) => {
+  return data.status === 'published';
+});
+
+// 按日期降序排序
+commandCenterPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// 类型标签映射
+const typeLabels = {
+  'decision-log': { en: 'Decision Log', zh: '决策日志' },
+  'trade-offs': { en: 'Trade-offs', zh: '权衡分析' },
+  'system-thinking': { en: 'System Thinking', zh: '系统思考' },
+  'direction-notes': { en: 'Direction Notes', zh: '方向笔记' },
+};
+
+// 统计各类型数量
+const counts = {
+  all: commandCenterPosts.length,
+  'decision-log': commandCenterPosts.filter(p => p.data.type === 'decision-log').length,
+  'trade-offs': commandCenterPosts.filter(p => p.data.type === 'trade-offs').length,
+  'system-thinking': commandCenterPosts.filter(p => p.data.type === 'system-thinking').length,
+  'direction-notes': commandCenterPosts.filter(p => p.data.type === 'direction-notes').length,
+};
+
+// 分类导航配置
+const filters = [
+  { key: 'all', label_en: 'All', label_zh: '全部' },
+  { key: 'decision-log', label_en: 'Decision Log', label_zh: '决策日志' },
+  { key: 'trade-offs', label_en: 'Trade-offs', label_zh: '权衡分析' },
+  { key: 'system-thinking', label_en: 'System Thinking', label_zh: '系统思考' },
+  { key: 'direction-notes', label_en: 'Direction Notes', label_zh: '方向笔记' },
+];
 ---
 
 <BaseLayout title="Command Center - Resume & About">
@@ -23,42 +58,7 @@ import '../styles/global.css';
         </p>
       </section>
 
-      <!-- Section 2: Capabilities -->
-      <section class="capabilities-section">
-        <h2 class="section-label">CAPABILITIES</h2>
-
-        <div class="capability-item">
-          <div class="capability-header">
-            <span class="capability-name">AI / Vision</span>
-            <span class="capability-value">85%</span>
-          </div>
-          <div class="capability-bar">
-            <div class="capability-fill" style="width: 85%"></div>
-          </div>
-        </div>
-
-        <div class="capability-item">
-          <div class="capability-header">
-            <span class="capability-name">Design / Architecture</span>
-            <span class="capability-value">80%</span>
-          </div>
-          <div class="capability-bar">
-            <div class="capability-fill" style="width: 80%"></div>
-          </div>
-        </div>
-
-        <div class="capability-item">
-          <div class="capability-header">
-            <span class="capability-name">Product / Systems</span>
-            <span class="capability-value">88%</span>
-          </div>
-          <div class="capability-bar">
-            <div class="capability-fill" style="width: 88%"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Section 3: Main Quest -->
+      <!-- Section 2: Main Quest -->
       <section class="quest-section">
         <h2 class="section-label">MAIN QUEST</h2>
         <p class="quest-statement">
@@ -84,27 +84,137 @@ import '../styles/global.css';
           </div>
         </div>
       </section>
-
-      <!-- Decision Logs Navigation -->
-      <section class="decision-logs-nav">
-        <h2 class="section-label">DECISION LOGS</h2>
-        <a href="/command-center" class="decision-link">
-          <div class="decision-link-content">
-            <p class="decision-link-en">View Strategic Decisions & Trade-offs →</p>
-            <p class="decision-link-zh">查看战略决策与权衡分析</p>
-          </div>
-        </a>
-      </section>
-
     </div>
+
+    <!-- Decision Logs - 全宽展示 -->
+    <section class="decision-logs-section">
+      <h2 class="section-label">DECISION LOGS</h2>
+      <p class="section-description">Strategic decisions, trade-offs, and architectural thinking.</p>
+      <p class="section-description-zh">战略决策、权衡分析与架构思考</p>
+
+      <!-- 分类导航 -->
+      <div class="gallery-filters">
+        {filters.map(filter => (
+          <a
+            href={`/command?filter=${filter.key}`}
+            class:list={['filter-tab', { active: filter.key === 'all' }]}
+            data-filter={filter.key}
+          >
+            <span class="filter-label-en">{filter.label_en}</span>
+            <span class="filter-label-zh">{filter.label_zh}</span>
+          </a>
+        ))}
+      </div>
+
+      <!-- 内容统计 -->
+      <div class="entry-count">
+        <span class="count-number" id="entry-count">{commandCenterPosts.length}</span>
+        <span class="count-label">entries</span>
+      </div>
+
+      <div class="decision-logs-grid">
+        {commandCenterPosts.map((post) => (
+          <a href={`/log/command-center/${post.slug}`} class="decision-card" data-type={post.data.type}>
+            <div class="card-main">
+              <h3 class="card-title-en">{post.data.title_en}</h3>
+              <p class="card-title-zh">{post.data.title_zh}</p>
+              {post.data.summary && (
+                <p class="card-summary">{post.data.summary}</p>
+              )}
+            </div>
+
+            <div class="card-meta">
+              <time class="meta-date" datetime={post.data.date.toISOString()}>
+                {post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+              <span class="meta-type">
+                {typeLabels[post.data.type].en} / {typeLabels[post.data.type].zh}
+              </span>
+              <span class="meta-status">PUBLISHED</span>
+            </div>
+
+            {post.data.tags.length > 0 && (
+              <div class="card-tags">
+                {post.data.tags.map(tag => (
+                  <span class="tag-chip">{tag}</span>
+                ))}
+              </div>
+            )}
+          </a>
+        ))}
+      </div>
+
+      <!-- 空状态 -->
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <p class="empty-message">No entries found for this filter.</p>
+        <p class="empty-message-zh">该分类暂无内容。</p>
+      </div>
+    </section>
+
   </main>
 </BaseLayout>
+
+<script define:vars={{ counts }}>
+  // 客户端过滤逻辑
+  function filterEntries() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filter = urlParams.get('filter') || 'all';
+
+    const entryCards = document.querySelectorAll('.decision-card');
+    const entryCount = document.getElementById('entry-count');
+    const emptyState = document.getElementById('empty-state');
+
+    let visibleCount = 0;
+
+    entryCards.forEach(card => {
+      const type = card.getAttribute('data-type');
+      const shouldShow = filter === 'all' || type === filter;
+
+      if (shouldShow) {
+        card.style.display = 'flex';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // 更新计数
+    if (entryCount) {
+      entryCount.textContent = counts[filter] || visibleCount;
+    }
+
+    // 显示/隐藏空状态
+    if (emptyState) {
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // 更新选中的过滤器样式
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    filterTabs.forEach(tab => {
+      const tabFilter = tab.getAttribute('data-filter');
+      if (tabFilter === filter) {
+        tab.classList.add('active');
+      } else {
+        tab.classList.remove('active');
+      }
+    });
+  }
+
+  // 页面加载时过滤
+  document.addEventListener('DOMContentLoaded', filterEntries);
+
+  // 监听浏览器前进/后退
+  window.addEventListener('popstate', filterEntries);
+
+  // Astro页面切换
+  document.addEventListener('astro:page-load', filterEntries);
+</script>
 
 <style>
   .page-container {
     min-height: 100vh;
     padding: 2rem;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
   }
 
@@ -122,7 +232,8 @@ import '../styles/global.css';
   }
 
   .content-wrapper {
-    max-width: 700px;
+    max-width: 800px;
+    margin-bottom: 4rem;
   }
 
   .page-title {
@@ -170,51 +281,6 @@ import '../styles/global.css';
     line-height: 1.5;
   }
 
-  /* Capabilities Section */
-  .capabilities-section {
-    padding-top: 1rem;
-  }
-
-  .capability-item {
-    margin-bottom: 2rem;
-  }
-
-  .capability-item:last-child {
-    margin-bottom: 0;
-  }
-
-  .capability-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.75rem;
-  }
-
-  .capability-name {
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    color: var(--ink-main);
-  }
-
-  .capability-value {
-    font-family: monospace;
-    font-size: 0.875rem;
-    color: var(--ink-soft);
-  }
-
-  .capability-bar {
-    width: 100%;
-    height: 2px;
-    background-color: rgba(74, 74, 74, 0.2);
-    position: relative;
-  }
-
-  .capability-fill {
-    height: 100%;
-    background-color: var(--ink-main);
-    transition: width 0.6s ease;
-  }
-
   /* Quest Section */
   .quest-statement {
     font-family: var(--font-sans);
@@ -225,6 +291,10 @@ import '../styles/global.css';
   }
 
   /* Principles Section */
+  .principles-section {
+    border-bottom: 1px solid rgba(74, 74, 74, 0.2) !important;
+  }
+
   .principles-list {
     display: flex;
     flex-direction: column;
@@ -253,43 +323,222 @@ import '../styles/global.css';
     letter-spacing: 0.05em;
   }
 
-  /* Decision Logs Navigation */
-  .decision-logs-nav {
+  /* Decision Logs Section */
+  .decision-logs-section {
     margin-top: 3rem;
   }
 
-  .decision-link {
-    display: block;
-    padding: 2rem;
-    border: 2px solid var(--ink-soft);
+  .section-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .section-description-zh {
+    font-family: var(--font-zh-body);
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  /* 分类导航 */
+  .gallery-filters {
+    display: flex;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(74, 74, 74, 0.2);
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid transparent;
     transition: all 0.3s ease;
+    cursor: pointer;
     text-decoration: none;
   }
 
-  .decision-link:hover {
-    border-color: var(--ink-main);
-    transform: translateX(4px);
-    background-color: rgba(31, 31, 31, 0.02);
+  .filter-tab:hover {
+    border-color: var(--ink-soft);
   }
 
-  .decision-link-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  .filter-tab.active {
+    border: 2px solid var(--ink-main);
+    background-color: rgba(31, 31, 31, 0.05);
   }
 
-  .decision-link-en {
+  .filter-label-en {
     font-family: var(--font-sans);
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: var(--ink-main);
     letter-spacing: 0.05em;
   }
 
-  .decision-link-zh {
+  .filter-label-zh {
+    font-family: var(--font-zh-display);
+    font-size: 1.75rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+
+  .filter-tab.active .filter-label-en {
+    font-weight: 600;
+  }
+
+  .filter-tab.active .filter-label-zh {
+    opacity: 1;
+  }
+
+  /* 内容统计 */
+  .entry-count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .count-number {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--ink-main);
+  }
+
+  .count-label {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+  }
+
+  /* 空状态 */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .empty-message {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-message-zh {
     font-family: var(--font-zh-display);
     font-size: 2rem;
     color: var(--ink-soft);
+    opacity: 0.7;
+  }
+
+  .decision-logs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2rem;
+  }
+
+  .decision-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 2rem;
+    border: 1px solid var(--ink-soft);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    min-height: 280px;
+    height: 100%;
+  }
+
+  .decision-card:hover {
+    border-color: var(--ink-main);
+    transform: translateY(-2px);
+  }
+
+  .card-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .card-title-en {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--ink-main);
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  .card-title-zh {
+    font-family: var(--font-zh-body);
+    font-size: 1.75rem;
+    color: var(--ink-soft);
     opacity: 0.8;
+    letter-spacing: 0.05em;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .card-summary {
+    font-family: var(--font-zh-body);
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.875rem;
+  }
+
+  .meta-date {
+    font-family: var(--font-sans);
+    color: var(--ink-soft);
+  }
+
+  .meta-type {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .meta-status {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--ink-main);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .tag-chip {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--ink-soft);
     letter-spacing: 0.05em;
   }
 
@@ -322,16 +571,48 @@ import '../styles/global.css';
       font-size: 1.75rem;
     }
 
-    .decision-link {
+    .decision-logs-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .decision-card {
       padding: 1.5rem;
     }
 
-    .decision-link-en {
-      font-size: 0.9375rem;
+    .card-title-en {
+      font-size: 1.125rem;
     }
 
-    .decision-link-zh {
-      font-size: 1.75rem;
+    .card-title-zh {
+      font-size: 1.5rem;
+    }
+
+    .card-summary {
+      font-size: 0.875rem;
+    }
+
+    .card-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    /* 分类导航响应式 */
+    .gallery-filters {
+      gap: 1rem;
+    }
+
+    .filter-tab {
+      padding: 0.5rem 1rem;
+    }
+
+    .filter-label-en {
+      font-size: 0.75rem;
+    }
+
+    .filter-label-zh {
+      font-size: 1.5rem;
     }
   }
 </style>

@@ -26,7 +26,7 @@
   --font-en-body: 'Inter', sans-serif;
 
   /* Typography - Chinese */
-  --font-zh-body: 'Source Han Serif', serif;
+  --font-zh-body: 'Noto Serif SC', 'Source Han Serif', serif;
   --font-zh-display: 'HanYiShenGong', serif;
 
   /* Legacy support */

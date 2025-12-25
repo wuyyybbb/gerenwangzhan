@@ -99,24 +99,6 @@ const landmarks = [
 
 <BaseLayout title="Mythic Engraving Interactive Map">
   <div class="map-wrapper">
-    <!-- Debug 切换按钮（右上角） -->
-    <button class="debug-toggle-btn" id="debugToggle" aria-label="Toggle debug mode">
-      <span class="debug-icon">🔧</span>
-    </button>
-
-    <!-- 汉堡菜单（备用导航） -->
-    <button class="hamburger-btn" id="menuToggle" aria-label="Toggle menu">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
-
-    <nav class="menu-dropdown" id="menuDropdown">
-      {landmarks.map(landmark => (
-        <a href={landmark.route} class="menu-item">{landmark.title_en}</a>
-      ))}
-    </nav>
-
     <!-- 固定画布容器 -->
     <div class="map-canvas" id="mapCanvas" data-design-w={DESIGN_W} data-design-h={DESIGN_H}>
       <!-- 背景层 -->
@@ -668,11 +650,11 @@ const landmarks = [
     background-color: var(--bg-parchment);
   }
 
-  /* Debug 切换按钮（右上角，fixed overlay） */
+  /* Debug 切换按钮（左上角，fixed overlay） */
   .debug-toggle-btn {
     position: fixed;
-    top: 16px;
-    right: 16px;
+    top: 62px;
+    left: 16px;
     z-index: 50;
     background: transparent;
     border: 1px solid var(--ink-main);
@@ -698,7 +680,7 @@ const landmarks = [
   }
 
   .debug-icon {
-    font-size: 1.25rem;
+    font-size: 0.875rem;
   }
 
   /* 固定画布 mapStage */
@@ -971,84 +953,6 @@ const landmarks = [
     display: block;
   }
 
-  /* 汉堡菜单（左上角，fixed overlay） */
-  .hamburger-btn {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    z-index: 50;
-    background: transparent;
-    border: 1px solid var(--ink-main);
-    padding: 0.4rem;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    width: 28px;
-    height: 28px;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-    opacity: 0.6;
-  }
-
-  .hamburger-btn:hover {
-    opacity: 1;
-    background-color: rgba(31, 31, 31, 0.05);
-  }
-
-  .hamburger-line {
-    width: 14px;
-    height: 1.5px;
-    background-color: var(--ink-main);
-    transition: all 0.3s ease;
-  }
-
-  .hamburger-btn.active .hamburger-line:nth-child(1) {
-    transform: translateY(4.5px) rotate(45deg);
-  }
-
-  .hamburger-btn.active .hamburger-line:nth-child(2) {
-    opacity: 0;
-  }
-
-  .hamburger-btn.active .hamburger-line:nth-child(3) {
-    transform: translateY(-4.5px) rotate(-45deg);
-  }
-
-  .menu-dropdown {
-    position: fixed;
-    top: 52px;
-    left: 16px;
-    z-index: 50;
-    background-color: rgba(239, 233, 198, 0.98);
-    border: 1px solid var(--ink-main);
-    padding: 0.5rem;
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-    min-width: 160px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .menu-dropdown.open {
-    display: flex;
-  }
-
-  .menu-item {
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    color: var(--ink-main);
-    padding: 0.5rem 0.75rem;
-    border: 1px solid transparent;
-    transition: all 0.3s ease;
-  }
-
-  .menu-item:hover {
-    border-color: var(--ink-main);
-    background-color: rgba(31, 31, 31, 0.03);
-  }
-
   /* Debug 层 */
   .debug-layer {
     position: absolute;
@@ -1110,17 +1014,6 @@ const landmarks = [
 
   /* 响应式调整 */
   @media (max-width: 768px) {
-    .debug-toggle-btn {
-      width: 32px;
-      height: 32px;
-      top: 12px;
-      right: 12px;
-    }
-
-    .debug-icon {
-      font-size: 1rem;
-    }
-
     /* 移动端隐藏社交图标（避免遮挡） */
     .social-icons-container {
       display: none;
@@ -1300,8 +1193,17 @@ const landmarks = [
 </style>
 
 <script>
-  // 确保 DOM 加载完成后执行
-  document.addEventListener('DOMContentLoaded', () => {
+  // 确保在 View Transitions 导航时也能正确执行
+  document.addEventListener('astro:page-load', () => {
+    console.log('🏠 首页脚本加载');
+
+    // 检查音乐状态
+    if (window.__globalAudio) {
+      console.log('🎵 首页检测到全局音频对象，状态:', window.__globalAudio.paused ? '⏸️ 暂停' : '▶️ 播放中');
+    } else {
+      console.warn('⚠️ 首页未检测到全局音频对象');
+    }
+
     // 地标配置数据（用于 hover 动画计算）
     const landmarks = [
       {
@@ -1564,32 +1466,6 @@ const landmarks = [
     }
   });
 
-  // 汉堡菜单交互
-  const menuToggle = document.getElementById('menuToggle');
-  const menuDropdown = document.getElementById('menuDropdown');
-
-  if (menuToggle && menuDropdown) {
-    menuToggle.addEventListener('click', () => {
-      menuToggle.classList.toggle('active');
-      menuDropdown.classList.toggle('open');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!menuToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
-        menuToggle.classList.remove('active');
-        menuDropdown.classList.remove('open');
-      }
-    });
-
-    const menuItems = menuDropdown.querySelectorAll('.menu-item');
-    menuItems.forEach(item => {
-      item.addEventListener('click', () => {
-        menuToggle.classList.remove('active');
-        menuDropdown.classList.remove('open');
-      });
-    });
-  }
-
   // Resume Badge 交互
   const resumeBadge = document.getElementById('resumeBadge');
   if (resumeBadge) {
@@ -1697,5 +1573,5 @@ const landmarks = [
     });
   });
 
-  }); // 结束 DOMContentLoaded
+  }); // 结束 astro:page-load
 </script>
