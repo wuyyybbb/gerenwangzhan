@@ -4,9 +4,15 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "dev:clean": "rm -rf .astro node_modules/.vite && astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "optimize-images": "node scripts/optimize-images.mjs",
+    "optimize-svgs": "node scripts/optimize-svgs.mjs",
+    "optimize-social-icons": "node scripts/optimize-social-icons.mjs",
+    "convert-svg": "node scripts/convert-svg-to-raster.mjs",
+    "test:connection": "bash test-connection.sh"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -14,6 +20,7 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
+    "sharp": "^0.33.5",
     "svgo": "^4.0.0"
   }
 }

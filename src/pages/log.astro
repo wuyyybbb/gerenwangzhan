@@ -27,6 +27,10 @@ const counts = {
   reflection: reflections.filter(e => e.data.status === 'published').length,
   misc: misc.filter(e => e.data.status === 'published').length,
 };
+
+// 从 URL 参数读取当前过滤器
+const url = new URL(Astro.request.url);
+const currentFilter = url.searchParams.get('filter') || 'all';
 ---
 
 <BaseLayout title="Knowledge Tower - Collection Gallery">
@@ -49,7 +53,7 @@ const counts = {
     </div>
 
     <!-- 过滤器 -->
-    <GalleryFilters activeFilter="all" />
+    <GalleryFilters activeFilter={currentFilter} />
 
     <!-- 内容统计 -->
     <div class="entry-count">
@@ -131,8 +135,40 @@ const counts = {
     });
   }
 
-  // 页面加载时过滤
-  document.addEventListener('DOMContentLoaded', filterEntries);
+  // 阻止过滤器链接的默认跳转行为，保持当前滚动位置
+  function initFilterClickHandlers() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault(); // 阻止默认跳转
+        const filter = tab.getAttribute('data-filter');
+        const url = new URL(window.location.href);
+
+        if (filter === 'all') {
+          url.searchParams.delete('filter');
+        } else {
+          url.searchParams.set('filter', filter);
+        }
+
+        // 更新 URL 但不触发页面跳转
+        window.history.pushState({}, '', url.toString());
+
+        // 手动触发过滤和排序
+        filterEntries();
+        sortEntries();
+      });
+    });
+  }
+
+  // 页面加载时过滤（支持 View Transitions）
+  document.addEventListener('DOMContentLoaded', () => {
+    filterEntries();
+    initFilterClickHandlers();
+  });
+  document.addEventListener('astro:page-load', () => {
+    filterEntries();
+    initFilterClickHandlers();
+  });
 
   // 监听浏览器前进/后退
   window.addEventListener('popstate', filterEntries);
@@ -170,8 +206,14 @@ const counts = {
     cards.forEach(card => grid.appendChild(card));
   }
 
+  // 页面加载时排序（支持 View Transitions）
   document.addEventListener('DOMContentLoaded', sortEntries);
-  window.addEventListener('popstate', sortEntries);
+  document.addEventListener('astro:page-load', sortEntries);
+
+  window.addEventListener('popstate', () => {
+    filterEntries();
+    sortEntries();
+  });
 </script>
 
 <style>

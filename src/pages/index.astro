@@ -3,8 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/global.css';
 
 // 设计画布常量
-const DESIGN_W = 1376;
-const DESIGN_H = 768;
+const DESIGN_W = 1920;
+const DESIGN_H = 1072;
 
 // Debug 模式（开发时设为 true，或按 D 键切换）
 const DEBUG_MODE = false;
@@ -12,11 +12,11 @@ const DEBUG_MODE = false;
 // 核心建筑（中心点）
 const coreBuilding = {
   building: {
-    src: '/map/core_building.svg',
-    rect: { x: 580, y: 180, w: 200, h: 300 },
-    transform: { scale: 1.4, dx: 0, dy: 0 },
+    basePath: '/map/core_building', // 不带扩展名
+    rect: { x: 580, y: 280, w: 200, h: 300 },
+    transform: { scale: 1.8, dx: 0, dy: 0 },
   },
-  center: { x: 688, y: 300 }, // 光束起点
+  center: { x: 938, y: 395 }, // 光束起点（门口位置）
 };
 
 // 地标配置（单一数据源）
@@ -28,17 +28,19 @@ const landmarks = [
     title_en: 'AI Workshop',
     title_zh: 'AI 实验坊',
     building: {
-      src: '/map/workshop_building.svg',
-      rect: { x: 210, y: 210, w: 240, h: 280 },
-      transform: { scale: 1.4, dx: 0, dy: -140 },
+      basePath: '/map/workshop_building',
+      rect: { x: -50, y: 480, w: 120, h: 280 },
+      transform: { scale: 4.1, dx: 0, dy: -140 },
+      hoverScale: 4.5, // 悬停时的缩放倍数
     },
     sign: {
-      src: '/map/workshop_sign.svg',
-      rect: { x: 250, y: 290, w: 140, h: 60 },
-      transform: { scale: 2.0, dx: 0, dy: 0 },
+      basePath: '/map/workshop_sign',
+      rect: { x: -55, y: 280, w: 140, h: 60 },
+      transform: { scale: 2.1, dx: 0, dy: 0 },
+      hoverScale: 1.04, // 悬停时的缩放倍数
     },
-    clickableRect: { x: 100, y: 200, w: 240, h: 320 },
-    beamEnd: { x: 330, y: 230 }, // 调整到建筑顶部浮空方块位置
+    clickableRect: { x: -30, y: 150, w: 240, h: 320 },
+    beamEnd: { x: -30, y: 250 }, // 建筑中心点
   },
   {
     id: 'knowledge',
@@ -46,17 +48,19 @@ const landmarks = [
     title_en: 'Knowledge Tower',
     title_zh: '知识塔',
     building: {
-      src: '/map/knowledge_building.svg',
-      rect: { x: 1020, y: 75, w: 300, h: 420 },
-      transform: { scale: 1.3, dx: 0, dy: -90 },
+      basePath: '/map/knowledge_building',
+      rect: { x: 1200, y: 85, w: 300, h: 420 },
+      transform: { scale: 1.75, dx: 0, dy: -90 },
+      hoverScale: 1.05, // 悬停时的缩放倍数
     },
     sign: {
-      src: '/map/knowledge_sign.svg',
-      rect: { x: 1100, y: 290, w: 140, h: 60 },
-      transform: { scale: 1.8, dx: 0, dy: 0 },
+      basePath: '/map/knowledge_sign',
+      rect: { x: 1300, y: 230, w: 140, h: 60 },
+      transform: { scale: 2.1, dx: 0, dy: 0 },
+      hoverScale: 1.04, // 悬停时的缩放倍数
     },
-    clickableRect: { x: 1020, y: 100, w: 300, h: 480 },
-    beamEnd: { x: 1170, y: 200 }, // 调整到建筑中心
+    clickableRect: { x: 1100, y: -100, w: 300, h: 480 },
+    beamEnd: { x: 1800, y: 100 }, // 建筑中心点
   },
   {
     id: 'archives',
@@ -64,17 +68,19 @@ const landmarks = [
     title_en: 'Ancient Archives',
     title_zh: '古卷库',
     building: {
-      src: '/map/archives_building.svg',
-      rect: { x: 80, y: 450, w: 320, h: 300 },
-      transform: { scale: 1.3, dx: 0, dy: 0 },
+      basePath: '/map/archives_building',
+      rect: { x: -80, y: 500, w: 320, h: 300 },
+      transform: { scale: 1.7, dx: 0, dy: 0 },
+      hoverScale: 1.05, // 悬停时的缩放倍数
     },
     sign: {
-      src: '/map/archives_sign.svg',
-      rect: { x: 200, y: 620, w: 200, h: 60 },
-      transform: { scale: 1.4, dx: 0, dy: 0 },
+      basePath: '/map/archives_sign',
+      rect: { x: 80, y: 640, w: 200, h: 60 },
+      transform: { scale: 1.65, dx: 0, dy: 0 },
+      hoverScale: 1.04, // 悬停时的缩放倍数
     },
-    clickableRect: { x: 80, y: 420, w: 320, h: 330 },
-    beamEnd: { x: 240, y: 600 }, // 调整到建筑中心
+    clickableRect: { x: 80, y: 300, w: 320, h: 330 },
+    beamEnd: { x: 80, y: 780 }, // 建筑中心点
   },
   {
     id: 'command',
@@ -82,36 +88,46 @@ const landmarks = [
     title_en: 'Command Center',
     title_zh: '指挥所',
     building: {
-      src: '/map/command_building.svg',
-      rect: { x: 920, y: 380, w: 360, h: 320 },
-      transform: { scale: 0.8, dx: 0, dy: 0 },
+      basePath: '/map/command_building',
+      rect: { x: 1050, y: 330, w: 360, h: 320 },
+      transform: { scale: 1.1, dx: 0, dy: 0 },
+      hoverScale: 1.05, // 悬停时的缩放倍数
     },
     sign: {
-      src: '/map/command_sign.svg',
-      rect: { x: 1010, y: 630, w: 200, h: 60 },
-      transform: { scale: 1.4, dx: 0, dy: 0 },
+      basePath: '/map/command_sign',
+      rect: { x: 1150, y: 600, w: 200, h: 60 },
+      transform: { scale: 1.6, dx: 0, dy: 0 },
+      hoverScale: 1.04, // 悬停时的缩放倍数
     },
-    clickableRect: { x: 980, y: 400, w: 360, h: 340 },
-    beamEnd: { x: 1100, y: 540 }, // 调整到建筑中心
+    clickableRect: { x: 980, y: 450, w: 360, h: 340 },
+    beamEnd: { x: 1700, y: 650 }, // 建筑中心点
   },
 ];
 ---
 
 <BaseLayout title="Mythic Engraving Interactive Map">
   <div class="map-wrapper">
-    <!-- 固定画布容器 -->
+    <!-- 🎯 Placeholder 层：纯色背景，避免 FOUC -->
+    <div class="map-placeholder"></div>
+
+    <!-- 🎯 背景图层：纯 CSS 铺满，不依赖 JS -->
+    <img
+      id="mapBackground"
+      class="map-background"
+      src="/map/background.webp"
+      alt="Interactive Map Background"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      data-lcp-target
+      onerror="console.error('❌ LCP 背景图加载失败');"
+    />
+
+    <!-- 固定画布容器（交互层）-->
     <div class="map-canvas" id="mapCanvas" data-design-w={DESIGN_W} data-design-h={DESIGN_H}>
-      <!-- 背景层 -->
-      <img
-        src="/map/background.webp"
-        alt="World Map"
-        class="map-background"
-        fetchpriority="high"
-        decoding="async"
-      />
 
       <!-- 主标题 -->
-      <div class="hero-title" style="left: 688px; top: 55px;">
+      <div class="hero-title" style="left: 688px; top: -75px;">
         <div class="hero-subtitle">FROM BUILDER TO</div>
         <div class="hero-main">INTELLIGENT PIONEER</div>
       </div>
@@ -290,10 +306,13 @@ const landmarks = [
         })}
       </svg>
 
-      <!-- 核心建筑层（带 transform） -->
+      <!-- 核心建筑层（延迟加载） -->
       <div
-        class="building-container core-container"
+        class="building-container core-container lazy-image"
         data-building-id="core"
+        data-lazy-src={coreBuilding.building.basePath}
+        data-lazy-alt="Core Building"
+        data-lazy-class="building-layer"
         style={`
           left: ${coreBuilding.building.rect.x}px;
           top: ${coreBuilding.building.rect.y}px;
@@ -302,179 +321,211 @@ const landmarks = [
           transform: translate(${coreBuilding.building.transform.dx}px, ${coreBuilding.building.transform.dy}px) scale(${coreBuilding.building.transform.scale});
         `}
       >
-        <img
-          src={coreBuilding.building.src}
-          alt="Core Building"
-          class="building-layer"
-          fetchpriority="high"
-          decoding="async"
-        />
+        <!-- img will be injected by IntersectionObserver -->
       </div>
 
-      <!-- 地标建筑层 -->
-      {landmarks.map(landmark => (
-        <div
-          class="building-container"
-          data-landmark-id={`${landmark.id}-building`}
-          style={`
-            left: ${landmark.building.rect.x}px;
-            top: ${landmark.building.rect.y}px;
-            width: ${landmark.building.rect.w}px;
-            height: ${landmark.building.rect.h}px;
-            transform: translate(${landmark.building.transform.dx}px, ${landmark.building.transform.dy}px) scale(${landmark.building.transform.scale});
-          `}
-        >
-          <img
-            src={landmark.building.src}
-            alt={`${landmark.title_en} Building`}
-            class="building-layer"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </div>
-      ))}
+      <!-- 地标建筑层（只有 workshop 为 eager + LCP 候选，其余 lazy + 低优先级） -->
+      {landmarks.map(landmark => {
+        const isWorkshop = landmark.id === 'workshop';
 
-      <!-- 地标标牌层（独立渲染） -->
-      {landmarks.map(landmark => (
-        <div
-          class="sign-container"
-          data-landmark-id={`${landmark.id}-sign`}
-          style={`
-            left: ${landmark.sign.rect.x}px;
-            top: ${landmark.sign.rect.y}px;
-            width: ${landmark.sign.rect.w}px;
-            height: ${landmark.sign.rect.h}px;
-            transform: translate(${landmark.sign.transform.dx}px, ${landmark.sign.transform.dy}px) scale(${landmark.sign.transform.scale});
-          `}
-        >
-          <img
-            src={landmark.sign.src}
-            alt={`${landmark.title_en} Sign`}
-            class="sign-bg"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </div>
-      ))}
+        if (isWorkshop) {
+          return (
+            <div
+              class="building-container eager-image lcp-candidate"
+              data-landmark-id={`${landmark.id}-building`}
+              data-eager-src={landmark.building.basePath}
+              data-eager-alt={`${landmark.title_en} Building`}
+              data-eager-class="building-layer lcp-target"
+              data-fetchpriority="high"
+              style={`
+                left: ${landmark.building.rect.x}px;
+                top: ${landmark.building.rect.y}px;
+                width: ${landmark.building.rect.w}px;
+                height: ${landmark.building.rect.h}px;
+                transform: translate(${landmark.building.transform.dx}px, ${landmark.building.transform.dy}px) scale(${landmark.building.transform.scale});
+              `}
+            >
+              <!-- img will be injected immediately with fetchpriority="high" -->
+            </div>
+          );
+        } else {
+          return (
+            <div
+              class="building-container lazy-image"
+              data-landmark-id={`${landmark.id}-building`}
+              data-lazy-src={landmark.building.basePath}
+              data-lazy-alt={`${landmark.title_en} Building`}
+              data-lazy-class="building-layer"
+              data-fetchpriority="low"
+              style={`
+                left: ${landmark.building.rect.x}px;
+                top: ${landmark.building.rect.y}px;
+                width: ${landmark.building.rect.w}px;
+                height: ${landmark.building.rect.h}px;
+                transform: translate(${landmark.building.transform.dx}px, ${landmark.building.transform.dy}px) scale(${landmark.building.transform.scale});
+                content-visibility: auto;
+              `}
+            >
+              <!-- img will be injected by IntersectionObserver with fetchpriority="low" -->
+            </div>
+          );
+        }
+      })}
 
-      <!-- Resume 标识（中央底部） -->
+      <!-- 地标标牌层（所有 sign 都低优先级，不参与 LCP 竞争） -->
+      {landmarks.map(landmark => {
+        const isWorkshop = landmark.id === 'workshop';
+
+        if (isWorkshop) {
+          return (
+            <div
+              class="sign-container eager-image"
+              data-landmark-id={`${landmark.id}-sign`}
+              data-eager-src={landmark.sign.basePath}
+              data-eager-alt={`${landmark.title_en} Sign`}
+              data-eager-class="sign-bg"
+              data-fetchpriority="low"
+              style={`
+                left: ${landmark.sign.rect.x}px;
+                top: ${landmark.sign.rect.y}px;
+                width: ${landmark.sign.rect.w}px;
+                height: ${landmark.sign.rect.h}px;
+                transform: translate(${landmark.sign.transform.dx}px, ${landmark.sign.transform.dy}px) scale(${landmark.sign.transform.scale});
+                content-visibility: auto;
+              `}
+            >
+              <!-- img will be injected immediately with fetchpriority="low" -->
+            </div>
+          );
+        } else {
+          return (
+            <div
+              class="sign-container lazy-image"
+              data-landmark-id={`${landmark.id}-sign`}
+              data-lazy-src={landmark.sign.basePath}
+              data-lazy-alt={`${landmark.title_en} Sign`}
+              data-lazy-class="sign-bg"
+              data-fetchpriority="low"
+              style={`
+                left: ${landmark.sign.rect.x}px;
+                top: ${landmark.sign.rect.y}px;
+                width: ${landmark.sign.rect.w}px;
+                height: ${landmark.sign.rect.h}px;
+                transform: translate(${landmark.sign.transform.dx}px, ${landmark.sign.transform.dy}px) scale(${landmark.sign.transform.scale});
+                content-visibility: auto;
+              `}
+            >
+              <!-- img will be injected by IntersectionObserver with fetchpriority="low" -->
+            </div>
+          );
+        }
+      })}
+
+      <!-- Resume 标识（中央底部）- 🔧 优先加载，先于社交图标 -->
       <a
         href="/resume"
-        class="resume-badge"
+        class="resume-badge eager-image"
         id="resumeBadge"
+        data-eager-src="/map/resume.svg"
+        data-eager-alt="Personal Resume Map"
+        data-eager-class="resume-badge-img"
+        data-fetchpriority="medium"
+        data-astro-prefetch="false"
         style="
-          left: 438px;
-          top: 615px;
-          width: 500px;
+          left: 400px;
+          top: 730px;
+          width: 550px;
           height: 150px;
         "
         aria-label="View Resume"
       >
-        <img
-          src="/map/resume.svg"
-          alt="Personal Resume Map"
-          class="resume-badge-img"
-          fetchpriority="high"
-          decoding="async"
-        />
+        <!-- picture will be injected immediately with medium priority -->
       </a>
 
-      <!-- 社交媒体图标（Resume Sign 内部） -->
+      <!-- 社交媒体图标（Resume Sign 内部）- 🔧 低优先级，最后加载 -->
       <div class="social-icons-container" style="
-        left: 590px;
-        top: 715px;
+        left: 580px;
+        top: 835px;
       ">
         <a
           href="https://space.bilibili.com/YOUR_UID"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-icon"
+          class="social-icon eager-image"
+          data-eager-src="/map/bilibili.svg"
+          data-eager-alt="Bilibili"
+          data-eager-class="social-icon-img"
+          data-fetchpriority="low"
           aria-label="Bilibili"
         >
-          <img
-            src="/map/bilibili.svg"
-            alt="Bilibili"
-            class="social-icon-img"
-            fetchpriority="high"
-            decoding="async"
-          />
+          <!-- picture will be injected with low priority -->
         </a>
 
         <a
           href="https://github.com/YOUR_USERNAME"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-icon"
+          class="social-icon eager-image"
+          data-eager-src="/map/github.svg"
+          data-eager-alt="GitHub"
+          data-eager-class="social-icon-img"
+          data-fetchpriority="low"
           aria-label="GitHub"
         >
-          <img
-            src="/map/github.svg"
-            alt="GitHub"
-            class="social-icon-img"
-            fetchpriority="high"
-            decoding="async"
-          />
+          <!-- picture will be injected with low priority -->
         </a>
 
         <a
           href="javascript:void(0)"
-          class="social-icon"
+          class="social-icon eager-image"
+          data-eager-src="/map/gongzhonghao.svg"
+          data-eager-alt="WeChat Official Account"
+          data-eager-class="social-icon-img"
+          data-fetchpriority="low"
           aria-label="WeChat Official Account"
           data-popup="gongzhonghao"
         >
-          <img
-            src="/map/gongzhonghao.svg"
-            alt="WeChat Official Account"
-            class="social-icon-img"
-            fetchpriority="high"
-            decoding="async"
-          />
+          <!-- picture will be injected with low priority -->
         </a>
 
         <a
           href="javascript:void(0)"
-          class="social-icon"
+          class="social-icon eager-image"
+          data-eager-src="/map/email.svg"
+          data-eager-alt="Email"
+          data-eager-class="social-icon-img"
+          data-fetchpriority="low"
           aria-label="Email"
           data-popup="email"
         >
-          <img
-            src="/map/email.svg"
-            alt="Email"
-            class="social-icon-img"
-            fetchpriority="high"
-            decoding="async"
-          />
+          <!-- picture will be injected with low priority -->
         </a>
 
         <a
           href="https://www.xiaohongshu.com/user/profile/YOUR_ID"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-icon"
+          class="social-icon eager-image"
+          data-eager-src="/map/xiaohongshu.svg"
+          data-eager-alt="Xiaohongshu"
+          data-eager-class="social-icon-img"
+          data-fetchpriority="low"
           aria-label="Xiaohongshu"
         >
-          <img
-            src="/map/xiaohongshu.svg"
-            alt="Xiaohongshu"
-            class="social-icon-img"
-            fetchpriority="high"
-            decoding="async"
-          />
+          <!-- picture will be injected with low priority -->
         </a>
 
         <a
           href="javascript:void(0)"
-          class="social-icon"
+          class="social-icon eager-image"
+          data-eager-src="/map/wechat.svg"
+          data-eager-alt="WeChat"
+          data-eager-class="social-icon-img"
+          data-fetchpriority="low"
           aria-label="WeChat"
           data-popup="wechat"
         >
-          <img
-            src="/map/wechat.svg"
-            alt="WeChat"
-            class="social-icon-img"
-            fetchpriority="high"
-            decoding="async"
-          />
+          <!-- picture will be injected with low priority -->
         </a>
       </div>
 
@@ -494,6 +545,7 @@ const landmarks = [
             href={landmark.route}
             class="landmark-hotspot"
             data-landmark={landmark.id}
+            data-astro-prefetch="false"
             aria-label={`Visit ${landmark.title_en}`}
           >
             <span class="sr-only">{landmark.title_en}</span>
@@ -587,14 +639,9 @@ const landmarks = [
       </svg>
     </div>
 
-    <!-- 小人角色引导 -->
-    <div id="girl-runner">
-      <img
-        src="/girl/girl.svg"
-        alt="guide girl"
-        loading="lazy"
-        decoding="async"
-      />
+    <!-- 小人角色引导（延迟加载） -->
+    <div id="girl-runner" class="lazy-image" data-lazy-src="/girl/girl" data-lazy-alt="Guide Girl" data-lazy-style="width: 100%; height: auto; display: block;">
+      <!-- img will be injected by IntersectionObserver -->
     </div>
 
     <!-- 弹窗组件 -->
@@ -605,7 +652,9 @@ const landmarks = [
         <!-- WeChat QR Code 弹窗 -->
         <div id="popup-wechat" class="popup-content">
           <h3 class="popup-title">微信扫一扫</h3>
-          <img src="/map/qrcode.png" alt="WeChat QR Code" class="popup-qrcode" />
+          <div class="popup-qrcode-container lazy-image" data-lazy-src="/map/qrcode.png" data-lazy-alt="WeChat QR Code">
+            <!-- img will be injected by IntersectionObserver -->
+          </div>
         </div>
 
         <!-- Email 弹窗 -->
@@ -636,9 +685,16 @@ const landmarks = [
   </div>
 </BaseLayout>
 
-<script type="module" src="/src/scripts/girl-runner.ts"></script>
+<script>
+  // 🎯 导入 girl-runner 模块（Astro import 方式）
+  import '../scripts/girl-runner.ts';
+</script>
 
 <style>
+  /* ============================================
+     🎯 首屏关键样式：避免 FOUC
+     ============================================ */
+
   /* 全屏 Viewport */
   .map-wrapper {
     position: relative;
@@ -647,7 +703,35 @@ const landmarks = [
     overflow: hidden;
     margin: 0;
     padding: 0;
-    background-color: var(--bg-parchment);
+    background-color: #2a2419; /* 深棕色，接近背景图主色调 */
+  }
+
+  /* 🎯 Placeholder 层：纯色背景，立即显示 */
+  .map-placeholder {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(135deg, #3d3225 0%, #2a2419 50%, #1f1810 100%);
+    pointer-events: none;
+  }
+
+  /* 🎯 背景图：纯 CSS 铺满，不依赖 JS */
+  .map-background {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover; /* 铺满视口，保持比例 */
+    object-position: center;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0; /* 初始隐藏，onload 后淡入 */
+    transition: opacity 0.6s ease-out;
+  }
+
+  /* 背景图加载完成后显示 */
+  .map-background.loaded {
+    opacity: 1;
   }
 
   /* Debug 切换按钮（左上角，fixed overlay） */
@@ -683,7 +767,7 @@ const landmarks = [
     font-size: 0.875rem;
   }
 
-  /* 固定画布 mapStage */
+  /* 固定画布 mapStage（交互层）*/
   .map-canvas {
     width: 1376px;
     height: 768px;
@@ -691,19 +775,8 @@ const landmarks = [
     left: 50%;
     top: 50%;
     transform-origin: center center;
+    z-index: 10; /* 在背景图之上 */
     /* transform 由 JS 计算: translate(-50%, -50%) scale(scale) */
-  }
-
-  /* 背景图（放在 mapStage 内，固定尺寸） */
-  .map-background {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 1376px;
-    height: 768px;
-    object-fit: fill;
-    display: block;
-    pointer-events: none;
   }
 
   /* 主标题 */
@@ -713,6 +786,10 @@ const landmarks = [
     z-index: 5;
     text-align: center;
     pointer-events: none;
+    /* 🔧 固定尺寸，避免参与 LCP 竞争 */
+    width: 600px;
+    height: 80px;
+    contain: layout style paint; /* 🔧 隔离布局，不影响 LCP */
   }
 
   .hero-subtitle {
@@ -724,6 +801,9 @@ const landmarks = [
     margin-bottom: 0.5rem;
     font-weight: 400;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    /* 🔧 固定高度 */
+    height: 24px;
+    line-height: 24px;
   }
 
   .hero-main {
@@ -735,6 +815,9 @@ const landmarks = [
     font-weight: 600;
     text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     line-height: 1.2;
+    /* 🔧 固定高度 */
+    height: 48px;
+    line-height: 48px;
   }
 
   /* 光束层（单一 SVG 覆盖层） */
@@ -804,6 +887,19 @@ const landmarks = [
     transform-origin: center center;
     z-index: 8;
     transition: transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1.2);
+    /* 🔧 强制修复：确保容器可见 */
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* 确保 picture 标签不影响布局 */
+  .building-container picture,
+  .sign-container picture,
+  #girl-runner picture {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .core-container {
@@ -812,12 +908,22 @@ const landmarks = [
 
   /* 建筑层样式 */
   .building-layer {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+    position: relative !important; /* 🔧 强制相对定位 */
+    width: 100% !important;
+    height: 100% !important;
     object-fit: contain;
     pointer-events: none;
     transition: filter 220ms ease;
+    display: block !important;
+    /* 🔧 强制修复：确保图片可见 */
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 1 !important;
+  }
+
+  /* 🔧 LCP 目标元素：最高优先级 */
+  .lcp-target {
+    content-visibility: visible !important; /* 🔧 强制可见，不延迟渲染 */
   }
 
   /* 建筑 hover 阴影 */
@@ -831,15 +937,37 @@ const landmarks = [
     transform-origin: center center;
     z-index: 9;
     transition: transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1.2);
+    /* 🔧 强制修复：确保容器可见 */
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   /* 标牌 SVG */
   .sign-bg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+    position: relative !important; /* 🔧 强制相对定位 */
+    width: 100% !important;
+    height: 100% !important;
     object-fit: contain;
     pointer-events: none;
+    display: block !important;
+    /* 🔧 强制修复：确保图片可见 */
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 1 !important;
+  }
+
+  /* 🐛 Debug 模式：高亮显示容器和图片 */
+  .debug-highlight .building-container,
+  .debug-highlight .sign-container {
+    outline: 3px solid red !important;
+    z-index: 9999 !important;
+  }
+
+  .debug-highlight .building-layer,
+  .debug-highlight .sign-bg {
+    outline: 2px solid lime !important;
+    z-index: 9999 !important;
   }
 
   /* Resume 标识（中央底部） */
@@ -1105,6 +1233,7 @@ const landmarks = [
     font-weight: 400;
   }
 
+  .popup-qrcode-container,
   .popup-qrcode {
     width: 280px;
     height: 280px;
@@ -1197,6 +1326,375 @@ const landmarks = [
   document.addEventListener('astro:page-load', () => {
     console.log('🏠 首页脚本加载');
 
+    // ============================================
+    // 🎯 背景图淡入：onload 后显示
+    // ============================================
+    const bgImage = document.getElementById('mapBackground');
+    if (bgImage) {
+      // 如果图片已经从缓存加载完成
+      if (bgImage.complete && bgImage.naturalHeight !== 0) {
+        console.log('✅ 背景图已从缓存加载');
+        bgImage.classList.add('loaded');
+      } else {
+        // 监听图片加载完成
+        bgImage.addEventListener('load', () => {
+          console.log('✅ 背景图加载完成，开始淡入');
+          bgImage.classList.add('loaded');
+        });
+
+        bgImage.addEventListener('error', () => {
+          console.error('❌ 背景图加载失败，显示 placeholder');
+          // 保留 placeholder，不添加 loaded class
+        });
+      }
+    }
+
+    // ============================================
+    // 🎯 LCP (Largest Contentful Paint) 监控
+    // ============================================
+    if ('PerformanceObserver' in window) {
+      try {
+        const lcpObserver = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const lastEntry = entries[entries.length - 1];
+
+          console.log('📊 LCP 检测结果:');
+          console.log(`  ⏱️  时间: ${lastEntry.renderTime || lastEntry.loadTime}ms`);
+          console.log(`  🎯 元素:`, lastEntry.element);
+          console.log(`  📏 尺寸: ${lastEntry.size}px²`);
+          console.log(`  🔗 URL: ${lastEntry.url || 'N/A'}`);
+
+          // 检查是否是预期的背景图
+          const isBackgroundImg = lastEntry.element?.classList?.contains('map-background');
+          if (isBackgroundImg) {
+            console.log('  ✅ LCP 已正确锁定到背景图！');
+          } else {
+            console.warn('  ⚠️  LCP 不是背景图，请检查！');
+            console.warn('  当前 LCP 元素:', lastEntry.element?.tagName, lastEntry.element?.className);
+          }
+        });
+
+        lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+
+        // 页面卸载时输出最终 LCP
+        window.addEventListener('beforeunload', () => {
+          lcpObserver.disconnect();
+        });
+      } catch (e) {
+        console.warn('⚠️  LCP 监控初始化失败:', e);
+      }
+    }
+
+    // ============================================
+    // 🎯 统一的"兜底必成功"图片加载器
+    // ============================================
+
+    /**
+     * 创建带 fallback 的 img 元素（简化版，确保请求真正发出）
+     * @param {string} basePath - 路径（可能带扩展名）
+     * @param {string} alt - 图片 alt 文本
+     * @param {string} className - CSS 类名
+     * @param {string} inlineStyle - 内联样式（可选）
+     * @param {string} fetchPriority - 加载优先级（high/low/auto）
+     * @param {Function} onSuccess - 成功回调
+     * @param {Function} onAllFailed - 所有格式都失败时的回调
+     * @returns {HTMLImageElement}
+     */
+    function makeImgWithFallback(basePath, alt, className, inlineStyle, fetchPriority, onSuccess, onAllFailed) {
+      const img = document.createElement('img');
+      img.alt = alt || '';
+      img.decoding = 'async';
+
+      // 🔧 根据 fetchpriority 设置加载策略
+      if (fetchPriority === 'high') {
+        img.loading = 'eager';
+        img.fetchPriority = 'high';
+        console.log(`🎯 [LCP 候选] ${basePath}`);
+      } else if (fetchPriority === 'medium') {
+        img.loading = 'eager';
+        img.fetchPriority = 'high'; // medium 也用 high，确保快速加载
+        console.log(`📋 [Resume] ${basePath}`);
+      } else {
+        // 🔧 修复：所有图片都用 eager，只是延迟时间不同
+        img.loading = 'eager'; // 改为 eager，确保加载
+        img.fetchPriority = 'low';
+      }
+
+      if (className) img.className = className;
+      if (inlineStyle) img.style.cssText = inlineStyle;
+
+      // 🔧 检查路径是否已经带扩展名
+      const hasExtension = /\.(avif|webp|svg|png|jpg|jpeg|gif)$/i.test(basePath);
+
+      let candidates = [];
+      if (hasExtension) {
+        candidates = [basePath];
+        console.log(`🔍 路径已带扩展名: ${basePath}`);
+      } else {
+        candidates = [
+          `${basePath}.avif`,
+          `${basePath}.webp`,
+          `${basePath}.svg`,
+          `${basePath}.png`,
+        ];
+        console.log(`🔍 路径无扩展名，候选:`, candidates);
+      }
+
+      console.log(`📋 [${basePath}] 候选列表:`, candidates);
+
+      let currentIndex = 0;
+
+      const tryNext = () => {
+        if (currentIndex >= candidates.length) {
+          console.error(`❌ [${basePath}] 所有格式都失败`);
+          if (onAllFailed) onAllFailed();
+          return;
+        }
+
+        const currentSrc = candidates[currentIndex];
+        console.log(`🔄 [${currentIndex + 1}/${candidates.length}] 尝试: ${currentSrc}`);
+
+        img.onload = () => {
+          console.log(`✅ [${currentIndex + 1}/${candidates.length}] 成功: ${currentSrc}`);
+          console.log(`🎉 最终成功 URL: ${currentSrc}`);
+          if (onSuccess) onSuccess();
+        };
+
+        img.onerror = () => {
+          console.warn(`⚠️ [${currentIndex + 1}/${candidates.length}] 失败: ${currentSrc}`);
+          currentIndex++;
+          tryNext();
+        };
+
+        img.src = currentSrc;
+      };
+
+      // 立即开始尝试第一个候选
+      tryNext();
+
+      return img;
+    }
+
+    // ============================================
+    // 🎯 统一加载逻辑
+    // ============================================
+
+    /**
+     * 加载单个容器的图片
+     * @param {HTMLElement} container - 容器元素
+     * @param {number} delay - 延迟时间（毫秒）
+     */
+    function loadImage(container, delay = 0) {
+      const basePath = container.getAttribute('data-lazy-src') || container.getAttribute('data-eager-src');
+      const alt = container.getAttribute('data-lazy-alt') || container.getAttribute('data-eager-alt') || '';
+      const className = container.getAttribute('data-lazy-class') || container.getAttribute('data-eager-class') || '';
+      const inlineStyle = container.getAttribute('data-lazy-style') || container.getAttribute('data-eager-style') || '';
+      const fetchPriority = container.getAttribute('data-fetchpriority') || 'auto'; // 🔧 读取优先级
+
+      // 🔧 修复点 1：basePath 为空时，无需清理 loading（因为还没设置）
+      if (!basePath) {
+        console.error('❌ 容器缺少 basePath:', container);
+        return;
+      }
+
+      // 🔧 修复点 2：已加载或加载中，直接返回
+      if (container.dataset.loaded || container.dataset.loading) {
+        console.log(`⏭️ 跳过已加载/加载中的容器: ${basePath}`);
+        return;
+      }
+
+      // 设置 loading 标志
+      container.dataset.loading = 'true';
+      console.log(`🔄 准备加载图片（延迟 ${delay}ms，优先级 ${fetchPriority}）: ${basePath}`);
+      console.log(`   容器信息:`, {
+        id: container.id || container.getAttribute('data-landmark-id'),
+        className: container.className,
+        width: container.offsetWidth,
+        height: container.offsetHeight,
+        visible: container.offsetParent !== null
+      });
+
+      // 🔧 修复点 3：超时保护（10 秒）
+      const loadingTimeoutId = setTimeout(() => {
+        if (container.dataset.loading && !container.dataset.loaded) {
+          console.error(`⏱️ 加载超时（10 秒），强制释放 loading: ${basePath}`);
+          delete container.dataset.loading;
+          container.dataset.loadFailed = 'true';
+        }
+      }, 10000);
+
+      // 🔧 辅助函数：清理 loading 状态
+      const cleanupLoading = (reason) => {
+        clearTimeout(loadingTimeoutId);
+        delete container.dataset.loading;
+        console.log(`🧹 清理 loading 状态: ${basePath} (原因: ${reason})`);
+      };
+
+      setTimeout(() => {
+        // 🔧 修复点 4：在 setTimeout 内检查到已加载，需要清理 loading
+        if (container.dataset.loaded) {
+          console.log(`⏭️ 容器已加载，跳过: ${basePath}`);
+          cleanupLoading('已加载');
+          return;
+        }
+
+        console.log(`📦 开始创建图片: ${basePath}`);
+
+        // 🔧 修复点 5：传递 fetchPriority, onSuccess 和 onAllFailed 回调
+        const img = makeImgWithFallback(
+          basePath,
+          alt,
+          className,
+          inlineStyle,
+          fetchPriority, // 🔧 传递优先级
+          // onSuccess 回调
+          () => {
+            console.log(`✅ 图片加载成功: ${basePath}`);
+            container.dataset.loaded = 'true';
+            cleanupLoading('加载成功');
+            container.appendChild(img);
+
+            // 🐛 诊断：检查图片添加后的状态
+            setTimeout(() => {
+              const imgRect = img.getBoundingClientRect();
+              const containerRect = container.getBoundingClientRect();
+
+              console.log(`✅ 图片已添加到容器:`, {
+                src: img.src,
+                container: container.id || container.getAttribute('data-landmark-id'),
+                childCount: container.children.length,
+                imgVisible: imgRect.width > 0 && imgRect.height > 0,
+                containerVisible: containerRect.width > 0 && containerRect.height > 0
+              });
+            }, 50);
+          },
+          // onAllFailed 回调
+          () => {
+            console.error(`❌ 所有格式都加载失败，隐藏容器: ${basePath}`);
+            container.dataset.loadFailed = 'true';
+            cleanupLoading('所有格式失败');
+            container.style.opacity = '0';
+            container.style.pointerEvents = 'none';
+          }
+        );
+
+        // 🔧 修复点 6：立即将图片添加到 DOM，触发加载
+        // （注意：这里先添加空的 img，src 会在 makeImgWithFallback 中设置）
+        // 不，应该在 onSuccess 中添加
+      }, delay);
+    }
+
+    // ============================================
+    // 🎯 立即加载 eager 元素
+    // ============================================
+    const eagerImages = document.querySelectorAll('.eager-image');
+    console.log(`⚡ 找到 ${eagerImages.length} 个 eager 元素`);
+
+    // 🔧 三级优先级分组
+    const highPriorityImages = [];    // LCP 候选：workshop building
+    const mediumPriorityImages = [];  // Resume
+    const lowPriorityImages = [];     // 社交图标、其他 signs
+
+    eagerImages.forEach((container) => {
+      const fetchPriority = container.getAttribute('data-fetchpriority') || 'auto';
+      const basePath = container.getAttribute('data-eager-src');
+
+      if (fetchPriority === 'high') {
+        highPriorityImages.push({ container, basePath });
+      } else if (fetchPriority === 'medium') {
+        mediumPriorityImages.push({ container, basePath });
+      } else {
+        lowPriorityImages.push({ container, basePath });
+      }
+    });
+
+    console.log(`\n🎯 加载优先级分组:`);
+    console.log(`   1️⃣ 高优先级 (LCP): ${highPriorityImages.length} 个`);
+    console.log(`   2️⃣ 中优先级 (Resume): ${mediumPriorityImages.length} 个`);
+    console.log(`   3️⃣ 低优先级 (Social): ${lowPriorityImages.length} 个`);
+
+    // 🔧 第一批：高优先级（LCP 候选）- 立即加载
+    console.log(`\n⚡ 第一批：LCP 候选 (立即)`);
+    highPriorityImages.forEach(({ container, basePath }, index) => {
+      console.log(`   [${index}] ${basePath}`);
+      loadImage(container, 0);
+    });
+
+    // 🔧 第二批：中优先级（Resume）- 延迟 200ms
+    console.log(`\n📋 第二批：Resume (延迟 200ms)`);
+    setTimeout(() => {
+      mediumPriorityImages.forEach(({ container, basePath }, index) => {
+        console.log(`   [${index}] ${basePath}`);
+        loadImage(container, 0); // 200ms 后立即加载
+      });
+    }, 200);
+
+    // 🔧 第三批：低优先级（社交图标、signs）- 延迟 500ms，错开加载
+    console.log(`\n🌐 第三批：社交图标 (延迟 500ms，间隔 80ms)`);
+    setTimeout(() => {
+      lowPriorityImages.forEach(({ container, basePath }, index) => {
+        console.log(`   [${index}] ${basePath}`);
+        loadImage(container, index * 80); // 每个间隔 80ms
+      });
+    }, 500);
+
+    // ============================================
+    // 🎯 IntersectionObserver 延迟加载 lazy 元素
+    // ============================================
+    const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const container = entry.target;
+          const basePath = container.getAttribute('data-lazy-src');
+          console.log(`👁️ 元素进入视口: ${basePath}`);
+
+          // 🔧 lazy 图片快速加载，避免超时
+          const randomDelay = Math.floor(Math.random() * 200) + 300; // 300-500ms 随机延迟
+          loadImage(container, randomDelay);
+
+          // 停止观察该元素
+          observer.unobserve(container);
+        }
+      });
+    }, {
+      rootMargin: '800px 0px', // 🔧 从 1200px 减少到 800px，减少预加载量
+      threshold: 0
+    });
+
+    // 🎯 观察所有 lazy 元素
+    const lazyImages = document.querySelectorAll('.lazy-image');
+    console.log(`🖼️  找到 ${lazyImages.length} 个 lazy 元素`);
+
+    lazyImages.forEach((img, index) => {
+      const basePath = img.getAttribute('data-lazy-src');
+      const id = img.getAttribute('data-landmark-id') || img.id || `unnamed-${index}`;
+      console.log(`  [${index}] ${id}: ${basePath}`);
+      lazyImageObserver.observe(img);
+    });
+
+    console.log(`✅ 已观察 ${lazyImages.length} 个延迟加载元素`);
+
+    // 🎯 兜底机制：页面加载完成 2 秒后，强制加载所有未加载的元素
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const unloadedImages = document.querySelectorAll('.lazy-image:not([data-loaded]):not([data-loading]), .eager-image:not([data-loaded]):not([data-loading])');
+        if (unloadedImages.length > 0) {
+          console.warn(`⚠️ 发现 ${unloadedImages.length} 个未触发的加载图片，执行兜底加载`);
+          unloadedImages.forEach(container => {
+            const basePath = container.getAttribute('data-lazy-src') || container.getAttribute('data-eager-src');
+            console.log(`🔧 兜底加载: ${basePath}`);
+            loadImage(container, 0); // 立即加载，无延迟
+          });
+        } else {
+          console.log(`✅ 所有图片已触发或已加载`);
+        }
+      }, 2000);
+    });
+
+    // ============================================
+    // 以下是原有代码
+    // ============================================
+
     // 检查音乐状态
     if (window.__globalAudio) {
       console.log('🎵 首页检测到全局音频对象，状态:', window.__globalAudio.paused ? '⏸️ 暂停' : '▶️ 播放中');
@@ -1204,33 +1702,57 @@ const landmarks = [
       console.warn('⚠️ 首页未检测到全局音频对象');
     }
 
-    // 地标配置数据（用于 hover 动画计算）
+    // 地标配置数据（与顶部 frontmatter 保持同步）
     const landmarks = [
       {
         id: 'workshop',
-        building: { transform: { scale: 1.4, dx: 0, dy: -140 } },
-        sign: { transform: { scale: 2.0, dx: 0, dy: 0 } },
+        building: {
+          transform: { scale: 4.1, dx: 0, dy: -140 },
+          hoverScale: 1.06  // 悬停缩放倍数
+        },
+        sign: {
+          transform: { scale: 2.1, dx: 0, dy: 0 },
+          hoverScale: 1.04  // 悬停缩放倍数
+        },
       },
       {
         id: 'knowledge',
-        building: { transform: { scale: 1.3, dx: 0, dy: -90 } },
-        sign: { transform: { scale: 1.8, dx: 0, dy: 0 } },
+        building: {
+          transform: { scale: 1.75, dx: 0, dy: -90 },
+          hoverScale: 1.05
+        },
+        sign: {
+          transform: { scale: 2.1, dx: 0, dy: 0 },
+          hoverScale: 1.04
+        },
       },
       {
         id: 'archives',
-        building: { transform: { scale: 1.3, dx: 0, dy: 0 } },
-        sign: { transform: { scale: 1.4, dx: 0, dy: 0 } },
+        building: {
+          transform: { scale: 1.7, dx: 0, dy: 0 },
+          hoverScale: 1.05
+        },
+        sign: {
+          transform: { scale: 1.65, dx: 0, dy: 0 },
+          hoverScale: 1.04
+        },
       },
       {
         id: 'command',
-        building: { transform: { scale: 0.8, dx: 0, dy: 0 } },
-        sign: { transform: { scale: 1.4, dx: 0, dy: 0 } },
+        building: {
+          transform: { scale: 1.1, dx: 0, dy: 0 },
+          hoverScale: 1.05
+        },
+        sign: {
+          transform: { scale: 1.6, dx: 0, dy: 0 },
+          hoverScale: 1.04
+        },
       },
     ];
 
     // 画布缩放逻辑
-    const DESIGN_W = 1376;
-    const DESIGN_H = 768;
+    const DESIGN_W = 1920;
+    const DESIGN_H = 1072;
 
     const mapCanvas = document.getElementById('mapCanvas');
     const debugLayer = document.getElementById('debugLayer');
@@ -1322,6 +1844,152 @@ const landmarks = [
   window.addEventListener('resize', scaleCanvas);
 
   // Debug 切换
+  let debugHighlight = false;
+
+  // 🐛 增强的调试系统：诊断容器可见性
+  function diagnoseContainers() {
+    console.log('\n========== 🐛 容器诊断报告 ==========\n');
+
+    // 诊断所有 building 容器
+    const buildingContainers = document.querySelectorAll('.building-container');
+    console.log(`📦 找到 ${buildingContainers.length} 个 building 容器:\n`);
+
+    buildingContainers.forEach((container, index) => {
+      const id = container.getAttribute('data-landmark-id') || container.getAttribute('data-building-id') || `container-${index}`;
+      const rect = container.getBoundingClientRect();
+      const computedStyle = window.getComputedStyle(container);
+
+      console.log(`[${index + 1}] ${id}:`);
+      console.log(`  ✓ childCount: ${container.children.length}`);
+      console.log(`  ✓ getBoundingClientRect:`, {
+        x: rect.x.toFixed(2),
+        y: rect.y.toFixed(2),
+        width: rect.width.toFixed(2),
+        height: rect.height.toFixed(2),
+        visible: rect.width > 0 && rect.height > 0
+      });
+      console.log(`  ✓ 计算样式:`, {
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity,
+        zIndex: computedStyle.zIndex,
+        overflow: computedStyle.overflow,
+        position: computedStyle.position
+      });
+
+      // 检查子元素（图片）
+      const img = container.querySelector('img');
+      if (img) {
+        const imgRect = img.getBoundingClientRect();
+        const imgStyle = window.getComputedStyle(img);
+        console.log(`  ✓ 子图片:`, {
+          src: img.src,
+          naturalWidth: img.naturalWidth,
+          naturalHeight: img.naturalHeight,
+          displayWidth: imgRect.width.toFixed(2),
+          displayHeight: imgRect.height.toFixed(2),
+          opacity: imgStyle.opacity,
+          visibility: imgStyle.visibility,
+          zIndex: imgStyle.zIndex
+        });
+      } else {
+        console.warn(`  ⚠️ 容器内没有 img 元素！`);
+      }
+      console.log('');
+    });
+
+    // 诊断所有 sign 容器
+    const signContainers = document.querySelectorAll('.sign-container');
+    console.log(`📦 找到 ${signContainers.length} 个 sign 容器:\n`);
+
+    signContainers.forEach((container, index) => {
+      const id = container.getAttribute('data-landmark-id') || `sign-${index}`;
+      const rect = container.getBoundingClientRect();
+      const computedStyle = window.getComputedStyle(container);
+
+      console.log(`[${index + 1}] ${id}:`);
+      console.log(`  ✓ childCount: ${container.children.length}`);
+      console.log(`  ✓ getBoundingClientRect:`, {
+        x: rect.x.toFixed(2),
+        y: rect.y.toFixed(2),
+        width: rect.width.toFixed(2),
+        height: rect.height.toFixed(2),
+        visible: rect.width > 0 && rect.height > 0
+      });
+      console.log(`  ✓ 计算样式:`, {
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity,
+        zIndex: computedStyle.zIndex,
+        overflow: computedStyle.overflow
+      });
+
+      // 检查子元素（图片）
+      const img = container.querySelector('img');
+      if (img) {
+        const imgRect = img.getBoundingClientRect();
+        const imgStyle = window.getComputedStyle(img);
+        console.log(`  ✓ 子图片:`, {
+          src: img.src,
+          naturalWidth: img.naturalWidth,
+          naturalHeight: img.naturalHeight,
+          displayWidth: imgRect.width.toFixed(2),
+          displayHeight: imgRect.height.toFixed(2),
+          opacity: imgStyle.opacity,
+          visibility: imgStyle.visibility,
+          zIndex: imgStyle.zIndex
+        });
+      } else {
+        console.warn(`  ⚠️ 容器内没有 img 元素！`);
+      }
+      console.log('');
+    });
+
+    // 检查是否被其他元素遮挡
+    console.log('🔍 检查元素层级关系:');
+    const allContainers = [...buildingContainers, ...signContainers];
+    allContainers.forEach(container => {
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const topElement = document.elementFromPoint(centerX, centerY);
+
+      const id = container.getAttribute('data-landmark-id') || container.getAttribute('data-building-id') || 'unknown';
+
+      if (topElement && !container.contains(topElement)) {
+        console.warn(`  ⚠️ ${id} 被遮挡！顶层元素:`, topElement.tagName, topElement.className);
+      } else {
+        console.log(`  ✓ ${id} 可见（或容器本身在顶层）`);
+      }
+    });
+
+    console.log('\n========================================\n');
+  }
+
+  // 键盘快捷键：D 键切换 debug 高亮模式
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'd' || e.key === 'D') {
+      debugHighlight = !debugHighlight;
+
+      if (debugHighlight) {
+        document.body.classList.add('debug-highlight');
+        console.log('🐛 Debug 高亮模式：已开启');
+        console.log('   - 红色边框：容器');
+        console.log('   - 绿色边框：图片');
+        console.log('   - z-index 已强制提升到 9999');
+
+        // 执行完整诊断
+        setTimeout(() => {
+          diagnoseContainers();
+        }, 100);
+      } else {
+        document.body.classList.remove('debug-highlight');
+        console.log('🐛 Debug 高亮模式：已关闭');
+      }
+    }
+  });
+
+  // 旧的 debug toggle（兼容性保留）
   if (debugToggle && debugLayer) {
     debugToggle.addEventListener('click', () => {
       debugMode = !debugMode;
@@ -1395,7 +2063,18 @@ const landmarks = [
         if (landmark) {
           const dx = landmark.building.transform.dx;
           const dy = landmark.building.transform.dy - 6; // 向上浮起 6px
-          const scale = landmark.building.transform.scale * 1.03; // 放大 1.03 倍
+          // 使用配置的悬停缩放倍数，如果未配置则默认 1.03
+          const hoverScaleMultiplier = landmark.building.hoverScale || 1.03;
+          const scale = landmark.building.transform.scale * hoverScaleMultiplier;
+
+          // 🐛 调试信息
+          console.log(`[${landmarkId}] 建筑悬停:`, {
+            原始scale: landmark.building.transform.scale,
+            hoverScale配置: landmark.building.hoverScale,
+            计算后scale: scale,
+            transform: `translate(${dx}px, ${dy}px) scale(${scale})`
+          });
+
           buildingContainer.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
         }
 
@@ -1410,7 +2089,9 @@ const landmarks = [
         if (landmark) {
           const dx = landmark.sign.transform.dx;
           const dy = landmark.sign.transform.dy - 6; // 向上浮起 6px
-          const scale = landmark.sign.transform.scale * 1.02; // 稍微放大
+          // 使用配置的悬停缩放倍数，如果未配置则默认 1.02
+          const hoverScaleMultiplier = landmark.sign.hoverScale || 1.02;
+          const scale = landmark.sign.transform.scale * hoverScaleMultiplier;
           signContainer.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
         }
       }

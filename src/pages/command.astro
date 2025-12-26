@@ -87,7 +87,7 @@ const filters = [
     </div>
 
     <!-- Decision Logs - 全宽展示 -->
-    <section class="decision-logs-section">
+    <section class="decision-logs-section" id="decision-logs-section">
       <h2 class="section-label">DECISION LOGS</h2>
       <p class="section-description">Strategic decisions, trade-offs, and architectural thinking.</p>
       <p class="section-description-zh">战略决策、权衡分析与架构思考</p>
@@ -200,14 +200,44 @@ const filters = [
     });
   }
 
+  // 阻止过滤器链接的默认跳转行为，保持当前滚动位置
+  function initFilterClickHandlers() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault(); // 阻止默认跳转
+        const filter = tab.getAttribute('data-filter');
+        const url = new URL(window.location.href);
+
+        if (filter === 'all') {
+          url.searchParams.delete('filter');
+        } else {
+          url.searchParams.set('filter', filter);
+        }
+
+        // 更新 URL 但不触发页面跳转
+        window.history.pushState({}, '', url.toString());
+
+        // 手动触发过滤
+        filterEntries();
+      });
+    });
+  }
+
   // 页面加载时过滤
-  document.addEventListener('DOMContentLoaded', filterEntries);
+  document.addEventListener('DOMContentLoaded', () => {
+    filterEntries();
+    initFilterClickHandlers();
+  });
+
+  // Astro页面切换
+  document.addEventListener('astro:page-load', () => {
+    filterEntries();
+    initFilterClickHandlers();
+  });
 
   // 监听浏览器前进/后退
   window.addEventListener('popstate', filterEntries);
-
-  // Astro页面切换
-  document.addEventListener('astro:page-load', filterEntries);
 </script>
 
 <style>
