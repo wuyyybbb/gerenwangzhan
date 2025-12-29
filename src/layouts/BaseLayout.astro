@@ -15,7 +15,28 @@ import { ViewTransitions } from 'astro:transitions';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content={description} />
+    <meta name="keywords" content="Wu Yebei, 吴叶贝, AI, 人工智能, AI工作流, 知识架构, 决策支持系统, AI Workshop, Knowledge Tower, 智能助手" />
+    <meta name="author" content="Wu Yebei (吴叶贝)" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Wu Yebei's Personal Map" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={Astro.url} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={Astro.url} />
+
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

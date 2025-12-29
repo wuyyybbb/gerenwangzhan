@@ -530,6 +530,28 @@ const landmarks = [
       </div>
 
       <!-- 可点击热区层 -->
+      <!-- 核心建筑热区 -->
+      <div
+        class="landmark-hotspot-container core-hotspot-container"
+        data-landmark-id="core-building"
+        style={`
+          left: ${coreBuilding.building.rect.x}px;
+          top: ${coreBuilding.building.rect.y}px;
+          width: ${coreBuilding.building.rect.w}px;
+          height: ${coreBuilding.building.rect.h}px;
+        `}
+      >
+        <a
+          href="/about"
+          class="landmark-hotspot core-hotspot"
+          data-landmark="core-building"
+          data-astro-prefetch="false"
+          aria-label="About Me"
+        >
+          <span class="sr-only">About</span>
+        </a>
+      </div>
+
       {landmarks.map(landmark => (
         <div
           class="landmark-hotspot-container"

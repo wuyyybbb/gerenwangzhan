@@ -1,0 +1,442 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+---
+
+<BaseLayout
+  title="About - Wu Yebei | AI Explorer & Knowledge Architect"
+  description="吴叶贝（Wu Yebei）- 专注于人工智能应用探索、知识体系构建与数字化表达的实践者。探索 AI 生成、智能工作流、知识架构与决策支持系统。"
+>
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Wu Yebei",
+    "alternateName": "吴叶贝",
+    "description": "AI应用探索者、知识体系构建者、数字化表达实践者",
+    "knowsAbout": [
+      "Artificial Intelligence",
+      "AI Workflows",
+      "Knowledge Architecture",
+      "Decision Support Systems",
+      "Intelligent Automation",
+      "Generative AI"
+    ],
+    "email": "wyb3206@163.com",
+    "url": "https://yourdomain.com/about",
+    "sameAs": [
+      "https://mp.weixin.qq.com/贝塔数智所"
+    ]
+  })} />
+
+  <main class="page-container about-container">
+    <!-- 返回按钮 -->
+    <a href="/" class="back-link">
+      ← Back to Map
+    </a>
+
+    <!-- 内容区 -->
+    <div class="content-wrapper">
+      <header class="about-header">
+        <h1 class="page-title">About</h1>
+        <p class="page-subtitle">关于我</p>
+      </header>
+
+      <!-- 主要介绍内容 -->
+      <div class="about-content">
+          <!-- 核心介绍 -->
+          <article class="about-intro">
+            <p class="intro-text">
+              我是 <strong>吴叶贝（Wu Yebei）</strong>，一名专注于 <em>人工智能应用探索、知识体系构建与数字化表达</em> 的实践者与思考者。我长期致力于将 <strong>前沿 AI 技术、结构化知识方法与真实问题解决场景</strong> 有机结合，通过实验性项目、原创文章和系统化框架，为技术与创意交汇的边缘提供可理解、可复用的思路与成果。
+            </p>
+            <p class="intro-text">
+              在这个网站上，你会看到我围绕 <strong>AI 生成、智能工作流、知识架构与决策支持系统</strong> 的探索与实践记录——它们既是我个人成长的脚印，也是希望能对同行者、学习者甚至未来的合作伙伴有所启发的内容集成。
+            </p>
+          </article>
+
+          <!-- 我正在做什么 -->
+          <article class="about-section-block">
+            <h2 class="section-heading">
+              <span class="icon">🧠</span> 我正在做什么
+            </h2>
+            <ul class="work-list">
+              <li>
+                <strong>构建 AI 实验工作坊（AI Workshop）</strong>：聚焦生成式AI、智能工作流、模型协同等实操性内容。
+              </li>
+              <li>
+                <strong>搭建知识体系（Knowledge Tower）</strong>：把复杂技术与理念拆解成结构化的知识单元，便于理解与传播。
+              </li>
+              <li>
+                <strong>整理历史与经验存档（Ancient Archives）</strong>：保留跨领域思考与长期积累的原创内容。
+              </li>
+              <li>
+                <strong>建立决策中枢（Command Center）</strong>：用系统性方法帮助自己与他人在不确定环境中做更稳健的选择。
+              </li>
+            </ul>
+            <p class="work-note">
+              这些内容不是碎片式的笔记，而是经过 <strong>实践验证与逻辑整合的系统性知识成果</strong>，以便被 <em>人类与智能检索工具</em> 更好地理解、使用和引用。
+            </p>
+          </article>
+
+          <!-- 我擅长什么 -->
+          <article class="about-section-block">
+            <h2 class="section-heading">
+              <span class="icon">🛠</span> 我擅长什么
+            </h2>
+            <p class="intro-text">我擅长将 <strong>抽象思想与技术细节结合</strong>：</p>
+            <ul class="skills-list">
+              <li>用 <strong>结构化与可复用的方法</strong> 将 AI 技术拆解成可执行方案</li>
+              <li>将 <strong>实验过程与技术经验</strong> 写作输出为长期有价值的知识内容</li>
+              <li>构建 <strong>技术与思维的双向路径</strong>，既能推动技术实践，也能支持战略性思考</li>
+              <li>通过整合工具、方法与案例，搭建可被 <strong>搜索引擎与智能助手理解</strong> 的知识地图</li>
+            </ul>
+            <p class="work-note">
+              这些能力既用于我自己的长期成长与研究，也用于支持他人有效跨越学习与落地的鸿沟。
+            </p>
+          </article>
+
+          <!-- 我写这网站的目的 -->
+          <article class="about-section-block">
+            <h2 class="section-heading">
+              <span class="icon">🌐</span> 我写这网站的目的
+            </h2>
+            <p class="intro-text">
+              我的目标不是生产"短期流量"，而是建立一份 <strong>长期有价值、可被理解和引用的个人知识资产</strong>：
+            </p>
+            <ul class="purpose-list">
+              <li>✔ 对未来的自己更友好</li>
+              <li>✔ 对行业探索者更有启发</li>
+              <li>✔ 对智能搜索引擎与人工智能代理更易理解</li>
+            </ul>
+            <p class="work-note">
+              这就是为什么我的内容强调 <strong>结构性、可读性与实用性</strong> — 让搜索引擎与智能助手在未来几年甚至更久都能准确理解我的思想与路径。
+            </p>
+          </article>
+
+          <!-- 联系方式 -->
+          <article class="about-section-block contact-section">
+            <h2 class="section-heading">
+              <span class="icon">📫</span> 联系我
+            </h2>
+            <div class="contact-info">
+              <p>📧 邮箱：<a href="mailto:wyb3206@163.com" class="contact-link">wyb3206@163.com</a></p>
+              <p>📱 公众号：<strong>贝塔数智所</strong></p>
+            </div>
+            <p class="contact-note">欢迎关注、交流与合作！</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 导航到其他页面 -->
+      <section class="explore-more">
+        <h2 class="explore-title">Explore More</h2>
+        <div class="explore-grid">
+          <a href="/workshop" class="explore-card" data-astro-prefetch="false">
+            <h3>AI Workshop</h3>
+            <p class="explore-subtitle">AI 实验工作坊</p>
+            <p>Explore AI-driven workflows and intelligent automation</p>
+          </a>
+
+          <a href="/command-center" class="explore-card" data-astro-prefetch="false">
+            <h3>Command Center</h3>
+            <p class="explore-subtitle">决策中枢</p>
+            <p>Strategic decision-making frameworks and methodologies</p>
+          </a>
+
+          <a href="/log" class="explore-card" data-astro-prefetch="false">
+            <h3>Decision Logs</h3>
+            <p class="explore-subtitle">决策日志</p>
+            <p>Document exploration journeys and thought processes</p>
+          </a>
+
+          <a href="/archives" class="explore-card" data-astro-prefetch="false">
+            <h3>Ancient Archives</h3>
+            <p class="explore-subtitle">古老档案</p>
+            <p>Preserved knowledge and historical insights</p>
+          </a>
+        </div>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  /* 页面容器 */
+  .page-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin-bottom: 3rem;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink-main);
+  }
+
+  .content-wrapper {
+    max-width: 900px;
+  }
+
+  /* 标题区域 */
+  .about-header {
+    margin-bottom: 4rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--ink-main);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-family: var(--font-zh-display);
+    font-size: 3rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  /* 介绍文本样式 */
+  .about-intro {
+    border: 1px solid var(--ink-soft);
+    padding: 2rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .about-intro:hover {
+    border-color: var(--ink-main);
+  }
+
+  .intro-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--ink-main, #1f1f1f);
+    margin-bottom: 1.2rem;
+    font-family: var(--font-zh-body, 'Noto Serif SC', serif);
+  }
+
+  .intro-text:last-child {
+    margin-bottom: 0;
+  }
+
+  .intro-text strong {
+    color: var(--ink-main, #1f1f1f);
+    font-weight: 600;
+  }
+
+  .intro-text em {
+    color: var(--ink-main);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  /* 区块样式 */
+  .about-section-block {
+    border: 1px solid var(--ink-soft);
+    padding: 2rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .about-section-block:hover {
+    border-color: var(--ink-main);
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+    font-family: var(--font-serif, 'Cinzel', serif);
+    color: var(--ink-main, #1f1f1f);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-heading .icon {
+    font-size: 1.3rem;
+  }
+
+  /* 列表样式 */
+  .work-list,
+  .skills-list,
+  .purpose-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+  }
+
+  .work-list li,
+  .skills-list li {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    line-height: 1.7;
+    font-size: 1rem;
+    color: var(--ink-main, #1f1f1f);
+  }
+
+  .work-list li::before,
+  .skills-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #d4b506;
+    font-weight: bold;
+  }
+
+  .purpose-list li {
+    padding-left: 0;
+    margin-bottom: 0.8rem;
+    font-size: 1.05rem;
+    color: var(--ink-main, #1f1f1f);
+  }
+
+  .work-note {
+    margin-top: 1.2rem;
+    padding: 1rem;
+    border-left: 3px solid var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink-soft, #4a4a4a);
+  }
+
+  /* 联系方式样式 */
+  .contact-info {
+    margin: 1.5rem 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .contact-info p {
+    margin-bottom: 0.8rem;
+  }
+
+  .contact-link {
+    color: var(--ink-main);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .contact-link:hover {
+    color: var(--ink-soft);
+    text-decoration: underline;
+  }
+
+  .contact-note {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: var(--ink-soft, #4a4a4a);
+    font-style: italic;
+  }
+
+  /* Explore More 区域 */
+  .explore-more {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 2px solid var(--ink-soft);
+  }
+
+  .explore-title {
+    font-size: 1.8rem;
+    font-family: var(--font-serif, 'Cinzel', serif);
+    color: var(--ink-main, #1f1f1f);
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .explore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .explore-card {
+    padding: 1.5rem;
+    border: 1px solid var(--ink-soft);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .explore-card:hover {
+    border-color: var(--ink-main);
+    transform: translateX(4px);
+  }
+
+  .explore-card h3 {
+    font-size: 1.3rem;
+    font-family: var(--font-serif, 'Cinzel', serif);
+    color: var(--ink-main, #1f1f1f);
+    margin-bottom: 0.5rem;
+  }
+
+  .explore-subtitle {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+  }
+
+  .explore-card p:last-child {
+    font-size: 0.95rem;
+    color: var(--ink-soft, #4a4a4a);
+    line-height: 1.5;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .page-subtitle {
+      font-size: 2rem;
+    }
+
+    .about-intro,
+    .about-section-block {
+      padding: 1.5rem;
+    }
+
+    .section-heading {
+      font-size: 1.3rem;
+    }
+
+    .intro-text,
+    .work-list li,
+    .skills-list li {
+      font-size: 0.95rem;
+    }
+
+    .explore-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>
