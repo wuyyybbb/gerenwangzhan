@@ -1,11 +1,17 @@
 ---
-title_en: "HD Upscaling with UltimateSDUpscale"
-title_zh: "高清放大与UltimateSDUpscale的双重力量"
+title_en: "HD Upscaling with Ultimate SD Upscale: From 512px to 4K Resolution"
+title_zh: "AI 高清放大实战：Ultimate SD Upscale 从 512px 到 4K 的完整流程"
 type: "course"
 lesson_number: 17
-date: 2024-06-01
+date: 2024-04-29
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Upscaling", "Ultimate SD Upscale", "High Resolution"]
+summary: "普通放大 vs AI 放大有何区别？Ultimate SD Upscale 如何避免显存爆炸？我的 4K 图像放大工作流：分块处理 + 细节增强最佳实践。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "图像放大 / 高清修复 / 显存优化"
+audience: "摄影师 / 设计师 / 打印输出需求者"
+tools: "ComfyUI / Ultimate SD Upscale / Tiled Diffusion"
+updated: "2024-03"
 ---
 
 # 1-7. 高清放大与UltimateSDUpscale的双重力量

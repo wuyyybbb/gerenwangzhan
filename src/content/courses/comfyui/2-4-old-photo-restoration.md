@@ -1,11 +1,17 @@
 ---
-title_en: "Old Photo Restoration"
-title_zh: "老照片修复"
+title_en: "AI Old Photo Restoration: Color Recovery & Damage Repair Workflow"
+title_zh: "AI 老照片修复实战：褪色上色与破损修复完整流程"
 type: "course"
 lesson_number: 24
-date: 2024-06-01
+date: 2024-05-05
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Photo Restoration", "Colorization", "Image Repair"]
+summary: "如何让黑白照片AI上色？破损照片如何智能修复？我的老照片修复工作流：去噪→上色→细节增强三步法与常见问题。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "照片修复 / AI 上色 / 图像还原"
+audience: "摄影师 / 家庭相册整理 / 文化遗产保护"
+tools: "ComfyUI / Colorization Models / Noise Reduction"
+updated: "2024-05"
 ---
 
 # 2-4. 老照片修复

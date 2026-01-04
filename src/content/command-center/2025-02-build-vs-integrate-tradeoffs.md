@@ -8,6 +8,12 @@ tags: ["trade-offs", "engineering", "product-strategy"]
 summary: "看起来更快的方案，往往在 6 个月后变成系统性的负债。"
 cover: "/assets/command-center/covers/2025-02.webp"
 featured: true
+author: "吴叶贝 (Wu Yebei)"
+topic: "技术权衡 / 工程决策 / 系统架构"
+audience: "工程师 / 产品经理 / 架构师"
+tools: "Yjs / ShareDB / Liveblocks / Real-time Collaboration"
+updated: "2025-02"
+category: "Command Center / 指挥中心"
 ---
 
 ## 背景

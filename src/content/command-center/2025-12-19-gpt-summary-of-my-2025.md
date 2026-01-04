@@ -7,6 +7,11 @@ status: published
 tags: ["reflection", "self-awareness", "long-term"]
 summary: "这一年最大的主题不是'突破'，而是'延展'。我没有停下，也没有真正跨过去。"
 featured: false
+author: "吴叶贝 (Wu Yebei)"
+topic: "年度总结 / 自我反思 / 长期思考"
+audience: "创业者 / 产品构建者 / 自我提升者"
+updated: "2025-12"
+category: "Command Center / 指挥中心"
 ---
 
 写这封信的时候，你应该刚刚从这一年的忙乱中抽身出来，或者至少假装自己抽身了。

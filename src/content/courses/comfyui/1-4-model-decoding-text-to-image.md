@@ -1,11 +1,17 @@
 ---
-title_en: "Model Decoding: Fundamentals of Text-to-Image"
-title_zh: "模型解码：探索文生图的基础原理与应用"
+title_en: "Text-to-Image Pipeline Decoded: Building Your First ComfyUI Workflow"
+title_zh: "文生图流程全解析：从提示词到成图的完整 ComfyUI 工作流"
 type: "course"
 lesson_number: 14
-date: 2024-06-01
+date: 2024-04-26
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Text-to-Image", "Workflow", "Stable Diffusion"]
+summary: "VAE、CLIP、KSampler 到底是什么？我如何理解 Latent Space 与采样器的关系？手把手拆解文生图的每个节点，搞懂 AI 图像生成原理。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 原理 / 文生图 / 工作流设计"
+audience: "AI 初学者 / 技术爱好者"
+tools: "ComfyUI / Stable Diffusion / Latent Diffusion"
+updated: "2024-03"
 ---
 
 # 1-4. 模型解码：探索文生图的基础原理与应用

@@ -1,11 +1,17 @@
 ---
-title_en: "IC-Light: Professional Lighting Control"
-title_zh: "光影魔术：IC-Light专业级光影处理"
+title_en: "IC-Light: Professional AI Lighting Control for Product Photography"
+title_zh: "IC-Light 专业级光影控制：产品摄影的 AI 打光技术"
 type: "course"
 lesson_number: 27
-date: 2024-06-01
+date: 2024-05-12
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "IC-Light", "Lighting Control", "Product Photography"]
+summary: "如何用 AI 重新打光？IC-Light 如何实现专业级光影效果？我的产品摄影工作流：环境光→方向光→细节高光三层打光法。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "光影控制 / 产品摄影 / AI 打光"
+audience: "产品摄影师 / 3D 渲染师 / 电商视觉"
+tools: "ComfyUI / IC-Light / Relighting"
+updated: "2024-05"
 ---
 
 # 2-7.光影魔术：IC-Light专业级光影处理(只支持1.5）

@@ -1,11 +1,17 @@
 ---
-title_en: "After Detailer and Face Enhancement"
-title_zh: "after detailer与修脸插件"
+title_en: "After Detailer Face Fixing: Automated Portrait Enhancement Workflow"
+title_zh: "After Detailer 人脸修复：自动化人像优化工作流"
 type: "course"
 lesson_number: 18
-date: 2024-06-01
+date: 2024-04-29
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Face Restoration", "After Detailer", "Portrait"]
+summary: "AI 生成的人脸为什么会崩？After Detailer 如何自动检测并修复面部？我的肖像摄影后期流程：人脸检测 + 局部重绘 + 细节增强。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "人像修复 / 面部增强 / 自动化后期"
+audience: "人像摄影师 / AI 艺术家 / 电商摄影"
+tools: "ComfyUI / After Detailer / Face Detection"
+updated: "2024-03"
 ---
 
 # 1-8. after detailer与修脸插件

@@ -17,7 +17,17 @@ const allPublishedEntries = [
   ...courses.filter(e => e.data.status === 'published').map(entry => ({ ...entry, collection: 'courses' as const })),
   ...reflections.filter(e => e.data.status === 'published').map(entry => ({ ...entry, collection: 'reflections' as const })),
   ...misc.filter(e => e.data.status === 'published').map(entry => ({ ...entry, collection: 'misc' as const })),
-];
+].sort((a, b) => {
+  // 首先按日期倒序排列（最新的在前）
+  const dateCompare = b.data.date.getTime() - a.data.date.getTime();
+
+  // 如果日期相同，且都是课程，按 lesson_number 倒序（数字大的在前）
+  if (dateCompare === 0 && a.data.type === 'course' && b.data.type === 'course') {
+    return ('lesson_number' in b.data ? b.data.lesson_number : 0) - ('lesson_number' in a.data ? a.data.lesson_number : 0);
+  }
+
+  return dateCompare;
+});
 
 // 统计各类型数量
 const counts = {
@@ -190,15 +200,22 @@ const currentFilter = url.searchParams.get('filter') || 'all';
       const typeB = b.getAttribute('data-type');
 
       if (filter === 'course' && typeA === 'course' && typeB === 'course') {
-        // 课程按 lesson_number 排序
-        const cardA = a.querySelector('[data-lesson-number]');
-        const cardB = b.querySelector('[data-lesson-number]');
-        const lessonA = parseInt(cardA?.getAttribute('data-lesson-number') || '0');
-        const lessonB = parseInt(cardB?.getAttribute('data-lesson-number') || '0');
-        return lessonA - lessonB;
+        // 课程：先按日期倒序，日期相同时按课时倒序
+        const dateA = new Date(a.querySelector('[data-date]')?.getAttribute('data-date') || '');
+        const dateB = new Date(b.querySelector('[data-date]')?.getAttribute('data-date') || '');
+        const dateCompare = dateB.getTime() - dateA.getTime();
+
+        if (dateCompare === 0) {
+          // 日期相同，按 lesson_number 倒序（数字大的在前）
+          const lessonA = parseInt(a.querySelector('[data-lesson-number]')?.getAttribute('data-lesson-number') || '0');
+          const lessonB = parseInt(b.querySelector('[data-lesson-number]')?.getAttribute('data-lesson-number') || '0');
+          return lessonB - lessonA;
+        }
+
+        return dateCompare;
       }
 
-      // 其他按日期排序（已经是正确顺序，不需要重新排序）
+      // 其他类型：已经按日期倒序排列，保持原有顺序
       return 0;
     });
 

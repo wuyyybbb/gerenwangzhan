@@ -8,6 +8,12 @@ tags: ["decision-making", "ai-product", "architecture"]
 summary: "在看似更快、更省事的路径面前，我选择了更难但更可控的设计方式。"
 cover: "/assets/command-center/covers/2025-01.webp"
 featured: true
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 产品设计 / 用户体验 / 架构决策"
+audience: "AI 产品经理 / 产品设计师 / 技术架构师"
+tools: "GPT-4 / AI Code Assistant / System Design"
+updated: "2025-01"
+category: "Command Center / 指挥中心"
 ---
 
 ## 背景

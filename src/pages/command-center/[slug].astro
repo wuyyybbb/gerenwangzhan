@@ -25,6 +25,8 @@ const { data } = post;
 // 格式化日期
 const year = new Date(data.date).getFullYear();
 const month = new Date(data.date).toLocaleDateString('zh-CN', { month: 'long' });
+const isoDate = new Date(data.date).toISOString();
+const updatedDate = data.updated ? new Date(`${data.updated}-01`).toISOString() : isoDate;
 
 // 类型标签
 const typeLabels = {
@@ -81,9 +83,56 @@ if (!prevPost || !nextPost) {
     nextPost = publishedPosts[currentIndexGlobal + 1] || null;
   }
 }
+
+// Article Schema 结构化数据（JSON-LD）
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": `https://wuyebei.cn/command-center/${post.slug}#article`,
+  "headline": data.title_en,
+  "alternativeHeadline": data.title_zh,
+  "description": data.summary,
+  "image": data.cover ? `https://wuyebei.cn${data.cover}` : "https://wuyebei.cn/og-image.jpg",
+  "author": {
+    "@type": "Person",
+    "@id": "https://wuyebei.cn/#person",
+    "name": data.author || "吴叶贝 (Wu Yebei)",
+    "url": "https://wuyebei.cn"
+  },
+  "publisher": {
+    "@type": "Person",
+    "@id": "https://wuyebei.cn/#person",
+    "name": "吴叶贝 (Wu Yebei)",
+    "url": "https://wuyebei.cn"
+  },
+  "datePublished": isoDate,
+  "dateModified": updatedDate,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://wuyebei.cn/command-center/${post.slug}`
+  },
+  "articleSection": `${typeLabel.en} / ${typeLabel.zh}`,
+  "keywords": data.tags.join(", "),
+  "inLanguage": ["en-US", "zh-CN"],
+  "about": data.topic || "AI 产品设计 / 决策思考 / 系统架构",
+  "audience": {
+    "@type": "Audience",
+    "audienceType": data.audience || "产品经理 / 技术架构师 / 创业者"
+  },
+  "isPartOf": {
+    "@type": "Blog",
+    "@id": "https://wuyebei.cn/command#blog",
+    "name": "Command Center - 指挥中心",
+    "description": "战略决策、权衡分析与架构思考"
+  }
+};
 ---
 
-<BaseLayout title={`${data.title_en} - Command Center`}>
+<BaseLayout
+  title={`${data.title_en} - Command Center`}
+  description={data.summary}
+  structuredData={articleSchema}
+>
   <main class="article-container">
     <!-- 返回按钮 -->
     <a href="/command-center" class="back-link">

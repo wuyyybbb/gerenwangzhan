@@ -1,11 +1,17 @@
 ---
-title_en: "Precise Matting and Mask Combinations"
-title_zh: "精准抠图与蒙板的多样组合"
+title_en: "AI Precise Matting: Advanced Mask Creation & Combination Techniques"
+title_zh: "AI 精准抠图实战：蒙版创建与多重组合技巧"
 type: "course"
 lesson_number: 25
-date: 2024-06-01
+date: 2024-05-08
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Matting", "Mask", "Background Removal"]
+summary: "如何实现毛发级精准抠图？多个蒙版如何组合使用？我的电商产品图抠图流程：SAM分割→细节优化→蒙版叠加实战。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "图像抠图 / 蒙版处理 / 背景替换"
+audience: "电商设计师 / 平面设计 / 产品摄影"
+tools: "ComfyUI / SAM / Alpha Matting"
+updated: "2024-05"
 ---
 
 # 2-5.精准抠图与蒙板的多样组合

@@ -1,11 +1,17 @@
 ---
-title_en: "Specify Eyebrow Shape and Eye Expression"
-title_zh: "指定眉毛形状和眼神"
+title_en: "Precise Facial Expression Control: Eyebrow & Eye Editing Techniques"
+title_zh: "精准面部表情控制：眉毛与眼神编辑技术"
 type: "course"
 lesson_number: 42
-date: 2024-06-01
+date: 2024-05-25
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Facial Expression", "Eye Control", "Portrait Fine-tuning"]
+summary: "如何精准控制眼神和眉毛形状？面部表情如何微调？我的人像精修工作流：眼神定向→眉形调整→表情优化实战技巧。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "表情控制 / 面部精修 / 微表情编辑"
+audience: "人像摄影师 / 角色设计师 / 电商模特图"
+tools: "ComfyUI / Facial Landmark / Expression Control"
+updated: "2024-05"
 ---
 
 # 4-2.指定眉毛形状和眼神

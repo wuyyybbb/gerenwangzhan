@@ -6,6 +6,12 @@ type: system-thinking
 status: published
 tags: ["Systems Thinking", "Technical Debt", "Team Dynamics"]
 summary: "Every decision creates ripples. Here's how to see the second and third-order effects before they hit you."
+author: "吴叶贝 (Wu Yebei)"
+topic: "系统思考 / 隐性成本 / 决策框架"
+audience: "技术管理者 / 产品负责人 / 团队 Leader"
+tools: "Systems Thinking Framework / Cost-Benefit Analysis"
+updated: "2025-03"
+category: "Command Center / 指挥中心"
 ---
 
 # System Thinking: The Hidden Costs No One Talks About

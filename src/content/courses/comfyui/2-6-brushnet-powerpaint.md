@@ -1,11 +1,17 @@
 ---
-title_en: "BrushNet (with XL) and PowerPaint"
-title_zh: "brushnet(搭配xl）+powerpaint"
+title_en: "BrushNet + PowerPaint: Advanced AI Painting & Editing with SDXL"
+title_zh: "BrushNet + PowerPaint 实战：基于 SDXL 的高级 AI 绘画与编辑"
 type: "course"
 lesson_number: 26
-date: 2024-06-01
+date: 2024-05-10
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "BrushNet", "PowerPaint", "SDXL"]
+summary: "BrushNet 如何实现精准笔刷控制？与 PowerPaint 结合能做什么？我的插画创作流程：草图→笔刷引导→细节绘制完整实战。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 绘画 / 笔刷控制 / 插画创作"
+audience: "插画师 / 概念艺术家 / 数字绘画"
+tools: "ComfyUI / BrushNet / PowerPaint / SDXL"
+updated: "2024-05"
 ---
 
 # 2-6.brushnet(搭配xl）+powerpaint

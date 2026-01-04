@@ -8,6 +8,12 @@ tags: ["AI", "Product Strategy", "Decision Making"]
 summary: "How we decided to build with AI capabilities while staying grounded in real user needs, not hype."
 cover: "/assets/command-center/covers/2025-01.webp"
 featured: true
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 产品策略 / 决策思考 / 产品方向"
+audience: "产品经理 / 创业者 / 技术团队负责人"
+tools: "AI Strategy Framework / User Research / Product Analytics"
+updated: "2025-01"
+category: "Command Center / 指挥中心"
 ---
 
 # Decision Log: Building AI Products Without Illusion

@@ -8,6 +8,11 @@ status: published
 venue: "Personal Research"
 authors: ["Your Name"]
 summary: "探讨如何通过约束式生成架构，在保证一致性和可访问性的前提下，实现自然语言到结构化 UI 的转换。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 代码生成 / 产品设计 / 约束式架构"
+audience: "AI 工程师 / 产品设计师 / 前端开发者"
+tools: "LLM / JSON Schema / Component Renderer"
+updated: "2024-11"
 ---
 
 ## 摘要

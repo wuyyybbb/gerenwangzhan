@@ -1,11 +1,17 @@
 ---
-title_en: "Cloud Deployment and Local Setup"
-title_zh: "云端部署+本地+基础设置"
+title_en: "ComfyUI Cloud Setup Guide: Deploy AI Workflows Without GPU Hardware"
+title_zh: "ComfyUI 云端部署完全指南：无需本地 GPU 的 AI 工作流搭建"
 type: "course"
 lesson_number: 12
-date: 2024-06-01
+date: 2024-04-24
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Cloud Computing", "GPU", "Deployment"]
+summary: "没有 RTX 4090 也能跑 SDXL？我如何用云端 GPU 部署 ComfyUI，成本控制在每小时 2 元以内。3 种云平台对比与避坑指南。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "云端部署 / GPU 计算 / 成本优化"
+audience: "AI 创作者 / 独立开发者 / 小团队"
+tools: "ComfyUI / AutoDL / Vast.ai / RunPod"
+updated: "2024-02"
 ---
 
 # 1-2. 云端部署+本地+基础设置

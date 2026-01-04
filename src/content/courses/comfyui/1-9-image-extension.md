@@ -1,11 +1,17 @@
 ---
-title_en: "Image Extension and Q&A"
-title_zh: "扩展图片+问题答疑"
+title_en: "AI Outpainting: Extending Images Beyond Original Boundaries"
+title_zh: "AI 智能扩图：超越原始边界的图像延伸技术"
 type: "course"
 lesson_number: 19
-date: 2024-06-01
+date: 2024-04-30
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Outpainting", "Image Extension", "Canvas Expansion"]
+summary: "如何让 AI 智能补全图像外的内容？Outpaint 与 Inpaint 有何区别？我在实际项目中遇到的边缘融合问题与解决方案。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "图像扩展 / AI 补全 / 画布扩展"
+audience: "设计师 / 内容创作者 / 摄影后期"
+tools: "ComfyUI / Outpaint / Canvas Extension"
+updated: "2024-04"
 ---
 
 # 1-9. 扩展图片

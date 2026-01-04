@@ -1,11 +1,17 @@
 ---
-title_en: "Working Principles and Advantages of ComfyUI"
-title_zh: "工作原理+ComfyUI优缺点"
+title_en: "Why ComfyUI Changed My AI Workflow: Node-based vs Traditional Interfaces"
+title_zh: "ComfyUI 如何改变我的 AI 创作流程：节点式 vs 传统界面深度对比"
 type: "course"
 lesson_number: 11
-date: 2024-06-01
+date: 2024-04-23
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Stable Diffusion", "AI Art", "Workflow Automation"]
+summary: "为什么我放弃 WebUI 转向 ComfyUI？100 张图批量 AI 换脸如何 1 键完成？节点式工作流的 3 大优势与 2 个学习陷阱。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 工作流 / 效率工具 / 自动化"
+audience: "AI 创作者 / 设计师 / 内容生产者"
+tools: "ComfyUI / Stable Diffusion / 节点编辑器"
+updated: "2024-02"
 ---
 
 # 1-1. 工作原理+ComfyUI优缺点

@@ -1,11 +1,17 @@
 ---
-title_en: "ControlNet Usage Differences: WebUI vs ComfyUI"
-title_zh: "webui与comfyui差异化的ControlNet使用方式"
+title_en: "ControlNet ComfyUI vs WebUI: Workflow Differences & Practical Tips"
+title_zh: "ControlNet 在 ComfyUI 与 WebUI 的差异：工作流对比与实战技巧"
 type: "course"
 lesson_number: 21
-date: 2024-06-01
+date: 2024-05-01
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "ControlNet", "Workflow Comparison", "Pose Control"]
+summary: "ControlNet 在 ComfyUI 中如何使用？与 WebUI 的操作差异在哪里？我的姿势控制工作流：Pose、Canny、Depth 三种预处理器实战。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "构图控制 / 姿势生成 / 工作流对比"
+audience: "AI 创作者 / 插画师 / 角色设计师"
+tools: "ComfyUI / ControlNet / Pose Estimator"
+updated: "2024-04"
 ---
 
 # 2-1.webui与comfyui差异化的ControlNet使用方式

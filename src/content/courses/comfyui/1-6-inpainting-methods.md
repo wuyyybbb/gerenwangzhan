@@ -1,11 +1,17 @@
 ---
-title_en: "Four Methods of Inpainting"
-title_zh: "局部重绘4种方式"
+title_en: "AI Inpainting Mastery: 局部重绘的 4 种实现方法对比"
+title_zh: "AI 局部重绘实战：Mask 蒙版、Inpaint 模型、Outpaint 扩图全解析"
 type: "course"
 lesson_number: 16
-date: 2024-06-01
+date: 2024-04-28
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Inpainting", "Outpainting", "Mask Editing"]
+summary: "如何让 AI 只修改图像的特定区域？Inpaint 模型 vs 普通模型+蒙版有何区别？我在商业项目中用到的 4 种局部编辑技巧。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "图像编辑 / 局部重绘 / AI 修图"
+audience: "电商设计师 / 修图师 / 内容创作者"
+tools: "ComfyUI / Inpaint Model / Mask Editor"
+updated: "2024-03"
 ---
 
 # 1-6. 局部重绘4种方式

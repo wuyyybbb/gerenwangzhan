@@ -7,6 +7,11 @@ tags: ["Tools", "Productivity", "Setup"]
 status: published
 category: "Setup"
 summary: "去掉炫耀和噪音，这是我实际每天使用的工具清单。重点不是最新最酷，而是真正有用。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "效率工具 / 工作流程 / 软件推荐"
+audience: "开发者 / 设计师 / 知识工作者"
+tools: "VSCode / Figma / Notion / Arc Browser"
+updated: "2024-11"
 ---
 
 ## 前言

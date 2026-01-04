@@ -1,14 +1,19 @@
 ---
-title_en: "ComfyUI Fundamentals: Nodes and Workflow"
-title_zh: "ComfyUI 基础：节点与工作流"
-date: 2024-10-01
+title_en: "Building Production-Ready AI Workflows from Scratch with ComfyUI"
+title_zh: "从零搭建可复用的 AI 图像生成工作流｜ComfyUI 基础实战"
+date: 2024-02-15
 type: course
 lesson_number: 1
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Stable Diffusion", "AI Art", "AI Workflow", "Node-based System"]
 status: published
 duration: "15 min"
 difficulty: beginner
-summary: "理解 ComfyUI 的核心概念：节点系统、数据流和工作流保存。第一课从零开始。"
+summary: "为什么节点式工作流比传统界面更适合 AI 创作？我如何用 ComfyUI 搭建第一个可复用的图像生成流程？本文带你从零理解节点系统、数据流控制，避开新手常踩的3个坑。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 工作流 / 生成式设计 / 图像生成"
+audience: "AI 创作者 / 产品设计师 / 技术美术"
+tools: "ComfyUI / Stable Diffusion / 节点式编程"
+updated: "2024-02"
 ---
 
 ## 课程目标

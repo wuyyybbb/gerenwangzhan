@@ -48,6 +48,8 @@ const { data } = entry;
 // 格式化日期
 const year = new Date(data.date).getFullYear();
 const month = new Date(data.date).toLocaleDateString('zh-CN', { month: 'long' });
+const isoDate = new Date(data.date).toISOString();
+const updatedDate = data.updated ? new Date(`${data.updated}-01`).toISOString() : isoDate;
 
 // 类型标签
 const typeLabels = {
@@ -94,9 +96,95 @@ const relatedEntries = allEntries
   .sort((a, b) => b.score - a.score)
   .slice(0, 3)
   .map(item => item.entry);
+
+// 根据 collection 类型选择 Schema 类型和 isPartOf
+const schemaType = collection === 'courses' ? 'Course' : 'Article';
+const collectionInfo = {
+  'papers': {
+    name: 'Research Papers - 研究论文',
+    description: 'Academic papers and research findings',
+    id: 'https://wuyebei.cn/log#papers'
+  },
+  'courses': {
+    name: 'ComfyUI Courses - ComfyUI 课程',
+    description: 'Complete ComfyUI tutorial series',
+    id: 'https://wuyebei.cn/log#courses'
+  },
+  'reflections': {
+    name: 'Reflections - 思考笔记',
+    description: 'Personal reflections and insights',
+    id: 'https://wuyebei.cn/log#reflections'
+  },
+  'misc': {
+    name: 'Miscellaneous - 杂项',
+    description: 'Various topics and notes',
+    id: 'https://wuyebei.cn/log#misc'
+  },
+  'command-center': {
+    name: 'Command Center - 指挥中心',
+    description: '战略决策、权衡分析与架构思考',
+    id: 'https://wuyebei.cn/command#blog'
+  }
+};
+
+// Article/Course Schema 结构化数据（JSON-LD）
+const articleSchema: any = {
+  "@context": "https://schema.org",
+  "@type": schemaType,
+  "@id": `https://wuyebei.cn/log/${collection}/${entry.slug}#${schemaType.toLowerCase()}`,
+  "headline": data.title_en,
+  "alternativeHeadline": data.title_zh,
+  "description": data.summary,
+  "image": data.cover ? `https://wuyebei.cn${data.cover}` : "https://wuyebei.cn/og-image.jpg",
+  "author": {
+    "@type": "Person",
+    "@id": "https://wuyebei.cn/#person",
+    "name": data.author || "吴叶贝 (Wu Yebei)",
+    "url": "https://wuyebei.cn"
+  },
+  "publisher": {
+    "@type": "Person",
+    "@id": "https://wuyebei.cn/#person",
+    "name": "吴叶贝 (Wu Yebei)",
+    "url": "https://wuyebei.cn"
+  },
+  "datePublished": isoDate,
+  "dateModified": updatedDate,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://wuyebei.cn/log/${collection}/${entry.slug}`
+  },
+  "articleSection": `${typeLabel.en} / ${typeLabel.zh}`,
+  "keywords": data.tags.join(", "),
+  "inLanguage": ["en-US", "zh-CN"],
+  "about": data.topic || "AI / 技术 / 产品设计",
+  "audience": {
+    "@type": "Audience",
+    "audienceType": data.audience || "AI 从业者 / 技术爱好者"
+  },
+  "isPartOf": {
+    "@type": collection === 'courses' ? "Course" : "Blog",
+    "@id": collectionInfo[collection].id,
+    "name": collectionInfo[collection].name,
+    "description": collectionInfo[collection].description
+  }
+};
+
+// Course 专属字段
+if (collection === 'courses' && 'lesson_number' in data) {
+  articleSchema.lessonNumber = data.lesson_number;
+  articleSchema.position = data.lesson_number;
+  if ('duration' in data && data.duration) {
+    articleSchema.timeRequired = data.duration;
+  }
+}
 ---
 
-<BaseLayout title={`${data.title_en} - ${collection === 'command-center' ? 'Command Center' : 'Knowledge Tower'}`}>
+<BaseLayout
+  title={`${data.title_en} - ${collection === 'command-center' ? 'Command Center' : 'Knowledge Tower'}`}
+  description={data.summary}
+  structuredData={articleSchema}
+>
   <main class="article-container">
     <!-- 返回按钮 -->
     <a href={collection === 'command-center' ? '/command' : '/log'} class="back-link">

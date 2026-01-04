@@ -6,6 +6,150 @@ import '../styles/global.css';
 const DESIGN_W = 1920;
 const DESIGN_H = 1072;
 
+// 结构化数据（Schema.org / JSON-LD）用于 SEO
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    // 1. Person - 个人信息
+    {
+      "@type": "Person",
+      "@id": "https://wuyebei.cn/#person",
+      "name": "吴叶贝",
+      "alternateName": "Wu Yebei",
+      "url": "https://wuyebei.cn",
+      "image": "https://wuyebei.cn/og-image.jpg",
+      "description": "专注于 AI 应用、知识体系与智能工作流的实践者。Builder → Intelligent Pioneer。构建智能系统，延展人的能动性，而非取代。",
+      "jobTitle": "AI 产品构建者 / 智能工作流设计师",
+      "sameAs": [
+        "https://space.bilibili.com/YOUR_UID",
+        "https://github.com/YOUR_USERNAME",
+        "https://www.xiaohongshu.com/user/profile/YOUR_ID"
+      ],
+      "knowsAbout": [
+        "Artificial Intelligence",
+        "AI Workflows",
+        "Generative AI",
+        "ComfyUI",
+        "Stable Diffusion",
+        "AI Product Design",
+        "Knowledge Systems",
+        "Intelligent Automation",
+        "System Thinking",
+        "Decision Making Frameworks",
+        "AI Image Generation",
+        "Product Strategy",
+        "Technical Architecture"
+      ],
+      "hasOccupation": {
+        "@type": "Occupation",
+        "name": "AI 产品构建者",
+        "occupationLocation": {
+          "@type": "Country",
+          "name": "中国"
+        },
+        "skills": [
+          "AI 工作流设计",
+          "ComfyUI 开发",
+          "生成式 AI 应用",
+          "产品设计",
+          "系统架构",
+          "知识管理"
+        ]
+      }
+    },
+    // 2. WebSite - 网站信息
+    {
+      "@type": "WebSite",
+      "@id": "https://wuyebei.cn/#website",
+      "url": "https://wuyebei.cn",
+      "name": "吴叶贝的个人网站 | Wu Yebei's Personal Site",
+      "description": "探索 AI 工作流、生成式设计与智能系统的实践空间。Knowledge Tower、AI Workshop、Command Center 与 Ancient Archives。",
+      "inLanguage": ["zh-CN", "en-US"],
+      "publisher": {
+        "@id": "https://wuyebei.cn/#person"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://wuyebei.cn/log?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    // 3. WebPage - 首页信息
+    {
+      "@type": "WebPage",
+      "@id": "https://wuyebei.cn/#webpage",
+      "url": "https://wuyebei.cn",
+      "name": "吴叶贝 | Wu Yebei - Intelligent Pioneer",
+      "description": "From Builder to Intelligent Pioneer. 构建智能系统，延展人的能动性。探索 AI 工作流、ComfyUI、生成式设计、产品思考与决策框架。",
+      "isPartOf": {
+        "@id": "https://wuyebei.cn/#website"
+      },
+      "about": {
+        "@id": "https://wuyebei.cn/#person"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://wuyebei.cn/og-image.jpg",
+        "width": 1200,
+        "height": 630
+      },
+      "inLanguage": "zh-CN"
+    },
+    // 4. CollectionPage - Knowledge Tower（知识塔）
+    {
+      "@type": "CollectionPage",
+      "@id": "https://wuyebei.cn/log#collection",
+      "url": "https://wuyebei.cn/log",
+      "name": "Knowledge Tower - 知识塔",
+      "description": "AI 课程、研究论文、技术思考与实践笔记的集合。ComfyUI 教程、生成式 AI 应用、产品设计思考。",
+      "isPartOf": {
+        "@id": "https://wuyebei.cn/#website"
+      },
+      "hasPart": [
+        {
+          "@type": "Course",
+          "name": "ComfyUI 完整课程",
+          "description": "从零搭建可复用的 AI 图像生成工作流，涵盖 ComfyUI 基础、ControlNet、IP-Adapter、光影控制等高级技术",
+          "provider": {
+            "@id": "https://wuyebei.cn/#person"
+          },
+          "inLanguage": "zh-CN",
+          "coursePrerequisites": "AI 图像生成基础",
+          "educationalLevel": "Intermediate to Advanced"
+        }
+      ]
+    },
+    // 5. BlogPosting - Command Center（指挥中心）
+    {
+      "@type": "Blog",
+      "@id": "https://wuyebei.cn/command#blog",
+      "url": "https://wuyebei.cn/command",
+      "name": "Command Center - 指挥中心",
+      "description": "战略决策、权衡分析与架构思考。Decision Logs、Trade-offs、System Thinking、Direction Notes。",
+      "isPartOf": {
+        "@id": "https://wuyebei.cn/#website"
+      },
+      "author": {
+        "@id": "https://wuyebei.cn/#person"
+      },
+      "inLanguage": "zh-CN"
+    },
+    // 6. BreadcrumbList - 面包屑导航
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://wuyebei.cn/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "首页",
+          "item": "https://wuyebei.cn"
+        }
+      ]
+    }
+  ]
+};
+
 // Debug 模式（开发时设为 true，或按 D 键切换）
 const DEBUG_MODE = false;
 
@@ -105,7 +249,10 @@ const landmarks = [
 ];
 ---
 
-<BaseLayout title="Mythic Engraving Interactive Map">
+<BaseLayout
+  title="Mythic Engraving Interactive Map"
+  structuredData={structuredData}
+>
   <div class="map-wrapper">
     <!-- 🎯 Placeholder 层：纯色背景，避免 FOUC -->
     <div class="map-placeholder"></div>

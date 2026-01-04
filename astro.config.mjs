@@ -2,9 +2,12 @@
 import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://wuyebei.cn',
+  integrations: [sitemap()],
   server: {
     // 🔧 稳定性修复：固定端口，避免端口冲突
     port: 4331,

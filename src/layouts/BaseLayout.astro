@@ -2,9 +2,10 @@
 interface Props {
   title: string;
   description?: string;
+  structuredData?: object; // 可选的结构化数据
 }
 
-const { title, description = "Mythic Engraving Interactive Map Portfolio" } = Astro.props;
+const { title, description = "Mythic Engraving Interactive Map Portfolio", structuredData } = Astro.props;
 import { ViewTransitions } from 'astro:transitions';
 ---
 
@@ -36,6 +37,11 @@ import { ViewTransitions } from 'astro:transitions';
 
     <!-- Canonical URL -->
     <link rel="canonical" href={Astro.url} />
+
+    <!-- JSON-LD 结构化数据 for SEO -->
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
 
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -166,7 +172,56 @@ import { ViewTransitions } from 'astro:transitions';
 
     <slot />
 
+    <!-- ICP 备案号 -->
+    <footer class="icp-footer">
+      <a
+        href="https://beian.miit.gov.cn/#/Integrated/index"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="icp-link"
+      >
+        浙ICP备2025190152号-1
+      </a>
+    </footer>
+
     <style>
+      /* ICP 备案号样式 */
+      .icp-footer {
+        position: fixed;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .icp-link {
+        font-family: var(--font-sans), sans-serif;
+        font-size: 0.75rem;
+        color: rgba(74, 74, 74, 0.6);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        pointer-events: all;
+        padding: 0.25rem 0.5rem;
+      }
+
+      .icp-link:hover {
+        color: rgba(74, 74, 74, 0.9);
+        text-decoration: underline;
+      }
+
+      /* 响应式调整 */
+      @media (max-width: 768px) {
+        .icp-footer {
+          bottom: 12px;
+        }
+
+        .icp-link {
+          font-size: 0.6875rem;
+        }
+      }
+
       /* 全局工具栏样式 */
       .global-toolbar {
         position: fixed;

@@ -7,6 +7,10 @@ tags: ["AI", "Society", "Philosophy"]
 status: published
 mood: "critical"
 summary: "当 AI 系统被要求对人类做出决策时，谁有权保留模糊性？谁被强制分类？这是关于权力和自动化的思考。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 伦理 / 社会哲学 / 权力结构"
+audience: "AI 从业者 / 产品设计师 / 技术伦理研究者"
+updated: "2024-09"
 ---
 
 ## 起因

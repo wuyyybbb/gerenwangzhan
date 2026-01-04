@@ -8,6 +8,11 @@ status: published
 venue: "Tech Blog"
 authors: ["Your Name"]
 summary: "深入分析 CRDT 和 OT 两种协作编辑架构的权衡，提出混合方案：文本用 CRDT，元数据用服务器权威。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "分布式系统 / 实时协作 / 架构设计"
+audience: "系统架构师 / 后端工程师 / 协作工具开发者"
+tools: "CRDT / OT / Yjs / Automerge"
+updated: "2024-09"
 ---
 
 ## 引言

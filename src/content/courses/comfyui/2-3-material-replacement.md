@@ -1,11 +1,17 @@
 ---
-title_en: "Material Replacement"
-title_zh: "材质替换"
+title_en: "AI Material Replacement: Realistic Texture Transformation Techniques"
+title_zh: "AI 材质替换实战：真实感纹理变换技术"
 type: "course"
 lesson_number: 23
-date: 2024-06-01
+date: 2024-05-02
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Material Replacement", "Texture Transfer", "Product Design"]
+summary: "如何用 AI 替换物体材质保持结构不变？木头→金属、布料→皮革如何实现？我在产品设计中的材质替换工作流与常见问题。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "材质替换 / 纹理生成 / 产品设计"
+audience: "产品设计师 / 3D 艺术家 / 工业设计"
+tools: "ComfyUI / ControlNet Tile / Texture Synthesis"
+updated: "2024-05"
 ---
 
 # 2-3. 材质替换

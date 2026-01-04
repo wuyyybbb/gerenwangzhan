@@ -1,11 +1,17 @@
 ---
-title_en: "Creative Photography"
-title_zh: "创意摄影"
+title_en: "AI Creative Photography: Combining Multiple Techniques for Unique Visuals"
+title_zh: "AI 创意摄影实战：多技术组合打造独特视觉效果"
 type: "course"
 lesson_number: 31
-date: 2024-06-01
+date: 2024-05-20
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Creative Photography", "Multi-technique", "Visual Design"]
+summary: "如何组合 ControlNet + LoRA + IP-Adapter 创造独特视觉？我的创意摄影工作流：概念设计→技术组合→风格调优完整案例。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "创意摄影 / 多技术融合 / 视觉设计"
+audience: "摄影师 / 视觉设计师 / 创意总监"
+tools: "ComfyUI / Multi-technique Workflow / Creative Composition"
+updated: "2024-05"
 ---
 
 # 3-1.创意摄影

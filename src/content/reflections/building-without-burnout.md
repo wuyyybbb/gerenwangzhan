@@ -7,6 +7,11 @@ tags: ["Life", "Work", "Sustainability"]
 status: published
 mood: "contemplative"
 summary: "创造者文化赞美不眠不休的努力，但持久的构建需要可持续的节奏。这是关于寻找平衡的思考。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "工作生活平衡 / 可持续创造 / 个人成长"
+audience: "创业者 / 产品开发者 / 创作者"
+tools: "时间管理 / 心理调节"
+updated: "2024-08"
 ---
 
 ## 创造者的悖论

@@ -1,6 +1,6 @@
 ---
 title_en: "Analysis of Factors Affecting Urban Architecture Design by Ecological Geography Environment"
-title_zh: ""
+title_zh: "生态地理环境对城市建筑设计影响因素分析"
 date: 2020-04-01
 type: paper
 tags: ["Urban Architecture", "Ecological Geography", "Environmental Design"]
@@ -8,6 +8,11 @@ status: published
 venue: "IOP Conference Series: Earth and Environmental Science, Vol. 453, Article 012011"
 authors: ["Wu et al."]
 summary: "This paper analyzes the factors affecting urban architecture design from the perspective of ecological geography environment."
+author: "吴叶贝 (Wu Yebei)"
+topic: "城市建筑 / 生态地理 / 环境设计"
+audience: "建筑师 / 城市规划师 / 环境研究者"
+tools: "生态地理分析 / 建筑设计理论"
+updated: "2020-04"
 ---
 
 ## 📄 Paper Information

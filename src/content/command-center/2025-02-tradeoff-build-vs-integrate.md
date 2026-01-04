@@ -7,6 +7,12 @@ status: published
 tags: ["Engineering", "Tradeoffs", "Technical Debt"]
 summary: "Breaking down the hidden costs of 'just use an API' vs 'build it ourselves' - with real numbers from 3 years of decisions."
 cover: "/assets/command-center/covers/2025-02.webp"
+author: "吴叶贝 (Wu Yebei)"
+topic: "技术决策 / 权衡分析 / 成本核算"
+audience: "工程师 / 技术负责人 / CTO"
+tools: "TCO Analysis / Build vs Buy Framework / Cost Modeling"
+updated: "2025-02"
+category: "Command Center / 指挥中心"
 ---
 
 # Tradeoff Analysis: Build vs Integrate

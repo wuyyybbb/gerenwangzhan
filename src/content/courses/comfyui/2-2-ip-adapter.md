@@ -1,11 +1,17 @@
 ---
-title_en: "IP-Adapter"
-title_zh: "IP-Adapter"
+title_en: "IP-Adapter: Reference Image Style Transfer Without Prompt Engineering"
+title_zh: "IP-Adapter 实战：无需提示词的参考图风格迁移技术"
 type: "course"
 lesson_number: 22
-date: 2024-06-01
+date: 2024-05-01
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "IP-Adapter", "Style Transfer", "Reference Image"]
+summary: "如何让 AI 直接学习参考图的风格？IP-Adapter 与 ControlNet 有何区别？我的电商产品图生成流程：参考图 + 风格强度调节最佳实践。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "风格迁移 / 参考图学习 / 产品摄影"
+audience: "电商设计师 / 产品摄影师 / 品牌设计"
+tools: "ComfyUI / IP-Adapter / Style Matching"
+updated: "2024-04"
 ---
 
 # 2-2.IP-Adapter

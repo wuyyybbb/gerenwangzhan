@@ -1,14 +1,19 @@
 ---
-title_en: "Advanced Sampling: LoRA and ControlNet"
-title_zh: "进阶采样：LoRA 与 ControlNet 控制"
-date: 2024-10-08
+title_en: "Mastering AI Image Control: LoRA Style Injection & ControlNet Composition Guide"
+title_zh: "AI 图像精准控制实战：LoRA 风格叠加与 ControlNet 构图指南"
+date: 2024-03-08
 type: course
 lesson_number: 2
-tags: ["ComfyUI", "LoRA", "ControlNet"]
+tags: ["ComfyUI", "LoRA", "ControlNet", "AI Art", "Style Transfer"]
 status: published
 duration: "25 min"
 difficulty: intermediate
-summary: "学习如何使用 LoRA 微调风格，ControlNet 控制构图，以及构建多步精炼工作流。"
+summary: "为什么多个 LoRA 叠加会崩溃？ControlNet 如何让 AI 严格遵循你的构图？我在商用项目中踩过的 3 个坑：强度调参陷阱、模型兼容性问题、Refine 采样失控。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 工作流 / 风格控制 / 构图生成"
+audience: "AI 创作者 / 视觉设计师 / 内容生产者"
+tools: "ComfyUI / LoRA / ControlNet / 多步采样"
+updated: "2024-03"
 ---
 
 ## 课程目标

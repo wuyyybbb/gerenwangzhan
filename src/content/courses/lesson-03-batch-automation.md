@@ -1,14 +1,19 @@
 ---
-title_en: "Batch Processing and Workflow Automation"
-title_zh: "批量生成与工作流自动化"
-date: 2024-10-15
+title_en: "Scaling AI Workflows: Batch Processing & API Automation for Production"
+title_zh: "AI 工作流规模化：批量生成与 API 自动化实战指南"
+date: 2024-04-22
 type: course
 lesson_number: 3
-tags: ["ComfyUI", "Automation", "Batch Processing"]
+tags: ["ComfyUI", "Automation", "Batch Processing", "API", "Production Workflow"]
 status: published
 duration: "20 min"
 difficulty: intermediate
-summary: "学习如何批量生成图像、使用变量节点、循环迭代和 API 调用自动化工作流。"
+summary: "如何用 API 批量生成 1000 张图？Primitive 节点如何统一管理参数？我在生产环境中遇到的 3 个问题：VRAM 爆炸、队列拥堵、参数模板化管理。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 工作流 / 自动化 / 批量处理"
+audience: "AI 工程师 / 产品开发者 / 技术团队"
+tools: "ComfyUI / Python API / 工作流模板化"
+updated: "2024-04"
 ---
 
 ## 课程目标

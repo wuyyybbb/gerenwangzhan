@@ -1,11 +1,17 @@
 ---
-title_en: "Model Transformation: Face Replacement"
-title_zh: "模特焕新：面部替换与背景优化"
+title_en: "AI Face Replacement & Optimization: Professional Portrait Editing"
+title_zh: "AI 换脸与优化实战：专业级人像编辑完整流程"
 type: "course"
 lesson_number: 41
-date: 2024-06-01
+date: 2024-05-24
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Face Replacement", "Face Swap", "Portrait Editing"]
+summary: "如何实现自然的 AI 换脸？肤色、光影如何匹配？我的商业人像换脸流程：面部检测→特征匹配→光影融合避坑指南。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "人脸替换 / 人像编辑 / 面部融合"
+audience: "人像摄影师 / 电商视觉 / 影视后期"
+tools: "ComfyUI / Face Swap / ReActor / Face Fusion"
+updated: "2024-05"
 ---
 
 # 4-1.模特焕新：面部替换与背景优化

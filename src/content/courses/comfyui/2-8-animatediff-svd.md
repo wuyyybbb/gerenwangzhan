@@ -1,11 +1,17 @@
 ---
-title_en: "AnimateDiff and SVD: Dynamic Effects"
-title_zh: "动画魔法：AnimateDIff和SVD 轻松实现动态效果"
+title_en: "AnimateDiff & SVD: Creating AI Animations from Static Images"
+title_zh: "AnimateDiff & SVD 动画生成：从静态图到动态效果的完整流程"
 type: "course"
 lesson_number: 28
-date: 2024-06-01
+date: 2024-05-15
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "AnimateDiff", "SVD", "AI Animation"]
+summary: "如何让静态图动起来？AnimateDiff 与 SVD 有何区别？我的 AI 动画工作流：关键帧→运动控制→视频输出实战与常见问题。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "AI 动画 / 视频生成 / 运动控制"
+audience: "动画师 / 视频创作者 / 社交媒体运营"
+tools: "ComfyUI / AnimateDiff / SVD / Motion Modules"
+updated: "2024-05"
 ---
 
 # 2-8. 动画魔法：AnimateDIff和SVD 轻松实现动态效果

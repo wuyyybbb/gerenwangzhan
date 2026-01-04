@@ -1,11 +1,17 @@
 ---
-title_en: "Image-to-Image Generation"
-title_zh: "图生图"
+title_en: "Image-to-Image Transformation: Control & Variation Techniques"
+title_zh: "图生图实战：如何精准控制 AI 改图的变化幅度"
 type: "course"
 lesson_number: 15
-date: 2024-06-01
+date: 2024-04-27
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Image-to-Image", "Denoising", "AI Transformation"]
+summary: "Denoising 强度如何影响图像变化？我如何让 AI 只修改颜色不改结构？图生图 3 种应用场景：风格迁移、局部优化、创意扩展。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "图像处理 / 风格迁移 / AI 编辑"
+audience: "设计师 / 摄影师 / AI 创作者"
+tools: "ComfyUI / Img2Img / Denoising Control"
+updated: "2024-03"
 ---
 
 # 1-5. 图生图

@@ -1,0 +1,163 @@
+# robots.txt for wuyebei.cn
+# 吴叶贝的个人网站 - AI 产品构建者 / 智能工作流设计师
+
+# ============================================
+# 全局规则：允许所有搜索引擎
+# ============================================
+
+User-agent: *
+Allow: /
+
+# ============================================
+# 禁止爬取的资源（避免浪费爬虫配额）
+# ============================================
+
+# 禁止爬取构建产物和临时文件
+Disallow: /dist/
+Disallow: /.astro/
+Disallow: /node_modules/
+Disallow: /.git/
+
+# 禁止爬取私有资源（如果有）
+Disallow: /private/
+Disallow: /admin/
+Disallow: /api/
+
+# 禁止爬取图片资源文件夹（避免浪费爬虫配额，但允许在页面中显示）
+# 注意：这不会影响图片在搜索结果中的展示，只是不单独索引图片文件夹
+Disallow: /_astro/
+Disallow: /assets/raw/
+
+# ============================================
+# 明确允许爬取的关键页面（SEO 优先级）
+# ============================================
+
+# 主要页面
+Allow: /
+Allow: /about/
+Allow: /resume/
+Allow: /workshop/
+Allow: /archives/
+
+# Knowledge Tower（知识塔）
+Allow: /log/
+Allow: /log/courses/
+Allow: /log/papers/
+Allow: /log/reflections/
+Allow: /log/command-center/
+
+# Command Center（指挥中心）
+Allow: /command/
+Allow: /command-center/
+
+# 允许图片在页面中展示（但不索引图片文件夹本身）
+Allow: /map/*.webp
+Allow: /map/*.svg
+Allow: /map/*.png
+Allow: /girl/*.webp
+Allow: /girl/*.svg
+Allow: /assets/command-center/covers/*.webp
+
+# ============================================
+# Sitemap 位置
+# ============================================
+
+Sitemap: https://wuyebei.cn/sitemap-index.xml
+
+# ============================================
+# 针对特定搜索引擎的优化规则
+# ============================================
+
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Google Image Search（允许索引图片）
+User-agent: Googlebot-Image
+Allow: /map/
+Allow: /girl/
+Allow: /assets/
+Disallow: /_astro/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
+# Baidu（百度 - 重要：中文搜索）
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 1
+
+# 360 Search（中文搜索引擎）
+User-agent: 360Spider
+Allow: /
+Crawl-delay: 1
+
+# Sogou（搜狗 - 中文搜索引擎）
+User-agent: Sogou web spider
+Allow: /
+Crawl-delay: 1
+
+# ChatGPT / OpenAI（允许 AI 模型训练和搜索）
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Anthropic Claude（如果未来支持）
+User-agent: ClaudeBot
+Allow: /
+
+# Google Gemini / Bard
+User-agent: Google-Extended
+Allow: /
+
+# ============================================
+# 禁止的爬虫（垃圾爬虫/恶意爬虫）
+# ============================================
+
+# 已知的垃圾爬虫
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# 禁止内容抓取工具
+User-agent: HTTrack
+Disallow: /
+
+User-agent: Teleport
+Disallow: /
+
+User-agent: WebCopier
+Disallow: /
+
+# ============================================
+# 额外说明
+# ============================================
+
+# 本网站欢迎：
+# ✅ Google、Bing、百度、360、搜狗等搜索引擎
+# ✅ ChatGPT、Perplexity、Claude、Gemini 等 AI 搜索和训练
+# ✅ 学术机构和研究爬虫（请遵守 Crawl-delay）
+#
+# 请勿：
+# ❌ 恶意抓取或镜像网站内容
+# ❌ 频繁请求导致服务器负载
+# ❌ 未经授权的商业数据采集
+#
+# 联系方式：wyb3206@163.com

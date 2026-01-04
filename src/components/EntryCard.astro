@@ -27,6 +27,7 @@ const typeLabel = typeLabels[data.type];
   href={`/log/${collection}/${slug}`}
   class="entry-card"
   data-lesson-number={'lesson_number' in data ? data.lesson_number : undefined}
+  data-date={data.date.toISOString()}
 >
   <div class="card-main">
     <h3 class="card-title-en">{data.title_en}</h3>

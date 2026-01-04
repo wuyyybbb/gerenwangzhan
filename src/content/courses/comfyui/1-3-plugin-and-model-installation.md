@@ -1,11 +1,17 @@
 ---
-title_en: "Plugin and Model Installation Methods"
-title_zh: "插件+模型安装方法"
+title_en: "Essential ComfyUI Plugins & Models: My Production Toolkit Setup"
+title_zh: "ComfyUI 核心插件与模型安装：我的生产环境工具包配置"
 type: "course"
 lesson_number: 13
-date: 2024-06-01
+date: 2024-04-25
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Plugins", "Models", "Setup"]
+summary: "ComfyUI Manager 如何 1 键安装 100+ 插件？模型文件如何正确组织避免路径混乱？我筛选出的 10 个必装插件与模型管理最佳实践。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "工具配置 / 插件生态 / 模型管理"
+audience: "ComfyUI 用户 / AI 工程师"
+tools: "ComfyUI Manager / Custom Nodes / Model Organizer"
+updated: "2024-02"
 ---
 
 # 1-3. 插件+模型安装方法

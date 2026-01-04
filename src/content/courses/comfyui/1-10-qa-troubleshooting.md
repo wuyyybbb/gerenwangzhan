@@ -1,11 +1,17 @@
 ---
-title_en: "Q&A and Troubleshooting"
-title_zh: "问题答疑与报错归纳解决"
+title_en: "ComfyUI Troubleshooting Guide: Common Issues & Solutions"
+title_zh: "ComfyUI 常见问题排查：从显存爆炸到节点报错的完整解决方案"
 type: "course"
 lesson_number: 20
-date: 2024-06-01
+date: 2024-04-30
 status: "published"
-tags: ["ComfyUI", "Stable Diffusion", "AI Art"]
+tags: ["ComfyUI", "Troubleshooting", "Debug", "Error Fixing"]
+summary: "CUDA out of memory 如何解决？节点连接失败是为什么？我整理的 ComfyUI 10 大常见问题与排查思路。"
+author: "吴叶贝 (Wu Yebei)"
+topic: "问题排查 / 调试技巧 / 性能优化"
+audience: "ComfyUI 用户 / AI 工程师 / 技术支持"
+tools: "ComfyUI / Debug Tools / Performance Monitoring"
+updated: "2024-04"
 ---
 
 # 1-9. 问题答疑，报错归纳解决
