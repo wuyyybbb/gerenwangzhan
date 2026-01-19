@@ -1,0 +1,17 @@
+ [Unit]
+ Description=Personal Map Track Service
+ After=network.target
+
+ [Service]
+ Type=simple
+ User=root
+ WorkingDirectory=/opt/personal-map-site
+ Environment=TRACK_PORT=3001
+ Environment=TRACK_HOST=127.0.0.1
+ Environment=TRACK_LOG_PATH=/var/log/personal_site/track.log
+ ExecStart=/usr/bin/node /opt/personal-map-site/server/track/track-server.js
+ Restart=always
+ RestartSec=3
+
+ [Install]
+ WantedBy=multi-user.target

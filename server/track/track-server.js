@@ -4,6 +4,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const PORT = Number(process.env.TRACK_PORT || 3001);
+const HOST = process.env.TRACK_HOST || '127.0.0.1';
 const LOG_PATH = process.env.TRACK_LOG_PATH || '/var/log/personal_site/track.log';
 const MAX_LIMIT = 10000;
 
@@ -270,6 +271,6 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
-  console.log(`track server listening on ${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`track server listening on ${HOST}:${PORT}`);
 });
