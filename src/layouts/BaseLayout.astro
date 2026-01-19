@@ -728,8 +728,7 @@ import { ViewTransitions } from 'astro:transitions';
       (() => {
         const params = new URLSearchParams(window.location.search);
         if (params.get('no_track') === '1') return;
-        if (window.location.pathname.startsWith('/admin/3206')) return;
-        if (!window.location.pathname.startsWith('/resume')) return;
+        if (window.location.pathname.startsWith('/admin')) return;
 
         const sessionKey = 'pm_session_id';
         let sessionId = localStorage.getItem(sessionKey);
@@ -741,6 +740,7 @@ import { ViewTransitions } from 'astro:transitions';
         const payloadBase = {
           session_id: sessionId,
           path: window.location.pathname,
+          href: window.location.href,
           ref: document.referrer || '',
           ua: navigator.userAgent || '',
         };
