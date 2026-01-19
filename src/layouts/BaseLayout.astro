@@ -723,5 +723,77 @@ import { ViewTransitions } from 'astro:transitions';
         }
       });
     </script>
+
+    <script is:inline>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('no_track') === '1') return;
+        if (window.location.pathname.startsWith('/admin/3206')) return;
+        if (!window.location.pathname.startsWith('/resume')) return;
+
+        const sessionKey = 'pm_session_id';
+        let sessionId = localStorage.getItem(sessionKey);
+        if (!sessionId) {
+          sessionId = (crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`);
+          localStorage.setItem(sessionKey, sessionId);
+        }
+
+        const payloadBase = {
+          session_id: sessionId,
+          path: window.location.pathname,
+          ref: document.referrer || '',
+          ua: navigator.userAgent || '',
+        };
+
+        const sendEvent = (event) => {
+          const data = JSON.stringify({ ...payloadBase, event });
+          try {
+            const blob = new Blob([data], { type: 'application/json' });
+            if (navigator.sendBeacon && navigator.sendBeacon('/api/track', blob)) {
+              return;
+            }
+          } catch (err) {
+            // 发送失败时降级为 fetch
+          }
+          try {
+            fetch('/api/track', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: data,
+              keepalive: true,
+            }).catch(() => {});
+          } catch (err) {
+            // 静默失败，不影响页面
+          }
+        };
+
+        let lastHeartbeat = 0;
+        const heartbeatInterval = 15000;
+        const sendHeartbeat = () => {
+          const now = Date.now();
+          if (now - lastHeartbeat < heartbeatInterval - 1000) return;
+          lastHeartbeat = now;
+          sendEvent('heartbeat');
+        };
+
+        sendEvent('page_view');
+        const timer = setInterval(sendHeartbeat, heartbeatInterval);
+
+        let leaveSent = false;
+        const sendLeave = () => {
+          if (leaveSent) return;
+          leaveSent = true;
+          clearInterval(timer);
+          sendEvent('leave');
+        };
+
+        window.addEventListener('pagehide', sendLeave, { once: true });
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') {
+            sendLeave();
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

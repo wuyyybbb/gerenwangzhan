@@ -1594,18 +1594,28 @@ const landmarks = [
 
       // 🔧 检查路径是否已经带扩展名
       const hasExtension = /\.(avif|webp|svg|png|jpg|jpeg|gif)$/i.test(basePath);
+      // 移动端优先使用 SVG，避免透明背景被栅格化成黑底
+      const preferSvgOnMobile = window.matchMedia('(max-width: 768px)').matches;
+      const preferSvg = preferSvgOnMobile && (basePath.startsWith('/map/') || basePath.startsWith('/girl/'));
 
       let candidates = [];
       if (hasExtension) {
         candidates = [basePath];
         console.log(`🔍 路径已带扩展名: ${basePath}`);
       } else {
-        candidates = [
-          `${basePath}.avif`,
-          `${basePath}.webp`,
-          `${basePath}.svg`,
-          `${basePath}.png`,
-        ];
+        candidates = preferSvg
+          ? [
+            `${basePath}.svg`,
+            `${basePath}.avif`,
+            `${basePath}.webp`,
+            `${basePath}.png`,
+          ]
+          : [
+            `${basePath}.avif`,
+            `${basePath}.webp`,
+            `${basePath}.svg`,
+            `${basePath}.png`,
+          ];
         console.log(`🔍 路径无扩展名，候选:`, candidates);
       }
 

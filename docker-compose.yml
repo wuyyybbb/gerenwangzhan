@@ -13,6 +13,8 @@ services:
       - NODE_ENV=production
     networks:
       - web-network
+    depends_on:
+      - track
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
       interval: 30s
@@ -20,6 +22,23 @@ services:
       retries: 3
       start_period: 40s
 
+  track:
+    build:
+      context: .
+      dockerfile: Dockerfile.track
+    container_name: personal-map-track
+    restart: unless-stopped
+    environment:
+      - TRACK_PORT=3001
+      - TRACK_LOG_PATH=/var/log/personal_site/track.log
+    volumes:
+      - track-logs:/var/log/personal_site
+    networks:
+      - web-network
+
 networks:
   web-network:
     driver: bridge
+
+volumes:
+  track-logs:

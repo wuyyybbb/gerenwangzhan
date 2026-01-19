@@ -1,0 +1,315 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/global.css';
+---
+
+<BaseLayout title="Track Admin">
+  <main class="track-admin page-container">
+    <a href="/" class="back-link">← Back to Map</a>
+
+    <h1 class="page-title">Track Admin</h1>
+    <p class="page-subtitle">简历访问监控</p>
+
+    <div class="filter-bar">
+      <label>
+        从
+        <input type="datetime-local" id="fromTime" />
+      </label>
+      <label>
+        到
+        <input type="datetime-local" id="toTime" />
+      </label>
+      <label>
+        关键词
+        <input type="text" id="keyword" placeholder="ip/path/ua/ref/session_id" />
+      </label>
+      <label>
+        行数
+        <input type="number" id="limit" value="200" min="100" max="10000" step="100" />
+      </label>
+      <button id="refreshBtn">刷新</button>
+    </div>
+
+    <section class="stats-panel">
+      <div class="stat-item">
+        <div class="stat-label">24h PV</div>
+        <div class="stat-value" id="pv24h">-</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">24h UV</div>
+        <div class="stat-value" id="uv24h">-</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">1h IP</div>
+        <div class="stat-value" id="ip1h">-</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">平均停留(24h)</div>
+        <div class="stat-value" id="avgDuration">-</div>
+      </div>
+    </section>
+
+    <section class="top-paths">
+      <h2>Top Paths (24h)</h2>
+      <div id="topPaths"></div>
+    </section>
+
+    <section class="log-table">
+      <table>
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>事件</th>
+            <th>路径</th>
+            <th>IP</th>
+            <th>Session</th>
+            <th>停留(s)</th>
+            <th>Ref</th>
+            <th>UA</th>
+          </tr>
+        </thead>
+        <tbody id="logList"></tbody>
+      </table>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .track-admin {
+    max-width: 1200px;
+    padding-top: 4.5rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .filter-bar label {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    gap: 0.5rem;
+  }
+
+  .filter-bar input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(74, 74, 74, 0.3);
+    background: rgba(255, 255, 255, 0.6);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+  }
+
+  #refreshBtn {
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--ink-main);
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-main);
+  }
+
+  .stats-panel {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+
+  .stat-item {
+    border: 1px solid rgba(74, 74, 74, 0.2);
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .stat-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--ink-main);
+  }
+
+  .top-paths {
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+
+  .top-paths h2 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  #topPaths {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .top-path-row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed rgba(74, 74, 74, 0.2);
+    padding-bottom: 0.4rem;
+  }
+
+  .log-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--ink-main);
+  }
+
+  .log-table th,
+  .log-table td {
+    border: 1px solid rgba(74, 74, 74, 0.2);
+    padding: 0.5rem 0.75rem;
+    vertical-align: top;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .log-table th {
+    background: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+  }
+
+  .log-empty {
+    text-align: center;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 768px) {
+    .stats-panel {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script is:inline>
+  const logList = document.getElementById('logList');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const fromTime = document.getElementById('fromTime');
+  const toTime = document.getElementById('toTime');
+  const keyword = document.getElementById('keyword');
+  const limitInput = document.getElementById('limit');
+  const pv24h = document.getElementById('pv24h');
+  const uv24h = document.getElementById('uv24h');
+  const ip1h = document.getElementById('ip1h');
+  const avgDuration = document.getElementById('avgDuration');
+  const topPaths = document.getElementById('topPaths');
+
+  function formatTime(ts) {
+    const date = new Date(ts);
+    return Number.isNaN(date.getTime()) ? '-' : date.toLocaleString();
+  }
+
+  function buildQuery() {
+    const params = new URLSearchParams();
+    if (fromTime.value) params.set('from', new Date(fromTime.value).toISOString());
+    if (toTime.value) params.set('to', new Date(toTime.value).toISOString());
+    if (keyword.value) params.set('q', keyword.value.trim());
+    if (limitInput.value) params.set('limit', limitInput.value);
+    return params.toString();
+  }
+
+  function renderTopPaths(list) {
+    topPaths.innerHTML = '';
+    if (!list || list.length === 0) {
+      topPaths.textContent = '暂无数据';
+      return;
+    }
+    list.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'top-path-row';
+      row.innerHTML = `<span>${item.path || '-'}</span><span>${item.count}</span>`;
+      topPaths.appendChild(row);
+    });
+  }
+
+  function renderLogs(items) {
+    logList.innerHTML = '';
+    if (!items || items.length === 0) {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td class="log-empty" colspan="8">当前条件无数据</td>`;
+      logList.appendChild(row);
+      return;
+    }
+    items.forEach(item => {
+      const durationKey = `${item.session_id || ''}__${item.path || ''}`;
+      const durationMs = Number((window.__sessionDurations || {})[durationKey] || 0);
+      const durationSec = Math.round(durationMs / 1000);
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${formatTime(item.ts)}</td>
+        <td>${item.event || '-'}</td>
+        <td>${item.path || '-'}</td>
+        <td>${item.ip || '-'}</td>
+        <td>${item.session_id || '-'}</td>
+        <td>${durationSec}</td>
+        <td>${item.ref || '-'}</td>
+        <td>${item.ua || '-'}</td>
+      `;
+      logList.appendChild(row);
+    });
+  }
+
+  async function loadLogs() {
+    try {
+      const query = buildQuery();
+      const res = await fetch(`/api/track/admin?${query}`);
+      const data = await res.json();
+      if (!data.ok) throw new Error('load failed');
+      pv24h.textContent = data.stats?.pv_24h ?? '-';
+      uv24h.textContent = data.stats?.uv_24h ?? '-';
+      ip1h.textContent = data.stats?.unique_ip_1h ?? '-';
+      avgDuration.textContent = Math.round((data.stats?.avg_session_duration_ms || 0) / 1000);
+      window.__sessionDurations = data.session_durations || {};
+      renderTopPaths(data.stats?.top_paths_24h || []);
+      renderLogs(data.items || []);
+    } catch (err) {
+      logList.innerHTML = '';
+      const row = document.createElement('tr');
+      row.innerHTML = `<td class="log-empty" colspan="8">当前条件无数据</td>`;
+      logList.appendChild(row);
+    }
+  }
+
+  function setDefaultRange() {
+    const now = new Date();
+    const from = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const toValue = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
+    const fromValue = new Date(from.getTime() - from.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
+    if (!fromTime.value) fromTime.value = fromValue;
+    if (!toTime.value) toTime.value = toValue;
+    if (!keyword.value) keyword.value = '';
+  }
+
+  refreshBtn.addEventListener('click', () => loadLogs());
+  setDefaultRange();
+  loadLogs();
+</script>

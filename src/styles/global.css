@@ -38,6 +38,39 @@ html {
   }
 }
 
+@media (max-width: 768px) {
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    padding-left: 52px;
+    min-height: 32px;
+  }
+
+  /* 移动端为左上角工具栏预留垂直空间，避免标题被遮挡 */
+  main.page-container {
+    padding-top: 7rem;
+    padding-left: 4.5rem;
+    padding-right: 2rem;
+    text-align: center;
+  }
+
+  /* 移动端标题与返回区拉开距离 */
+  main.page-container .page-title {
+    margin-top: 0.75rem;
+  }
+
+  /* 移动端内容块居中 */
+  main.page-container .content-wrapper {
+    margin: 0 auto;
+  }
+
+  /* 返回按钮保持左对齐 */
+  main.page-container .back-link {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 /* Timeline detail section titles */
 .detail-section-title {
   color: #FF8E00 !important;

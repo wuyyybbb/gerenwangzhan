@@ -1,0 +1,14 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY server/track /app/server/track
+
+ENV TRACK_PORT=3001
+ENV TRACK_LOG_PATH=/var/log/personal_site/track.log
+
+RUN mkdir -p /var/log/personal_site
+
+EXPOSE 3001
+
+CMD ["node", "/app/server/track/track-server.js"]
