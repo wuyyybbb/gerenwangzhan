@@ -183,7 +183,7 @@ async function handleAdmin(req, res) {
   const defaultFromMs = now - 24 * 60 * 60 * 1000;
   const defaultToMs = now;
   const fromMs = toMs(query.from) ?? defaultFromMs;
-  const toMs = toMs(query.to) ?? defaultToMs;
+  const toMsValue = toMs(query.to) ?? defaultToMs;
   const keyword = (query.q || '').toLowerCase();
 
   const lines = await readLastLines(LOG_PATH, limit);
@@ -200,7 +200,7 @@ async function handleAdmin(req, res) {
       const ts = Date.parse(item.ts || '');
       if (Number.isNaN(ts)) return false;
       if (ts < fromMs) return false;
-      if (ts > toMs) return false;
+      if (ts > toMsValue) return false;
       if (!keyword) return true;
       return [
         item.ip,
@@ -266,6 +266,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: false, error: 'not_found' }));
   } catch (err) {
+    console.error('[track] server_error:', err);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: false, error: 'server_error' }));
   }
