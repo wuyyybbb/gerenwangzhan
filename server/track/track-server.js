@@ -81,6 +81,30 @@ function toMs(input) {
   return Number.isNaN(t) ? null : t;
 }
 
+function classifyAgent(uaRaw) {
+  const ua = String(uaRaw || '').toLowerCase();
+
+  const botRules = [
+    { tag: 'bingbot', re: /bingbot/ },
+    { tag: 'googlebot', re: /googlebot/ },
+    { tag: 'yandexbot', re: /yandex(bot)?/ },
+    { tag: 'baiduspider', re: /baiduspider/ },
+    { tag: 'bytespider', re: /bytespider/ },
+    { tag: 'duckduckbot', re: /duckduckbot/ },
+    { tag: 'semrush', re: /semrush/ },
+    { tag: 'ahrefs', re: /ahrefs/ },
+    { tag: 'mj12bot', re: /mj12bot/ },
+    { tag: 'crawler', re: /(bot|spider|crawl|slurp)/ },
+    { tag: 'headless', re: /(headless|lighthouse)/ },
+    { tag: 'script', re: /(curl|wget|httpclient|python-requests)/ },
+  ];
+
+  for (const r of botRules) {
+    if (r.re.test(ua)) return { agent_type: 'bot', bot_tag: r.tag };
+  }
+  return { agent_type: 'human', bot_tag: '' };
+}
+
 function buildStats(items) {
   const now = Date.now();
   const since24h = now - 24 * 60 * 60 * 1000;
@@ -122,15 +146,29 @@ function buildStats(items) {
 }
 
 function buildSessionDurations(items, heartbeatIntervalMs) {
+  const capMs = 30 * 60 * 1000;
   const sessionMap = new Map();
 
   items.forEach(item => {
     const sid = item.session_id || '';
     if (!sid) return;
     if (!sessionMap.has(sid)) {
-      sessionMap.set(sid, { heartbeatCount: 0 });
+      sessionMap.set(sid, {
+        heartbeatCount: 0,
+        firstTs: null,
+        lastLeaveTs: null,
+      });
     }
     const entry = sessionMap.get(sid);
+    const ts = Date.parse(item.ts || '');
+    if (!Number.isNaN(ts)) {
+      if (item.event === 'page_view') {
+        entry.firstTs = entry.firstTs === null ? ts : Math.min(entry.firstTs, ts);
+      }
+      if (item.event === 'leave') {
+        entry.lastLeaveTs = entry.lastLeaveTs === null ? ts : Math.max(entry.lastLeaveTs, ts);
+      }
+    }
     if (item.event === 'heartbeat') {
       entry.heartbeatCount += 1;
     }
@@ -138,7 +176,13 @@ function buildSessionDurations(items, heartbeatIntervalMs) {
 
   const durations = {};
   sessionMap.forEach((value, sid) => {
-    durations[sid] = value.heartbeatCount * heartbeatIntervalMs;
+    const heartbeatEst = value.heartbeatCount * heartbeatIntervalMs;
+    let leaveEst = 0;
+    if (value.firstTs !== null && value.lastLeaveTs !== null) {
+      leaveEst = Math.max(0, value.lastLeaveTs - value.firstTs);
+    }
+    const duration = Math.max(leaveEst, heartbeatEst);
+    durations[sid] = Math.min(duration, capMs);
   });
 
   return durations;
@@ -155,6 +199,8 @@ async function handleTrack(req, res) {
     return;
   }
 
+  const agent = classifyAgent(payload.ua || req.headers['user-agent'] || '');
+
   const entry = {
     ts: new Date().toISOString(),
     ip: getClientIp(req),
@@ -163,6 +209,8 @@ async function handleTrack(req, res) {
     path: String(payload.path || ''),
     event: String(payload.event || ''),
     session_id: String(payload.session_id || ''),
+    agent_type: agent.agent_type,
+    bot_tag: agent.bot_tag,
   };
 
   try {
@@ -185,9 +233,10 @@ async function handleAdmin(req, res) {
   const fromMs = toMs(query.from) ?? defaultFromMs;
   const toMsValue = toMs(query.to) ?? defaultToMs;
   const keyword = (query.q || '').toLowerCase();
+  const type = (query.type || 'human').toLowerCase(); // human | bot | all
 
   const lines = await readLastLines(LOG_PATH, limit);
-  const rawItems = lines
+  const itemsAll = lines
     .map(line => {
       try {
         return JSON.parse(line);
@@ -210,14 +259,30 @@ async function handleAdmin(req, res) {
         item.session_id,
         item.event,
       ].some(field => String(field || '').toLowerCase().includes(keyword));
+    })
+    .filter(item => {
+      if (type === 'all') return true;
+      if (type === 'bot') return item.agent_type === 'bot';
+      return item.agent_type !== 'bot';
     });
 
-  const items = rawItems.sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts));
-  const stats = buildStats(items);
+  const items = itemsAll.sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts));
+  const itemsHuman = itemsAll.filter(item => item.agent_type !== 'bot');
+  const itemsBot = itemsAll.filter(item => item.agent_type === 'bot');
+  const stats = buildStats(itemsHuman);
+  const stats_bot = buildStats(itemsBot);
+  const stats_all = buildStats(itemsAll);
   const sessionDurations = buildSessionPathDurations(items, 15000);
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ ok: true, items, stats, session_durations: sessionDurations }));
+  res.end(JSON.stringify({
+    ok: true,
+    items,
+    stats,
+    stats_bot,
+    stats_all,
+    session_durations: sessionDurations
+  }));
 }
 
 function buildSessionPathDurations(items, heartbeatIntervalMs) {

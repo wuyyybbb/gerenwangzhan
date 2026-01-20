@@ -30,6 +30,12 @@ import '../../styles/global.css';
       <button id="refreshBtn">刷新</button>
     </div>
 
+    <div class="type-toggle" id="typeToggle">
+      <button type="button" class="type-btn active" data-type="human">Human</button>
+      <button type="button" class="type-btn" data-type="bot">Bot</button>
+      <button type="button" class="type-btn" data-type="all">All</button>
+    </div>
+
     <section class="stats-panel">
       <div class="stat-item">
         <div class="stat-label">24h PV</div>
@@ -59,6 +65,7 @@ import '../../styles/global.css';
         <thead>
           <tr>
             <th>时间</th>
+            <th>标签</th>
             <th>事件</th>
             <th>路径</th>
             <th>IP</th>
@@ -71,6 +78,28 @@ import '../../styles/global.css';
         <tbody id="logList"></tbody>
       </table>
     </section>
+
+    <div class="ua-modal" id="uaModal">
+      <div class="ua-modal-content">
+        <button type="button" class="ua-modal-close" id="uaModalClose">×</button>
+        <div class="ua-modal-section">
+          <div class="ua-modal-title">UA</div>
+          <div class="ua-modal-text" id="uaModalUa"></div>
+        </div>
+        <div class="ua-modal-section">
+          <div class="ua-modal-title">Ref</div>
+          <div class="ua-modal-text" id="uaModalRef"></div>
+        </div>
+        <div class="ua-modal-section">
+          <div class="ua-modal-title">Session</div>
+          <div class="ua-modal-text" id="uaModalSession"></div>
+        </div>
+        <div class="ua-modal-section">
+          <div class="ua-modal-title">IP</div>
+          <div class="ua-modal-text" id="uaModalIp"></div>
+        </div>
+      </div>
+    </div>
   </main>
 </BaseLayout>
 
@@ -119,6 +148,28 @@ import '../../styles/global.css';
     font-family: var(--font-sans);
     font-size: 0.875rem;
     color: var(--ink-main);
+  }
+
+  .type-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .type-btn {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid rgba(74, 74, 74, 0.3);
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--ink-soft);
+  }
+
+  .type-btn.active {
+    border-color: var(--ink-main);
+    color: var(--ink-main);
+    background: rgba(255, 255, 255, 0.4);
   }
 
   .stats-panel {
@@ -194,6 +245,72 @@ import '../../styles/global.css';
     font-weight: 600;
   }
 
+  .bot-tag {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.7rem;
+  }
+
+  .ua-link {
+    color: var(--ink-main);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .ua-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+  }
+
+  .ua-modal.active {
+    display: flex;
+  }
+
+  .ua-modal-content {
+    position: relative;
+    width: min(720px, 92vw);
+    background: var(--bg-parchment);
+    border: 1px solid rgba(74, 74, 74, 0.2);
+    padding: 1.5rem;
+    text-align: left;
+  }
+
+  .ua-modal-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    border: none;
+    background: transparent;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .ua-modal-section {
+    margin-bottom: 1rem;
+  }
+
+  .ua-modal-title {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.35rem;
+  }
+
+  .ua-modal-text {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--ink-main);
+    word-break: break-word;
+  }
+
   .log-empty {
     text-align: center;
     color: var(--ink-soft);
@@ -218,6 +335,15 @@ import '../../styles/global.css';
   const ip1h = document.getElementById('ip1h');
   const avgDuration = document.getElementById('avgDuration');
   const topPaths = document.getElementById('topPaths');
+  const typeToggle = document.getElementById('typeToggle');
+  const uaModal = document.getElementById('uaModal');
+  const uaModalClose = document.getElementById('uaModalClose');
+  const uaModalUa = document.getElementById('uaModalUa');
+  const uaModalRef = document.getElementById('uaModalRef');
+  const uaModalSession = document.getElementById('uaModalSession');
+  const uaModalIp = document.getElementById('uaModalIp');
+
+  let currentType = 'human';
 
   function formatTime(ts) {
     const date = new Date(ts);
@@ -230,6 +356,7 @@ import '../../styles/global.css';
     if (toTime.value) params.set('to', new Date(toTime.value).toISOString());
     if (keyword.value) params.set('q', keyword.value.trim());
     if (limitInput.value) params.set('limit', limitInput.value);
+    if (currentType) params.set('type', currentType);
     return params.toString();
   }
 
@@ -256,19 +383,24 @@ import '../../styles/global.css';
       return;
     }
     items.forEach(item => {
+      const agentType = item.agent_type || 'human';
+      const botTag = item.bot_tag ? `BOT(${item.bot_tag})` : 'BOT';
+      const labelHtml = agentType === 'bot' ? `<span class="bot-tag">${botTag}</span>` : '';
       const durationKey = `${item.session_id || ''}__${item.path || ''}`;
       const durationMs = Number((window.__sessionDurations || {})[durationKey] || 0);
       const durationSec = Math.round(durationMs / 1000);
+      const uaShort = buildUaShort(item.ua || '');
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${formatTime(item.ts)}</td>
+        <td>${labelHtml}</td>
         <td>${item.event || '-'}</td>
         <td>${item.path || '-'}</td>
         <td>${item.ip || '-'}</td>
         <td>${item.session_id || '-'}</td>
         <td>${durationSec}</td>
         <td>${item.ref || '-'}</td>
-        <td>${item.ua || '-'}</td>
+        <td><span class="ua-link" data-ua="${encodeURIComponent(item.ua || '')}" data-ref="${encodeURIComponent(item.ref || '')}" data-session="${encodeURIComponent(item.session_id || '')}" data-ip="${encodeURIComponent(item.ip || '')}">${uaShort}</span></td>
       `;
       logList.appendChild(row);
     });
@@ -280,10 +412,13 @@ import '../../styles/global.css';
       const res = await fetch(`/api/track/admin?${query}`);
       const data = await res.json();
       if (!data.ok) throw new Error('load failed');
-      pv24h.textContent = data.stats?.pv_24h ?? '-';
-      uv24h.textContent = data.stats?.uv_24h ?? '-';
-      ip1h.textContent = data.stats?.unique_ip_1h ?? '-';
-      avgDuration.textContent = Math.round((data.stats?.avg_session_duration_ms || 0) / 1000);
+      let stats = data.stats;
+      if (currentType === 'bot') stats = data.stats_bot || stats;
+      if (currentType === 'all') stats = data.stats_all || stats;
+      pv24h.textContent = stats?.pv_24h ?? '-';
+      uv24h.textContent = stats?.uv_24h ?? '-';
+      ip1h.textContent = stats?.unique_ip_1h ?? '-';
+      avgDuration.textContent = Math.round((stats?.avg_session_duration_ms || 0) / 1000);
       window.__sessionDurations = data.session_durations || {};
       renderTopPaths(data.stats?.top_paths_24h || []);
       renderLogs(data.items || []);
@@ -307,7 +442,55 @@ import '../../styles/global.css';
     if (!fromTime.value) fromTime.value = fromValue;
     if (!toTime.value) toTime.value = toValue;
     if (!keyword.value) keyword.value = '';
+    currentType = 'human';
+    typeToggle.querySelectorAll('.type-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === currentType);
+    });
   }
+
+  function buildUaShort(uaRaw) {
+    const ua = String(uaRaw || '');
+    if (!ua) return '-';
+    return ua.length > 60 ? `${ua.slice(0, 60)}...` : ua;
+  }
+
+  function openUaModal(payload) {
+    uaModalUa.textContent = payload.ua || '-';
+    uaModalRef.textContent = payload.ref || '-';
+    uaModalSession.textContent = payload.session || '-';
+    uaModalIp.textContent = payload.ip || '-';
+    uaModal.classList.add('active');
+  }
+
+  function closeUaModal() {
+    uaModal.classList.remove('active');
+  }
+
+  logList.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!target.classList.contains('ua-link')) return;
+    openUaModal({
+      ua: decodeURIComponent(target.dataset.ua || ''),
+      ref: decodeURIComponent(target.dataset.ref || ''),
+      session: decodeURIComponent(target.dataset.session || ''),
+      ip: decodeURIComponent(target.dataset.ip || ''),
+    });
+  });
+
+  uaModalClose.addEventListener('click', () => closeUaModal());
+  uaModal.addEventListener('click', (event) => {
+    if (event.target === uaModal) closeUaModal();
+  });
+
+  typeToggle.addEventListener('click', (event) => {
+    const btn = event.target.closest('.type-btn');
+    if (!btn) return;
+    currentType = btn.dataset.type || 'human';
+    typeToggle.querySelectorAll('.type-btn').forEach(item => {
+      item.classList.toggle('active', item === btn);
+    });
+    loadLogs();
+  });
 
   refreshBtn.addEventListener('click', () => loadLogs());
   setDefaultRange();
