@@ -30,10 +30,18 @@ import '../../styles/global.css';
       <button id="refreshBtn">刷新</button>
     </div>
 
-    <div class="type-toggle" id="typeToggle">
-      <button type="button" class="type-btn active" data-type="human">Human</button>
-      <button type="button" class="type-btn" data-type="bot">Bot</button>
-      <button type="button" class="type-btn" data-type="all">All</button>
+    <div class="toggle-row">
+      <div class="type-toggle" id="typeToggle">
+        <span class="toggle-label">类型</span>
+        <button type="button" class="type-btn active" data-type="human">Human</button>
+        <button type="button" class="type-btn" data-type="bot">Bot</button>
+        <button type="button" class="type-btn" data-type="all">All</button>
+      </div>
+      <div class="type-toggle" id="behaviorToggle">
+        <span class="toggle-label">行为</span>
+        <button type="button" class="type-btn active" data-behavior="human">Human行为</button>
+        <button type="button" class="type-btn" data-behavior="all">全部</button>
+      </div>
     </div>
 
     <section class="stats-panel">
@@ -72,7 +80,7 @@ import '../../styles/global.css';
             <th>Session</th>
             <th>停留(s)</th>
             <th>Ref</th>
-            <th>UA</th>
+            <th class="ua-col">UA</th>
           </tr>
         </thead>
         <tbody id="logList"></tbody>
@@ -87,8 +95,20 @@ import '../../styles/global.css';
           <div class="ua-modal-text" id="uaModalUa"></div>
         </div>
         <div class="ua-modal-section">
+          <div class="ua-modal-title">时间</div>
+          <div class="ua-modal-text" id="uaModalTs"></div>
+        </div>
+        <div class="ua-modal-section">
           <div class="ua-modal-title">Ref</div>
           <div class="ua-modal-text" id="uaModalRef"></div>
+        </div>
+        <div class="ua-modal-section">
+          <div class="ua-modal-title">路径</div>
+          <div class="ua-modal-text" id="uaModalPath"></div>
+        </div>
+        <div class="ua-modal-section">
+          <div class="ua-modal-title">事件</div>
+          <div class="ua-modal-text" id="uaModalEvent"></div>
         </div>
         <div class="ua-modal-section">
           <div class="ua-modal-title">Session</div>
@@ -97,6 +117,14 @@ import '../../styles/global.css';
         <div class="ua-modal-section">
           <div class="ua-modal-title">IP</div>
           <div class="ua-modal-text" id="uaModalIp"></div>
+        </div>
+        <div class="ua-modal-section">
+          <div class="ua-modal-title">Agent</div>
+          <div class="ua-modal-text" id="uaModalAgent"></div>
+        </div>
+        <div class="ua-modal-section">
+          <div class="ua-modal-title">Human行为</div>
+          <div class="ua-modal-text" id="uaModalBehavior"></div>
         </div>
       </div>
     </div>
@@ -150,10 +178,22 @@ import '../../styles/global.css';
     color: var(--ink-main);
   }
 
+  .toggle-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
   .type-toggle {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .toggle-label {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
   }
 
   .type-btn {
@@ -227,7 +267,7 @@ import '../../styles/global.css';
     width: 100%;
     border-collapse: collapse;
     font-family: var(--font-sans);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     color: var(--ink-main);
   }
 
@@ -254,10 +294,24 @@ import '../../styles/global.css';
     font-size: 0.7rem;
   }
 
-  .ua-link {
-    color: var(--ink-main);
-    text-decoration: underline;
-    cursor: pointer;
+  .human-tag {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 10px;
+    background: rgba(74, 74, 74, 0.12);
+    color: rgba(74, 74, 74, 0.8);
+    font-size: 0.7rem;
+  }
+
+  .ua-col {
+    width: 180px;
+  }
+
+  .ua-short {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .ua-modal {
@@ -336,14 +390,21 @@ import '../../styles/global.css';
   const avgDuration = document.getElementById('avgDuration');
   const topPaths = document.getElementById('topPaths');
   const typeToggle = document.getElementById('typeToggle');
+  const behaviorToggle = document.getElementById('behaviorToggle');
   const uaModal = document.getElementById('uaModal');
   const uaModalClose = document.getElementById('uaModalClose');
   const uaModalUa = document.getElementById('uaModalUa');
+  const uaModalTs = document.getElementById('uaModalTs');
   const uaModalRef = document.getElementById('uaModalRef');
+  const uaModalPath = document.getElementById('uaModalPath');
+  const uaModalEvent = document.getElementById('uaModalEvent');
   const uaModalSession = document.getElementById('uaModalSession');
   const uaModalIp = document.getElementById('uaModalIp');
+  const uaModalAgent = document.getElementById('uaModalAgent');
+  const uaModalBehavior = document.getElementById('uaModalBehavior');
 
   let currentType = 'human';
+  let currentBehavior = 'human';
 
   function formatTime(ts) {
     const date = new Date(ts);
@@ -357,6 +418,7 @@ import '../../styles/global.css';
     if (keyword.value) params.set('q', keyword.value.trim());
     if (limitInput.value) params.set('limit', limitInput.value);
     if (currentType) params.set('type', currentType);
+    if (currentBehavior) params.set('behavior', currentBehavior);
     return params.toString();
   }
 
@@ -383,14 +445,34 @@ import '../../styles/global.css';
       return;
     }
     items.forEach(item => {
-      const agentType = item.agent_type || 'human';
+      const agentType = item.agent_type || 'unknown';
       const botTag = item.bot_tag ? `BOT(${item.bot_tag})` : 'BOT';
-      const labelHtml = agentType === 'bot' ? `<span class="bot-tag">${botTag}</span>` : '';
+      let labelHtml = '';
+      if (agentType === 'bot') {
+        labelHtml = `<span class="bot-tag">${botTag}</span>`;
+      } else if (item.is_human_action) {
+        labelHtml = `<span class="human-tag">HUMAN</span>`;
+      } else if (agentType === 'unknown') {
+        labelHtml = `<span class="bot-tag">UNK</span>`;
+      }
       const durationKey = `${item.session_id || ''}__${item.path || ''}`;
       const durationMs = Number((window.__sessionDurations || {})[durationKey] || 0);
       const durationSec = Math.round(durationMs / 1000);
-      const uaShort = buildUaShort(item.ua || '');
+      const uaShort = item.ua_short || '-';
+      const uaFull = item.ua_full || item.ua || '';
       const row = document.createElement('tr');
+      row.className = 'log-row';
+      row.dataset.rowId = item.row_id || '';
+      row.dataset.ua = uaFull;
+      row.dataset.ref = item.ref || '';
+      row.dataset.session = item.session_id || '';
+      row.dataset.ip = item.ip || '';
+      row.dataset.event = item.event || '';
+      row.dataset.path = item.path || '';
+      row.dataset.ts = item.ts || '';
+      row.dataset.agentType = agentType;
+      row.dataset.botTag = item.bot_tag || '';
+      row.dataset.isHumanAction = item.is_human_action ? 'true' : 'false';
       row.innerHTML = `
         <td>${formatTime(item.ts)}</td>
         <td>${labelHtml}</td>
@@ -400,7 +482,7 @@ import '../../styles/global.css';
         <td>${item.session_id || '-'}</td>
         <td>${durationSec}</td>
         <td>${item.ref || '-'}</td>
-        <td><span class="ua-link" data-ua="${encodeURIComponent(item.ua || '')}" data-ref="${encodeURIComponent(item.ref || '')}" data-session="${encodeURIComponent(item.session_id || '')}" data-ip="${encodeURIComponent(item.ip || '')}">${uaShort}</span></td>
+        <td><span class="ua-short">${uaShort}</span></td>
       `;
       logList.appendChild(row);
     });
@@ -412,13 +494,10 @@ import '../../styles/global.css';
       const res = await fetch(`/api/track/admin?${query}`);
       const data = await res.json();
       if (!data.ok) throw new Error('load failed');
-      let stats = data.stats;
-      if (currentType === 'bot') stats = data.stats_bot || stats;
-      if (currentType === 'all') stats = data.stats_all || stats;
-      pv24h.textContent = stats?.pv_24h ?? '-';
-      uv24h.textContent = stats?.uv_24h ?? '-';
-      ip1h.textContent = stats?.unique_ip_1h ?? '-';
-      avgDuration.textContent = Math.round((stats?.avg_session_duration_ms || 0) / 1000);
+      pv24h.textContent = data.stats?.pv_24h ?? '-';
+      uv24h.textContent = data.stats?.uv_24h ?? '-';
+      ip1h.textContent = data.stats?.unique_ip_1h ?? '-';
+      avgDuration.textContent = Math.round((data.stats?.avg_session_duration_ms || 0) / 1000);
       window.__sessionDurations = data.session_durations || {};
       renderTopPaths(data.stats?.top_paths_24h || []);
       renderLogs(data.items || []);
@@ -443,22 +522,28 @@ import '../../styles/global.css';
     if (!toTime.value) toTime.value = toValue;
     if (!keyword.value) keyword.value = '';
     currentType = 'human';
+    currentBehavior = 'human';
     typeToggle.querySelectorAll('.type-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.type === currentType);
     });
-  }
-
-  function buildUaShort(uaRaw) {
-    const ua = String(uaRaw || '');
-    if (!ua) return '-';
-    return ua.length > 60 ? `${ua.slice(0, 60)}...` : ua;
+    behaviorToggle.querySelectorAll('.type-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.behavior === currentBehavior);
+    });
   }
 
   function openUaModal(payload) {
     uaModalUa.textContent = payload.ua || '-';
+    uaModalTs.textContent = payload.ts || '-';
     uaModalRef.textContent = payload.ref || '-';
+    uaModalPath.textContent = payload.path || '-';
+    uaModalEvent.textContent = payload.event || '-';
     uaModalSession.textContent = payload.session || '-';
     uaModalIp.textContent = payload.ip || '-';
+    const agentInfo = payload.agentType
+      ? `${payload.agentType}${payload.botTag ? ` (${payload.botTag})` : ''}`
+      : '-';
+    uaModalAgent.textContent = agentInfo;
+    uaModalBehavior.textContent = payload.isHumanAction === 'true' ? 'true' : 'false';
     uaModal.classList.add('active');
   }
 
@@ -467,13 +552,19 @@ import '../../styles/global.css';
   }
 
   logList.addEventListener('click', (event) => {
-    const target = event.target;
-    if (!target.classList.contains('ua-link')) return;
+    const row = event.target.closest('.log-row');
+    if (!row) return;
     openUaModal({
-      ua: decodeURIComponent(target.dataset.ua || ''),
-      ref: decodeURIComponent(target.dataset.ref || ''),
-      session: decodeURIComponent(target.dataset.session || ''),
-      ip: decodeURIComponent(target.dataset.ip || ''),
+      ua: row.dataset.ua || '',
+      ref: row.dataset.ref || '',
+      session: row.dataset.session || '',
+      ip: row.dataset.ip || '',
+      event: row.dataset.event || '',
+      path: row.dataset.path || '',
+      ts: row.dataset.ts || '',
+      agentType: row.dataset.agentType || '',
+      botTag: row.dataset.botTag || '',
+      isHumanAction: row.dataset.isHumanAction || 'false',
     });
   });
 
@@ -487,6 +578,16 @@ import '../../styles/global.css';
     if (!btn) return;
     currentType = btn.dataset.type || 'human';
     typeToggle.querySelectorAll('.type-btn').forEach(item => {
+      item.classList.toggle('active', item === btn);
+    });
+    loadLogs();
+  });
+
+  behaviorToggle.addEventListener('click', (event) => {
+    const btn = event.target.closest('.type-btn');
+    if (!btn) return;
+    currentBehavior = btn.dataset.behavior || 'human';
+    behaviorToggle.querySelectorAll('.type-btn').forEach(item => {
       item.classList.toggle('active', item === btn);
     });
     loadLogs();

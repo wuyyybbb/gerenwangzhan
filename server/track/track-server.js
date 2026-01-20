@@ -83,6 +83,7 @@ function toMs(input) {
 
 function classifyAgent(uaRaw) {
   const ua = String(uaRaw || '').toLowerCase();
+  if (!ua) return { agent_type: 'unknown', bot_tag: '' };
 
   const botRules = [
     { tag: 'bingbot', re: /bingbot/ },
@@ -103,6 +104,33 @@ function classifyAgent(uaRaw) {
     if (r.re.test(ua)) return { agent_type: 'bot', bot_tag: r.tag };
   }
   return { agent_type: 'human', bot_tag: '' };
+}
+
+function shortUA(uaRaw, agentType, botTag) {
+  const ua = String(uaRaw || '');
+  const uaLower = ua.toLowerCase();
+
+  if (agentType === 'bot' && botTag) {
+    return `BOT: ${botTag}`;
+  }
+
+  const iosMatch = uaLower.match(/iphone|ipad/);
+  if (iosMatch) {
+    const versionMatch = uaLower.match(/os\s+(\d+)_/);
+    return `iPhone iOS ${versionMatch ? versionMatch[1] : ''}`.trim();
+  }
+
+  const androidMatch = uaLower.match(/android\s+(\d+)/);
+  if (androidMatch) {
+    return `Android ${androidMatch[1]}`;
+  }
+
+  if (uaLower.includes('windows')) return 'Windows';
+  if (uaLower.includes('mac os x') || uaLower.includes('macintosh')) return 'macOS';
+  if (uaLower.includes('linux')) return 'Linux';
+
+  if (agentType === 'unknown') return 'Other';
+  return 'Other';
 }
 
 function buildStats(items) {
@@ -234,9 +262,10 @@ async function handleAdmin(req, res) {
   const toMsValue = toMs(query.to) ?? defaultToMs;
   const keyword = (query.q || '').toLowerCase();
   const type = (query.type || 'human').toLowerCase(); // human | bot | all
+  const behavior = (query.behavior || 'human').toLowerCase(); // human | all
 
   const lines = await readLastLines(LOG_PATH, limit);
-  const itemsAll = lines
+  const itemsAllRaw = lines
     .map(line => {
       try {
         return JSON.parse(line);
@@ -259,19 +288,45 @@ async function handleAdmin(req, res) {
         item.session_id,
         item.event,
       ].some(field => String(field || '').toLowerCase().includes(keyword));
-    })
-    .filter(item => {
-      if (type === 'all') return true;
-      if (type === 'bot') return item.agent_type === 'bot';
-      return item.agent_type !== 'bot';
     });
 
-  const items = itemsAll.sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts));
-  const itemsHuman = itemsAll.filter(item => item.agent_type !== 'bot');
-  const itemsBot = itemsAll.filter(item => item.agent_type === 'bot');
-  const stats = buildStats(itemsHuman);
-  const stats_bot = buildStats(itemsBot);
-  const stats_all = buildStats(itemsAll);
+  const humanSessionSet = new Set();
+  itemsAllRaw.forEach(item => {
+    if (item.event === 'heartbeat' && item.session_id) {
+      humanSessionSet.add(item.session_id);
+    }
+  });
+
+  const itemsAll = itemsAllRaw.map(item => {
+    const agent = classifyAgent(item.ua || '');
+    const agentType = item.agent_type || agent.agent_type;
+    const botTag = item.bot_tag || agent.bot_tag;
+    const uaFull = String(item.ua || '');
+    return {
+      ...item,
+      agent_type: agentType,
+      bot_tag: botTag,
+      is_human_action: Boolean(item.session_id && humanSessionSet.has(item.session_id)),
+      ua_full: uaFull,
+      ua_short: shortUA(uaFull, agentType, botTag),
+      row_id: `${item.ts || ''}_${item.ip || ''}_${item.session_id || ''}_${item.event || ''}_${item.path || ''}`,
+    };
+  });
+
+  const behaviorFiltered = behavior === 'human'
+    ? itemsAll.filter(item => item.is_human_action)
+    : itemsAll;
+
+  const typeFiltered = behaviorFiltered.filter(item => {
+    if (type === 'all') return true;
+    if (type === 'bot') return item.agent_type === 'bot';
+    return item.agent_type !== 'bot';
+  });
+
+  const items = typeFiltered.sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts));
+  const stats = buildStats(items);
+  const stats_bot = buildStats(behaviorFiltered.filter(item => item.agent_type === 'bot'));
+  const stats_all = buildStats(behaviorFiltered);
   const sessionDurations = buildSessionPathDurations(items, 15000);
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
