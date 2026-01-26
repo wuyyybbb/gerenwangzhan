@@ -1499,16 +1499,44 @@ const landmarks = [
     // 🎯 背景图淡入：onload 后显示
     // ============================================
     const bgImage = document.getElementById('mapBackground');
+    let bgReady = false;
+    const requiredLoaded = new Set();
+    const requiredTargets = new Set();
+
+    // 启动图等待核心素材加载完成
+    ['core', 'workshop-building'].forEach((id) => {
+      const target = document.querySelector(`[data-building-id="${id}"], [data-landmark-id="${id}"]`);
+      if (target) requiredTargets.add(id);
+    });
+
+    const checkAppReady = () => {
+      if (!bgReady) return;
+      if (requiredLoaded.size < requiredTargets.size) return;
+      window.dispatchEvent(new Event('app:ready'));
+    };
+
+    const markRequiredLoaded = (container) => {
+      const id = container.getAttribute('data-building-id') || container.getAttribute('data-landmark-id');
+      if (id && requiredTargets.has(id)) {
+        requiredLoaded.add(id);
+        checkAppReady();
+      }
+    };
+
     if (bgImage) {
       // 如果图片已经从缓存加载完成
       if (bgImage.complete && bgImage.naturalHeight !== 0) {
         console.log('✅ 背景图已从缓存加载');
         bgImage.classList.add('loaded');
+        bgReady = true;
+        checkAppReady();
       } else {
         // 监听图片加载完成
         bgImage.addEventListener('load', () => {
           console.log('✅ 背景图加载完成，开始淡入');
           bgImage.classList.add('loaded');
+          bgReady = true;
+          checkAppReady();
         });
 
         bgImage.addEventListener('error', () => {
@@ -1732,6 +1760,7 @@ const landmarks = [
             container.dataset.loaded = 'true';
             cleanupLoading('加载成功');
             container.appendChild(img);
+            markRequiredLoaded(container);
 
             // 🐛 诊断：检查图片添加后的状态
             setTimeout(() => {
@@ -1798,6 +1827,12 @@ const landmarks = [
       console.log(`   [${index}] ${basePath}`);
       loadImage(container, 0);
     });
+
+    // 🔧 核心建筑提前加载，避免启动图消失后主视觉缺失
+    const coreContainer = document.querySelector('.core-container.lazy-image');
+    if (coreContainer) {
+      loadImage(coreContainer, 0);
+    }
 
     // 🔧 第二批：中优先级（Resume）- 延迟 200ms
     console.log(`\n📋 第二批：Resume (延迟 200ms)`);
