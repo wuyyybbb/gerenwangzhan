@@ -1503,14 +1503,18 @@ const landmarks = [
     const requiredLoaded = new Set();
     const requiredTargets = new Set();
 
-    // 启动图等待核心素材加载完成
-    ['core', 'workshop-building'].forEach((id) => {
-      const target = document.querySelector(`[data-building-id="${id}"], [data-landmark-id="${id}"]`);
-      if (target) requiredTargets.add(id);
+    // 启动图等待建筑素材加载完成
+    document.querySelectorAll('.building-container').forEach((container) => {
+      const id = container.getAttribute('data-building-id') || container.getAttribute('data-landmark-id');
+      if (id) requiredTargets.add(id);
     });
 
     const checkAppReady = () => {
       if (!bgReady) return;
+      if (requiredTargets.size === 0) {
+        window.dispatchEvent(new Event('app:ready'));
+        return;
+      }
       if (requiredLoaded.size < requiredTargets.size) return;
       window.dispatchEvent(new Event('app:ready'));
     };
