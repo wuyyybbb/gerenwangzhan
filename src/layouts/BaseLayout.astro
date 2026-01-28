@@ -170,17 +170,18 @@ import { ViewTransitions } from 'astro:transitions';
       </button>
     </div>
 
-    <!-- 启动图覆盖层 -->
-    <div class="splash-overlay" id="splashOverlay" aria-hidden="true">
-      <div class="splash-content">
-        <div class="splash-illustration">
-          <img class="splash-image" src="/loading/loading.WebP" alt="Loading" />
-          <div class="splash-progress-frame">
-            <div class="splash-progress-bar" id="splashProgressBar"></div>
+    {Astro.url.pathname === '/' && (
+      <div class="splash-overlay" id="splashOverlay" aria-hidden="true">
+        <div class="splash-content">
+          <div class="splash-illustration">
+            <img class="splash-image" src="/loading/loading.WebP" alt="Loading" />
+            <div class="splash-progress-frame">
+              <div class="splash-progress-bar" id="splashProgressBar"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    )}
 
     <slot />
 
@@ -866,6 +867,7 @@ import { ViewTransitions } from 'astro:transitions';
 
     <script is:inline>
       (() => {
+        if (window.location.pathname !== '/') return;
         const overlay = document.getElementById('splashOverlay');
         const bar = document.getElementById('splashProgressBar');
         if (!overlay || !bar) return;
